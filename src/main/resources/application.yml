@@ -5,3 +5,6 @@ spring:
     url: "jdbc:mysql://127.0.0.1:3306/xunibi?serverTimezone=GMT%2B8"
     username: root
     password: wmc.20011020
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*.xml
+  type-aliases-package: com.example.xunibibackend.entity

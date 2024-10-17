@@ -1,13 +1,17 @@
 package com.example.xunibibackend.service.impl;
 
 import com.example.xunibibackend.entity.Team;
+import com.example.xunibibackend.mapper.TeamMapper;
 import com.example.xunibibackend.service.TeamsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class TeamsServiceImpl implements TeamsService {
+    @Autowired
+    TeamMapper teamMapper;
     @Override
     public Team createTeam(Team team) {
         return null;
@@ -20,7 +24,7 @@ public class TeamsServiceImpl implements TeamsService {
 
     @Override
     public Team getTeamById(Long id) {
-        return null;
+        return teamMapper.selectById(id);
     }
 
     @Override
