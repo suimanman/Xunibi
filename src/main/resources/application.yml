@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: Xunibi-backend
+  datasource:
+    url: "jdbc:mysql://127.0.0.1:3306/xunibi?serverTimezone=GMT%2B8"
+    username: root
+    password: wmc.20011020
