@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -12,15 +13,15 @@ import java.util.Date;
 @TableName("team")
 public class Team {
     @Id
-    @TableId(value = "team_id")
-    private Long teamId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer teamId;
 
     @Column(name = "team_name", nullable = false)
     private String teamName;
 
-    @Column(name = "virtual_coins", nullable = false)
-    private Integer virtualCoins;
+    @Column(name = "virtual_coins")
+    private Double virtualCoins;
 
-    @Column(name = "creation_date", nullable = false)
-    private Date creationDate;
+    @Column(name = "creation_date")
+    private LocalDate creationDate;
 }

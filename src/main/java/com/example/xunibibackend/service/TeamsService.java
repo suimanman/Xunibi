@@ -5,7 +5,7 @@ import com.example.xunibibackend.entity.Team;
 import java.util.List;
 
 public interface TeamsService {
-    Team createTeam(Team team);
+    Integer createTeam(Team team);
 
     List<Team> getAllTeams();
 
