@@ -9,9 +9,9 @@ public interface TeamsService {
 
     List<Team> getAllTeams();
 
-    Team getTeamById(Long id);
+    Team getTeamById(Integer id);
 
-    Team updateTeam(Long id, Team team);
+    Integer updateTeam(Integer id, Team team);
 
-    void deleteTeam(Long id);
+    void deleteTeamById(Integer id);
 }

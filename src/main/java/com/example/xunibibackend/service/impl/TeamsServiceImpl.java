@@ -32,17 +32,17 @@ public class TeamsServiceImpl implements TeamsService {
     }
 
     @Override
-    public Team getTeamById(Long id) {
-        return teamMapper.selectById(id);
+    public Team getTeamById(Integer id) {
+        return teamMapper.selectByTeamId(id);
     }
 
     @Override
-    public Team updateTeam(Long id, Team team) {
-        return null;
+    public Integer updateTeam(Integer id, Team team) {
+        return teamMapper.updateTeam(id,team);
     }
 
     @Override
-    public void deleteTeam(Long id) {
-
+    public void deleteTeamById(Integer id) {
+        teamMapper.deleteTeamById(id);
     }
 }

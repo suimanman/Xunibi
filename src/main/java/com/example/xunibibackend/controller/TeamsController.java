@@ -4,6 +4,7 @@ import com.example.xunibibackend.entity.Team;
 import com.example.xunibibackend.service.TeamsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,22 +38,22 @@ public class TeamsController {
 
     // 根据 ID 获取单个团队
     @GetMapping("/{id}")
-    public ResponseEntity<Team> getTeamById(@PathVariable Long id) {
+    public ResponseEntity<Team> getTeamById(@PathVariable Integer id) {
         Team team = teamsService.getTeamById(id);
         return ResponseEntity.ok(team);
     }
 
     // 更新团队信息
     @PutMapping("/update/{id}")
-    public ResponseEntity<Team> updateTeam(@PathVariable Long id, @RequestBody Team team) {
-        Team updatedTeam = teamsService.updateTeam(id, team);
-        return ResponseEntity.ok(updatedTeam);
+    public ResponseEntity<String> updateTeam(@PathVariable Integer id, @RequestBody Team team) {
+        Integer updatedTeam = teamsService.updateTeam(id, team);
+        return ResponseEntity.ok("更新成功！");
     }
 
     // 删除团队
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteTeam(@PathVariable Long id) {
-        teamsService.deleteTeam(id);
+    public ResponseEntity<Void> deleteTeam(@PathVariable Integer id) {
+        teamsService.deleteTeamById(id);
         return ResponseEntity.noContent().build();
     }
 }
