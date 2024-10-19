@@ -20,4 +20,7 @@ public interface TeamMapper extends BaseMapper<Team> {
 
     @Delete("delete from team where team_id=#{id}")
     void deleteTeamById(Integer id);
+
+    @Update("update team set virtual_coins=#{coinNew} where team_id=#{teamId}")
+    void updateCoinById(Integer teamId, Double coinNew);
 }

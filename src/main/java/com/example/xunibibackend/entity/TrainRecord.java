@@ -15,11 +15,11 @@ public class TrainRecord {
     private Integer id;
 
     @ManyToOne
-    @Column(name = "team_id",nullable = false)
+    @JoinColumn(name = "team_id",nullable = false)
     private Team teamId;
 
     @ManyToOne
-    @Column(name = "user_id",nullable = false)
+    @JoinColumn(name = "user_id",nullable = false)
     private User userId;
 
     private String eventName;

@@ -4,7 +4,7 @@ import com.example.xunibibackend.entity.Achievement;
 
 public interface GainService {
 
-    boolean checkIn(Long id);
+    boolean checkIn(Integer id);
 
     boolean rewardAchievement(Achievement achievement);
 

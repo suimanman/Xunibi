@@ -10,7 +10,7 @@ import java.util.Date;
 public class SignInRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "team_id", nullable = false)

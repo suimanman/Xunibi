@@ -1,34 +1,33 @@
 package com.example.xunibibackend.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Data
+@TableName("achievements")
 public class Achievement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer achievementId;
 
-    @ManyToOne
-    @JoinColumn(name = "team_id", nullable = false)
-    private Team team;
+    @Column(name = "team_id", nullable = false)
+    private Integer teamId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
 
     @Column(name = "achievement_type", nullable = false)
-    private String type;
+    private String achievementType;
 
-    @Column(name = "virtual_coin_awarded", nullable = false)
-    private Float coin_awarded;
+    @Column(name = "coin_awarded", nullable = false)
+    private Double coinAwarded;
 
-    @Column(name = "description")
     private String description;
 
-    @Column(name = "achievement_date", nullable = false)
-    private Date date;
+    @Column(name = "achievement_date")
+    private LocalDate achievementDate;
 }
