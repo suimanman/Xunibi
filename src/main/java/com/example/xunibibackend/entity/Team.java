@@ -19,9 +19,7 @@ public class Team {
     @Column(name = "team_name", nullable = false)
     private String teamName;
 
-    @Column(name = "virtual_coins")
     private Double virtualCoins;
 
-    @Column(name = "creation_date")
     private LocalDate creationDate;
 }
