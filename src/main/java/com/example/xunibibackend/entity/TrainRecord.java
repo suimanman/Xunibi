@@ -12,20 +12,17 @@ import java.time.LocalDate;
 public class TrainRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer trainId;
 
-    @ManyToOne
-    @JoinColumn(name = "team_id",nullable = false)
-    private Team teamId;
+    @Column(name = "team_id",nullable = false)
+    private Integer teamId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id",nullable = false)
-    private User userId;
+    @Column(name = "user_id",nullable = false)
+    private Integer userId;
 
     private String eventName;
     private LocalDate eventDate;
     private String eventType;
-    @Column(name="virtual_coins",nullable = false)
     private Double coins;
     private String description;
 

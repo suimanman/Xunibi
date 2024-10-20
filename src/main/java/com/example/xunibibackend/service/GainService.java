@@ -2,6 +2,7 @@ package com.example.xunibibackend.service;
 
 import com.example.xunibibackend.entity.Achievement;
 import com.example.xunibibackend.entity.DutyRecord;
+import com.example.xunibibackend.entity.TrainRecord;
 
 public interface GainService {
 
@@ -11,5 +12,5 @@ public interface GainService {
 
     boolean rewardDuty(DutyRecord dutyRecord);
 
-    boolean rewardTraining(Integer id);
+    boolean rewardTraining(TrainRecord trainRecord);
 }

@@ -3,10 +3,8 @@ package com.example.xunibibackend.service.impl;
 import com.example.xunibibackend.entity.Achievement;
 import com.example.xunibibackend.entity.DutyRecord;
 import com.example.xunibibackend.entity.Team;
-import com.example.xunibibackend.mapper.AchievementMapper;
-import com.example.xunibibackend.mapper.DutyMapper;
-import com.example.xunibibackend.mapper.GainMapper;
-import com.example.xunibibackend.mapper.TeamMapper;
+import com.example.xunibibackend.entity.TrainRecord;
+import com.example.xunibibackend.mapper.*;
 import com.example.xunibibackend.service.GainService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +26,8 @@ public class GainServiceImpl implements GainService {
     AchievementMapper achievementMapper;
     @Autowired
     DutyMapper dutyMapper;
+    @Autowired
+    TrainMapper trainMapper;
     @Override
     public boolean checkIn(Integer id) {
         return false;
@@ -69,7 +69,32 @@ public class GainServiceImpl implements GainService {
     }
 
     @Override
-    public boolean rewardTraining(Integer id) {
-        return false;
+    public boolean rewardTraining(TrainRecord trainRecord) {
+        // 创建一个map，存储不同eventType对应的虚拟币奖励值
+        Map<String, Double> map = new HashMap<>();
+        map.put("校内培训", 50.0);
+        map.put("会议", 30.0);
+        map.put("校外培训", 70.0);
+
+        Integer teamId = trainRecord.getTeamId();
+        Team team = teamMapper.selectByTeamId(teamId);
+
+        // 获取 trainRecord.getEventType() 对应的虚拟币数量
+        Double trainingCoin = map.get(trainRecord.getEventType());
+
+        // 确保 trainingCoin 不为 null，避免空指针异常
+        if (trainingCoin != null) {
+            Double coinNew = team.getVirtualCoins() + trainingCoin;
+            // 更新团队虚拟币
+            teamMapper.updateCoinById(teamId, coinNew);
+            trainRecord.setCoins(trainingCoin);  // 设置虚拟币值
+        } else {
+            // trainRecord.getEventType() 不在 map 中
+            System.out.println("Event type not found in map.");
+            return false;
+        }
+        // 将trainRecord插入数据库
+        trainMapper.insert(trainRecord);
+        return true;
     }
 }

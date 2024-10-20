@@ -55,8 +55,7 @@ public class GainController {
     // d) 通过参加培训、会议获得虚拟币
     @PostMapping("/reward/training")
     public ResponseEntity<?> rewardTraining(@RequestBody TrainRecord trainRecord) {
-        boolean success = gainService.rewardTraining(trainRecord.
-        getId());
+        boolean success = gainService.rewardTraining(trainRecord);
         if (success) {
             return ResponseEntity.ok("培训或会议虚拟币发放成功");
         } else {
