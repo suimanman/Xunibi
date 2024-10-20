@@ -1,31 +1,30 @@
 package com.example.xunibibackend.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
 @Data
+@TableName("DutyRecords")
 public class DutyRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer dutyId;
 
-    @ManyToOne
-    @JoinColumn(name = "team_id", nullable = false)
-    private Team team;
+    private Integer teamId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private Integer userId;
 
     @Column(name = "duty_date", nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date dutyDate;
+    private LocalDate dutyDate;
 
-    @Column(name = "virtual_coin_awarded",nullable = false)
-    private Float coin_awarded;
+    @Column(name = "coin_awarded",nullable = false)
+    private Double coinAwarded;
 
     @Column(name = "description")
     private String description;

@@ -1,6 +1,7 @@
 package com.example.xunibibackend.service;
 
 import com.example.xunibibackend.entity.Achievement;
+import com.example.xunibibackend.entity.DutyRecord;
 
 public interface GainService {
 
@@ -8,7 +9,7 @@ public interface GainService {
 
     boolean rewardAchievement(Achievement achievement);
 
-    boolean rewardDuty(Long id);
+    boolean rewardDuty(DutyRecord dutyRecord);
 
     boolean rewardTraining(Integer id);
 }

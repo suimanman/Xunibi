@@ -1,8 +1,10 @@
 package com.example.xunibibackend.service.impl;
 
 import com.example.xunibibackend.entity.Achievement;
+import com.example.xunibibackend.entity.DutyRecord;
 import com.example.xunibibackend.entity.Team;
 import com.example.xunibibackend.mapper.AchievementMapper;
+import com.example.xunibibackend.mapper.DutyMapper;
 import com.example.xunibibackend.mapper.GainMapper;
 import com.example.xunibibackend.mapper.TeamMapper;
 import com.example.xunibibackend.service.GainService;
@@ -24,6 +26,8 @@ public class GainServiceImpl implements GainService {
     TeamMapper teamMapper;
     @Autowired
     AchievementMapper achievementMapper;
+    @Autowired
+    DutyMapper dutyMapper;
     @Override
     public boolean checkIn(Integer id) {
         return false;
@@ -48,14 +52,20 @@ public class GainServiceImpl implements GainService {
         }
         achievement.setAchievementDate(LocalDate.now());
         achievement.setCoinAwarded(achievementCoin);
-        log.info("------{}",achievement);
         achievementMapper.insert(achievement);
         return true;
     }
 
     @Override
-    public boolean rewardDuty(Long id) {
-        return false;
+    public boolean rewardDuty(DutyRecord dutyRecord) {
+        Integer teamId=dutyRecord.getTeamId();
+        Team team =teamMapper.selectByTeamId(teamId);
+        Double coinNew=team.getVirtualCoins() + 20.0;
+        teamMapper.updateCoinById(teamId,coinNew);
+        dutyRecord.setDutyDate(LocalDate.now());
+        dutyRecord.setCoinAwarded(20.0);
+        dutyMapper.insert(dutyRecord);
+        return true;
     }
 
     @Override

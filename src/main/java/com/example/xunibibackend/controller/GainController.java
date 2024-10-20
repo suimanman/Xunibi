@@ -44,7 +44,7 @@ public class GainController {
     // c) 通过值班工作获得虚拟币
     @PostMapping("/reward/duty")
     public ResponseEntity<?> rewardDuty(@RequestBody DutyRecord dutyRecord) {
-        boolean success = gainService.rewardDuty(dutyRecord.getId());
+        boolean success = gainService.rewardDuty(dutyRecord);
         if (success) {
             return ResponseEntity.ok("值班虚拟币发放成功");
         } else {
