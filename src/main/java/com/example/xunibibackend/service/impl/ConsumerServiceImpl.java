@@ -47,7 +47,7 @@ public class ConsumerServiceImpl implements ConsumerService {
         Camera camera;
         Area area;
 
-        Double coinConsumptionPerDay=0.0;
+        Double coinConsumptionPerDay;
         Double totalCoinConsumption=0.0;
 
         // 获取团队信息
@@ -120,11 +120,12 @@ public class ConsumerServiceImpl implements ConsumerService {
         rentalRecord.setRentalType(type2);
         rentalRecord.setTeamId(teamId);
         rentalRecord.setCoinSpent(totalCoinConsumption);
+        rentalRecord.setRentalOrPenalty(true);
         rentalRecordMapper.insert(rentalRecord);
 
         // 使用 Redis 设置租用时间计时器
         String redisKey = "rental:" + type1 +","+type2+ "," + teamId;
-        long expireTime = rentalDays * 24 * 60 * 60; // 秒数
+        long expireTime = (long)rentalDays * 24 * 60 * 60; // 秒数
         redisTemplate.opsForValue().set(redisKey, "rented", expireTime, TimeUnit.SECONDS);
 
         return true;
@@ -135,10 +136,22 @@ public class ConsumerServiceImpl implements ConsumerService {
      */
     @Override
     public boolean returnEquipment(ReturnRequest returnRequest) {
-        String redisKey = "rental:" + returnRequest.getType2() + ":" + returnRequest.getTeamId();
-
+        String redisKey = "rental:" + returnRequest.getType1() + "," + returnRequest.getType2() + "," + returnRequest.getTeamId();
+        int type1=returnRequest.getType1();
+        String type2=returnRequest.getType2();
         // 检查 Redis 中是否存在租用记录
         if (redisTemplate.hasKey(redisKey)) {
+            //更新借用设备或工位当前状态为可用
+            if(type1 == 1){
+                workstationMapper.updateRental(1,null,type2);
+            }else if(type1 == 2){
+                equipmentMapper.updateRental(1,null,type2);
+            }else if(type1 == 3){
+                cameraMapper.updateRental(1,null,type2);
+            }else if(type1 == 4){
+                areaMapper.updateRental(1,null,type2);
+            }
+
             // 归还设备，删除 Redis 记录
             redisTemplate.delete(redisKey);
             return true; // 按时归还，无罚款

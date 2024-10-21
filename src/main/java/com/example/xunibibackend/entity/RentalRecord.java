@@ -18,4 +18,6 @@ public class RentalRecord {
     private Double coinSpent;
     private Integer rentalDays;
     private String rentalType;
+    //租用：1 或者 惩罚：0
+    private boolean rentalOrPenalty;
 }

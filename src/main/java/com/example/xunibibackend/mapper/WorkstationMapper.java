@@ -12,5 +12,5 @@ public interface WorkstationMapper extends BaseMapper<Workstation> {
     Workstation selectByType(String type2);
 
     @Update("update workstation set is_available = #{i} ,rented_team_id = #{teamId} where type = #{type}")
-    void updateRental(int i, int teamId,String type);
+    void updateRental(Integer i, Integer teamId,String type);
 }

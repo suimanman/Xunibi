@@ -11,5 +11,5 @@ public interface CameraMapper extends BaseMapper<Camera> {
     @Select("select from camera where type = #{type2}")
     Camera selectByType(String type2);
     @Update("update camera set is_available = #{i} ,rented_team_id = #{teamId} where type = #{type}")
-    void updateRental(int i, int teamId, String type2);
+    void updateRental(Integer i, Integer teamId, String type2);
 }
