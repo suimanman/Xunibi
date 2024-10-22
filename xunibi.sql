@@ -11,7 +11,7 @@
  Target Server Version : 80300 (8.3.0)
  File Encoding         : 65001
 
- Date: 20/10/2024 14:18:43
+ Date: 22/10/2024 19:07:07
 */
 
 SET NAMES utf8mb4;
@@ -66,9 +66,9 @@ CREATE TABLE `Area` (
 -- Records of Area
 -- ----------------------------
 BEGIN;
-INSERT INTO `Area` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`) VALUES (1, 'Conference Room', 0, 1, 200);
-INSERT INTO `Area` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`) VALUES (2, 'Event Space', 1, NULL, 300);
-INSERT INTO `Area` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`) VALUES (3, 'Workshop Area', 0, 3, 150);
+INSERT INTO `Area` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`) VALUES (1, 'Conference Room', 0, 1, 30);
+INSERT INTO `Area` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`) VALUES (2, 'Event Space', 0, 3, 40);
+INSERT INTO `Area` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`) VALUES (3, 'Workshop Area', 0, 3, 50);
 COMMIT;
 
 -- ----------------------------
@@ -135,7 +135,7 @@ CREATE TABLE `DutyRecords` (
   KEY `user_id` (`user_id`),
   CONSTRAINT `dutyrecords_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `Team` (`team_id`),
   CONSTRAINT `dutyrecords_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of DutyRecords
@@ -147,6 +147,12 @@ INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_a
 INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (4, 1, 1, '2024-10-20', 20.00, 'test');
 INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (5, 1, 1, '2024-10-20', 20.00, 'test');
 INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (6, 1, 1, '2024-10-20', 20.00, 'traintest');
+INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (7, 1, 1, '2024-10-22', 20.00, '值班201办公室');
+INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (8, 1, 1, '2024-10-22', 20.00, '值班201办公室');
+INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (9, 1, 1, '2024-10-22', 20.00, '值班201办公室');
+INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (10, 1, 1, '2024-10-22', 20.00, '值班201办公室');
+INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (11, 1, 1, '2024-10-22', 20.00, '值班201办公室');
+INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (12, 1, 1, '2024-10-22', 20.00, '值班201办公室');
 COMMIT;
 
 -- ----------------------------
@@ -181,20 +187,25 @@ CREATE TABLE `RentalRecords` (
   `rental_id` int NOT NULL AUTO_INCREMENT,
   `team_id` int DEFAULT NULL,
   `rental_date` date NOT NULL,
-  `virtual_coin_spent` decimal(10,2) NOT NULL,
-  `rental_duration_days` int NOT NULL,
+  `coin_spent` decimal(10,2) NOT NULL,
+  `rental_days` int NOT NULL,
+  `rental_type` varchar(255) DEFAULT NULL,
+  `rental_or_return` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`rental_id`),
   KEY `team_id` (`team_id`),
   CONSTRAINT `rentalrecords_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `Team` (`team_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of RentalRecords
 -- ----------------------------
 BEGIN;
-INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `virtual_coin_spent`, `rental_duration_days`) VALUES (1, 1, '2023-09-15', 200.00, 30);
-INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `virtual_coin_spent`, `rental_duration_days`) VALUES (2, 2, '2023-09-10', 150.00, 20);
-INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `virtual_coin_spent`, `rental_duration_days`) VALUES (3, 3, '2023-09-05', 100.00, 10);
+INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (1, 1, '2023-09-15', 200.00, 30, NULL, NULL);
+INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (2, 2, '2023-09-10', 150.00, 20, NULL, NULL);
+INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (3, 3, '2023-09-05', 100.00, 10, NULL, NULL);
+INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (4, 1, '2024-10-21', 50.00, 1, 'Shared Desk', 0);
+INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (5, 1, '2024-10-21', 50.00, 1, 'Shared Desk', 0);
+INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (6, 3, '2024-10-22', 80.00, 2, 'Event Space', 1);
 COMMIT;
 
 -- ----------------------------
@@ -240,9 +251,9 @@ CREATE TABLE `Team` (
 -- Records of Team
 -- ----------------------------
 BEGIN;
-INSERT INTO `Team` (`team_id`, `team_name`, `creation_date`, `virtual_coins`) VALUES (1, 'hhh', '2023-01-10', 1270.00);
-INSERT INTO `Team` (`team_id`, `team_name`, `creation_date`, `virtual_coins`) VALUES (2, 'Tech Pioneers', '2023-03-15', 500.00);
-INSERT INTO `Team` (`team_id`, `team_name`, `creation_date`, `virtual_coins`) VALUES (3, 'Creative Minds', '2023-05-20', 750.00);
+INSERT INTO `Team` (`team_id`, `team_name`, `creation_date`, `virtual_coins`) VALUES (1, 'hhh', '2023-01-10', 1240.00);
+INSERT INTO `Team` (`team_id`, `team_name`, `creation_date`, `virtual_coins`) VALUES (2, 'Tech Pioneers', '2023-03-15', 400.00);
+INSERT INTO `Team` (`team_id`, `team_name`, `creation_date`, `virtual_coins`) VALUES (3, 'Creative Minds', '2023-05-20', 670.00);
 COMMIT;
 
 -- ----------------------------
@@ -312,20 +323,26 @@ CREATE TABLE `VirtualCoinTransactions` (
   `team_id` int DEFAULT NULL,
   `transaction_date` date NOT NULL,
   `transaction_type` varchar(50) NOT NULL,
-  `virtual_coin_amount` decimal(10,2) NOT NULL,
+  `coin_amount` decimal(10,2) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`transaction_id`),
   KEY `team_id` (`team_id`),
   CONSTRAINT `virtualcointransactions_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `Team` (`team_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of VirtualCoinTransactions
 -- ----------------------------
 BEGIN;
-INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `virtual_coin_amount`, `description`) VALUES (1, 1, '2023-10-01', 'gain', 10.00, 'Daily sign-in reward');
-INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `virtual_coin_amount`, `description`) VALUES (2, 2, '2023-10-01', 'spend', 50.00, 'Laser Cutter usage');
-INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `virtual_coin_amount`, `description`) VALUES (3, 3, '2023-10-01', 'gain', 20.00, 'Duty work reward');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (1, 1, '2023-10-01', 'gain', 10.00, 'Daily sign-in reward');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (2, 2, '2023-10-01', 'spend', 50.00, 'Laser Cutter usage');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (3, 3, '2023-10-01', 'gain', 20.00, 'Duty work reward');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (4, NULL, '2024-10-22', '获取虚拟币', 20.00, '值班201办公室');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (5, NULL, '2024-10-22', '获取虚拟币', 20.00, '值班201办公室');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (6, NULL, '2024-10-22', '获取虚拟币', 20.00, '值班201办公室');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (7, NULL, '2024-10-22', '获取虚拟币', 20.00, '值班201办公室');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (8, 1, '2024-10-22', '获取虚拟币', 20.00, '值班201办公室');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (9, 3, '2024-10-22', '消耗虚拟币', 80.00, '租用Event Space');
 COMMIT;
 
 -- ----------------------------
@@ -341,14 +358,14 @@ CREATE TABLE `Workstation` (
   PRIMARY KEY (`id`),
   KEY `fk_team` (`rented_team_id`),
   CONSTRAINT `fk_team` FOREIGN KEY (`rented_team_id`) REFERENCES `Team` (`team_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of Workstation
 -- ----------------------------
 BEGIN;
 INSERT INTO `Workstation` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`) VALUES (1, 'Private Office', 0, 1, 100);
-INSERT INTO `Workstation` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`) VALUES (2, 'Shared Desk', 1, NULL, 50);
+INSERT INTO `Workstation` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`) VALUES (2, 'Shared Desk', 1, 1, 50);
 INSERT INTO `Workstation` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`) VALUES (3, 'Dedicated Desk', 0, 2, 75);
 COMMIT;
 
