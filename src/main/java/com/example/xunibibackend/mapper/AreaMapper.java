@@ -8,8 +8,8 @@ import org.apache.ibatis.annotations.Update;
 
 @Mapper
 public interface AreaMapper extends BaseMapper<Area> {
-    @Select("select from area where type = #{type2}")
+    @Select("select * from area where type = #{type2}")
     Area selectByType(String type2);
-    @Update("update area set is_available = #{i} ,rented_team_id = #{teamId} where type = #{type}")
+    @Update("update area set is_available = #{i} ,rented_team_id = #{teamId} where type = #{type2}")
     void updateRental(Integer i, Integer teamId, String type2);
 }

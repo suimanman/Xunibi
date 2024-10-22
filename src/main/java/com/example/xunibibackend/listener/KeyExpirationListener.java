@@ -26,6 +26,8 @@ public class KeyExpirationListener implements MessageListener {
 
     @Autowired
     RentalRecordMapper rentalRecordMapper;
+    @Autowired
+    CoinTransactionMapper coinTransactionMapper;
     @Override
     public void onMessage(Message message, byte[] pattern) {
         String expiredKey = message.toString();
@@ -43,6 +45,13 @@ public class KeyExpirationListener implements MessageListener {
     }
 
     private void handlePenalty(Integer type1,String type2, int teamId) {
+
+        //虚拟币交易记录
+        VirtualCoinTransaction coinTransaction=new VirtualCoinTransaction();
+        coinTransaction.setTransactionDate(LocalDate.now());
+        coinTransaction.setTransactionType("消耗虚拟币");
+        coinTransaction.setTeamId(teamId);
+
         Double penaltyCoins=0.0;
         if(type1 == 1){
             Workstation workstation = workstationMapper.selectByType(type2);
@@ -52,6 +61,9 @@ public class KeyExpirationListener implements MessageListener {
             penaltyCoins = workstation.getCoinConsumption() * 2;
             team.setVirtualCoins(team.getVirtualCoins() - penaltyCoins);
             teamMapper.updateCoinById(teamId, team.getVirtualCoins());
+            //虚拟币交易记录
+            coinTransaction.setCoinAmount(penaltyCoins);
+            coinTransaction.setDescription("租用"+type2+"超时未归还双倍消耗虚拟币");
 
             System.out.println("Penalty applied: " + penaltyCoins + " coins for team: " + teamId);
         }else if(type1 == 2){
@@ -62,6 +74,9 @@ public class KeyExpirationListener implements MessageListener {
             penaltyCoins = equipment.getCoinConsumption() * 2;
             team.setVirtualCoins(team.getVirtualCoins() - penaltyCoins);
             teamMapper.updateCoinById(teamId, team.getVirtualCoins());
+            //虚拟币交易记录
+            coinTransaction.setCoinAmount(penaltyCoins);
+            coinTransaction.setDescription("租用"+type2+"超时未归还双倍消耗虚拟币");
 
             System.out.println("Penalty applied: " + penaltyCoins + " coins for team: " + teamId);
         }else if(type1 == 3){
@@ -72,6 +87,9 @@ public class KeyExpirationListener implements MessageListener {
             penaltyCoins = camera.getCoinConsumption() * 2;
             team.setVirtualCoins(team.getVirtualCoins() - penaltyCoins);
             teamMapper.updateCoinById(teamId, team.getVirtualCoins());
+            //虚拟币交易记录
+            coinTransaction.setCoinAmount(penaltyCoins);
+            coinTransaction.setDescription("租用"+type2+"超时未归还双倍消耗虚拟币");
 
             System.out.println("Penalty applied: " + penaltyCoins + " coins for team: " + teamId);
         }else if(type1 == 4){
@@ -82,6 +100,9 @@ public class KeyExpirationListener implements MessageListener {
             penaltyCoins = area.getCoinConsumption() * 2;
             team.setVirtualCoins(team.getVirtualCoins() - penaltyCoins);
             teamMapper.updateCoinById(teamId, team.getVirtualCoins());
+            //虚拟币交易记录
+            coinTransaction.setCoinAmount(penaltyCoins);
+            coinTransaction.setDescription("租用"+type2+"超时未归还双倍消耗虚拟币");
 
             System.out.println("Penalty applied: " + penaltyCoins + " coins for team: " + teamId);
         }
@@ -91,7 +112,10 @@ public class KeyExpirationListener implements MessageListener {
         rentalRecord.setRentalType(type2);
         rentalRecord.setTeamId(teamId);
         rentalRecord.setCoinSpent(penaltyCoins);
-        rentalRecord.setRentalOrPenalty(false);
+        rentalRecord.setRentalOrReturn(false);
         rentalRecordMapper.insert(rentalRecord);
+
+        //将虚拟币交易记录添加到表中
+        coinTransactionMapper.insert(coinTransaction);
     }
 }

@@ -30,6 +30,9 @@ public class ConsumerServiceImpl implements ConsumerService {
     CameraMapper cameraMapper;
 
     @Autowired
+    CoinTransactionMapper coinTransactionMapper;
+
+    @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
     /**
@@ -37,6 +40,11 @@ public class ConsumerServiceImpl implements ConsumerService {
      */
     @Override
     public boolean rentEquipment(RentalRequest rentalRequest) {
+        //虚拟币交易记录
+        VirtualCoinTransaction coinTransaction=new VirtualCoinTransaction();
+        coinTransaction.setTransactionDate(LocalDate.now());
+        coinTransaction.setTransactionType("消耗虚拟币");
+
         int rentalDays = rentalRequest.getRentalDays();
         Integer type1 = rentalRequest.getType1();
         String type2 = rentalRequest.getType2();
@@ -52,7 +60,8 @@ public class ConsumerServiceImpl implements ConsumerService {
 
         // 获取团队信息
         Team team = teamMapper.selectByTeamId(teamId);
-
+        //虚拟币交易记录
+        coinTransaction.setTeamId(teamId);
         if(type1 == 1){
             // 获取工位信息
             workstation = workstationMapper.selectByType(type2);
@@ -62,6 +71,10 @@ public class ConsumerServiceImpl implements ConsumerService {
             // 计算虚拟币消耗
             coinConsumptionPerDay = workstation.getCoinConsumption();
             totalCoinConsumption = rentalDays * coinConsumptionPerDay;
+
+            //虚拟币交易记录消耗
+            coinTransaction.setCoinAmount(totalCoinConsumption);
+            coinTransaction.setDescription("租用工位");
             // 检查团队的虚拟币余额是否足够
             if (team.getVirtualCoins() < totalCoinConsumption) {
                 return false; // 虚拟币不足
@@ -76,6 +89,11 @@ public class ConsumerServiceImpl implements ConsumerService {
             // 计算虚拟币消耗
             coinConsumptionPerDay = equipment.getCoinConsumption();
             totalCoinConsumption = rentalDays * coinConsumptionPerDay;
+
+            //虚拟币交易记录消耗
+            coinTransaction.setCoinAmount(totalCoinConsumption);
+            coinTransaction.setDescription("租用"+type2);
+
             if (team.getVirtualCoins() < totalCoinConsumption) {
                 return false; // 虚拟币不足
             }
@@ -89,6 +107,11 @@ public class ConsumerServiceImpl implements ConsumerService {
             // 计算虚拟币消耗
             coinConsumptionPerDay = camera.getCoinConsumption();
             totalCoinConsumption = rentalDays * coinConsumptionPerDay;
+
+            //虚拟币交易记录消耗
+            coinTransaction.setCoinAmount(totalCoinConsumption);
+            coinTransaction.setDescription("租用"+type2);
+
             if (team.getVirtualCoins() < totalCoinConsumption) {
                 return false; // 虚拟币不足
             }
@@ -103,6 +126,11 @@ public class ConsumerServiceImpl implements ConsumerService {
             // 计算虚拟币消耗
             coinConsumptionPerDay = area.getCoinConsumption();
             totalCoinConsumption = rentalDays * coinConsumptionPerDay;
+
+            //虚拟币交易记录消耗
+            coinTransaction.setCoinAmount(totalCoinConsumption);
+            coinTransaction.setDescription("租用"+type2);
+
             if (team.getVirtualCoins() < totalCoinConsumption) {
                 return false; // 虚拟币不足
             }
@@ -112,7 +140,7 @@ public class ConsumerServiceImpl implements ConsumerService {
         // 扣除虚拟币
         team.setVirtualCoins(team.getVirtualCoins() - totalCoinConsumption);
         teamMapper.updateCoinById(teamId, team.getVirtualCoins());
-
+        log.info("----------------");
         //将租用记录添加到租用记录表中
         RentalRecord rentalRecord=new RentalRecord();
         rentalRecord.setRentalDate(LocalDate.now());
@@ -120,8 +148,11 @@ public class ConsumerServiceImpl implements ConsumerService {
         rentalRecord.setRentalType(type2);
         rentalRecord.setTeamId(teamId);
         rentalRecord.setCoinSpent(totalCoinConsumption);
-        rentalRecord.setRentalOrPenalty(true);
+        rentalRecord.setRentalOrReturn(true);
         rentalRecordMapper.insert(rentalRecord);
+        log.info("----------------");
+        //将虚拟币交易记录添加到表中
+        coinTransactionMapper.insert(coinTransaction);
 
         // 使用 Redis 设置租用时间计时器
         String redisKey = "rental:" + type1 +","+type2+ "," + teamId;

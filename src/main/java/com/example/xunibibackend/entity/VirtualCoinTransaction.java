@@ -1,31 +1,27 @@
 package com.example.xunibibackend.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
 @Data
+@TableName("VirtualCoinTransactions")
 public class VirtualCoinTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long transactionId;
 
-    @ManyToOne
-    @JoinColumn(name = "team_id", nullable = false)
-    private Team team;
+    private Integer teamId;
 
-    @Column(name = "transaction_type", nullable = false)
     private String transactionType;
 
-    @Column(name = "virtual_coin_amount", nullable = false)
-    private Float amount;
+    private Double coinAmount;
 
-    @Column(name = "transaction_date", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date transactionDate;
+    private LocalDate transactionDate;
 
-    @Column(name = "description")
     private String description;
 }

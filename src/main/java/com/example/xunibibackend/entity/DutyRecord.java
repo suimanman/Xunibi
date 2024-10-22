@@ -19,13 +19,9 @@ public class DutyRecord {
 
     private Integer userId;
 
-    @Column(name = "duty_date", nullable = false)
-    @Temporal(TemporalType.DATE)
     private LocalDate dutyDate;
 
-    @Column(name = "coin_awarded",nullable = false)
     private Double coinAwarded;
 
-    @Column(name = "description")
     private String description;
 }
