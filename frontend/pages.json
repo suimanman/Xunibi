@@ -3,7 +3,7 @@
 		{
 			"path": "pages/home/home",
 			"style": {
-				"navigationBarTitleText": "首页"
+				"navigationBarTitleText": "主页"
 			}
 		},
 		{
@@ -16,7 +16,7 @@
 			"path" : "pages/rental/rental",
 			"style" : 
 			{
-				"navigationBarTitleText" : "资源"
+				"navigationBarTitleText" : "资源租用"
 			}
 		},
 		{
@@ -43,7 +43,7 @@
 	    "list": [
 	      {
 	        "pagePath": "pages/home/home",
-	        "text": "首页",
+	        "text": "主页",
 	        "iconPath": "static/image/home.png",
 	        "selectedIconPath": "static/image/home_selected.png"
 	      },

@@ -254,4 +254,8 @@
   -webkit-appearance: none;
   background: transparent;
 }
+page {
+  background-color: #f3f3f3;
+  /* 你想要的背景颜色 */
+}
 

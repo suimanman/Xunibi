@@ -22,7 +22,7 @@
     "list": [
       {
         "pagePath": "pages/home/home",
-        "text": "首页",
+        "text": "主页",
         "iconPath": "static/image/home.png",
         "selectedIconPath": "static/image/home_selected.png"
       },

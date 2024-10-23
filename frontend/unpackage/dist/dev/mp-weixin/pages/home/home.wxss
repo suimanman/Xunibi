@@ -1,14 +1,33 @@
 
-.dashboard.data-v-92bb8f34 {
-  padding: 20px;
+.home-page.data-v-92bb8f34 {
+  padding: 10px;
 }
-.coin-balance.data-v-92bb8f34 {
-  margin-bottom: 20px;
+.welcome-section.data-v-92bb8f34 {
+  background-color: white; /* 背景色 */
+  border-radius: 15px; /* 通过 border-radius 实现椭圆效果 */
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  padding: 20px 0;
 }
-.usage-chart.data-v-92bb8f34 {
-  margin-bottom: 20px;
+.info.data-v-92bb8f34{
+	font-size: 15px;
+	margin-left: 10px;
+	padding: 10px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
-.rental-history.data-v-92bb8f34 {
-  margin-bottom: 20px;
+.quick-actions.data-v-92bb8f34 {
+  margin-top: 20px;
+}
+.activity-list.data-v-92bb8f34 {
+  margin-top: 20px;
+}
+.u-list-item.data-v-92bb8f34{
+	background-color: white; /* 背景色 */
+	border-radius: 15px; /* 通过 border-radius 实现椭圆效果 */
 }
 

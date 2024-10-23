@@ -1,11 +1,6 @@
 {
-  "navigationBarTitleText": "资源",
+  "navigationBarTitleText": "资源租用",
   "usingComponents": {
-    "u-navbar": "/uni_modules/uview-ui/components/u-navbar/u-navbar",
-    "u-row": "/uni_modules/uview-ui/components/u-row/u-row",
-    "u-col": "/uni_modules/uview-ui/components/u-col/u-col",
-    "u-avatar": "/uni_modules/uview-ui/components/u-avatar/u-avatar",
-    "u-cell": "/uni_modules/uview-ui/components/u-cell/u-cell",
-    "u-button": "/uni_modules/uview-ui/components/u-button/u-button"
+    "u-tabs": "/uni_modules/uview-ui/components/u-tabs/u-tabs"
   }
 }
