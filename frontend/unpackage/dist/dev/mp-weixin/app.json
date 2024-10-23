@@ -1,27 +1,48 @@
 {
   "pages": [
-    "pages/index/index",
-    "pages/devices/devices",
-    "pages/rules/rules"
+    "pages/home/home",
+    "pages/gain/gain",
+    "pages/rental/rental",
+    "pages/me/me"
   ],
   "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8",
+    "navigationStyle": "default"
+  },
   "tabBar": {
     "color": "#7A7E83",
     "selectedColor": "#3cc51f",
     "borderStyle": "black",
     "backgroundColor": "#ffffff",
+    "position": "bottom",
     "list": [
       {
-        "pagePath": "pages/index/index",
-        "text": "首页"
+        "pagePath": "pages/home/home",
+        "text": "首页",
+        "iconPath": "static/image/home.png",
+        "selectedIconPath": "static/image/home_selected.png"
       },
       {
-        "pagePath": "pages/devices/devices",
-        "text": "设备"
+        "pagePath": "pages/gain/gain",
+        "text": "奖励",
+        "iconPath": "static/image/gain.png",
+        "selectedIconPath": "static/image/gain_selected.png"
       },
       {
-        "pagePath": "pages/rules/rules",
-        "text": "规则"
+        "pagePath": "pages/rental/rental",
+        "text": "资源",
+        "iconPath": "static/image/devices.png",
+        "selectedIconPath": "static/image/devices_selected.png"
+      },
+      {
+        "pagePath": "pages/me/me",
+        "text": "我",
+        "iconPath": "static/image/me.png",
+        "selectedIconPath": "static/image/me_selected.png"
       }
     ]
   },

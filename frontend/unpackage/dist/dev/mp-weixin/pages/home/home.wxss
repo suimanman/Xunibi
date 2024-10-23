@@ -1,0 +1,14 @@
+
+.dashboard.data-v-92bb8f34 {
+  padding: 20px;
+}
+.coin-balance.data-v-92bb8f34 {
+  margin-bottom: 20px;
+}
+.usage-chart.data-v-92bb8f34 {
+  margin-bottom: 20px;
+}
+.rental-history.data-v-92bb8f34 {
+  margin-bottom: 20px;
+}
+

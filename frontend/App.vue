@@ -1,8 +1,9 @@
 <template>
   <u-tabbar :active.sync="active">
     <u-tabbar-item icon="home" title="首页" @click="switchPage('/pages/home/home')"></u-tabbar-item>
-    <u-tabbar-item icon="list" title="设备" @click="switchPage('/pages/devices/devices')"></u-tabbar-item>
-    <u-tabbar-item icon="person" title="我的" @click="switchPage('/pages/profile/profile')"></u-tabbar-item>
+	<u-tabbar-item icon="gain" title="奖励" @click="switchPage('/pages/gain/gain')"></u-tabbar-item>
+    <u-tabbar-item icon="list" title="资源" @click="switchPage('/pages/rental/rental')"></u-tabbar-item>
+    <u-tabbar-item icon="person" title="我" @click="switchPage('/pages/me/me')"></u-tabbar-item>
   </u-tabbar>
 </template>
 

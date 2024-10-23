@@ -1,49 +1,69 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path": "pages/index/index",
+			"path": "pages/home/home",
 			"style": {
 				"navigationBarTitleText": "首页"
 			}
 		},
 		{
-			"path" : "pages/devices/devices",
-			"style" : 
-			{
-				"navigationBarTitleText" : "设备"
+			"path": "pages/gain/gain",
+			"style": {
+				"navigationBarTitleText": "奖励"
 			}
 		},
 		{
-			"path" : "pages/rules/rules",
+			"path" : "pages/rental/rental",
 			"style" : 
 			{
-				"navigationBarTitleText" : "规则"
+				"navigationBarTitleText" : "资源"
+			}
+		},
+		{
+			"path" : "pages/me/me",
+			"style" : 
+			{
+				"navigationBarTitleText" : "个人中心"
 			}
 		}
 	],
+	"globalStyle": {
+			"navigationBarTextStyle": "black",
+			"navigationBarTitleText": "uni-app",
+			"navigationBarBackgroundColor": "#F8F8F8",
+			"backgroundColor": "#F8F8F8",
+			"navigationStyle": "default"
+		},
 	"tabBar": {
 	    "color": "#7A7E83",
-	    "selectedColor": "#3cc51f",
-	    "borderStyle": "black",
-	    "backgroundColor": "#ffffff",
+	    		"selectedColor": "#3cc51f",
+	    		"borderStyle": "black",
+	    		"backgroundColor": "#ffffff",
+	    		"position": "bottom",
 	    "list": [
 	      {
-	        "pagePath": "pages/index/index",
-	        "text": "首页"
-	        // "iconPath": "static/home.png"
-	        // "selectedIconPath": "static/home-selected.png"
+	        "pagePath": "pages/home/home",
+	        "text": "首页",
+	        "iconPath": "static/image/home.png",
+	        "selectedIconPath": "static/image/home_selected.png"
+	      },
+		  {
+		    "pagePath": "pages/gain/gain",
+		    "text": "奖励",
+		    "iconPath": "static/image/gain.png",
+		    "selectedIconPath": "static/image/gain_selected.png"
+		  },
+	      {
+	        "pagePath": "pages/rental/rental",
+	        "text": "资源",
+	        "iconPath": "static/image/devices.png",
+	        "selectedIconPath": "static/image/devices_selected.png"
 	      },
 	      {
-	        "pagePath": "pages/devices/devices",
-	        "text": "设备"
-	        // "iconPath": "static/devices.png"
-	        // "selectedIconPath": "static/devices-selected.png"
-	      },
-	      {
-	        "pagePath": "pages/rules/rules",
-	        "text": "规则"
-	        // "iconPath": "static/rules.png"
-	        // "selectedIconPath": "static/rules-selected.png"
+	        "pagePath": "pages/me/me",
+	        "text": "我",
+	        "iconPath": "static/image/me.png",
+	        "selectedIconPath": "static/image/me_selected.png"
 	      }
 	    ]
 	  }
