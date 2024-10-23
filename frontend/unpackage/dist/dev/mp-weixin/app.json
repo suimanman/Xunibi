@@ -1,12 +1,29 @@
 {
   "pages": [
-    "pages/index/index"
+    "pages/index/index",
+    "pages/devices/devices",
+    "pages/rules/rules"
   ],
-  "window": {
-    "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "uni-app",
-    "navigationBarBackgroundColor": "#F8F8F8",
-    "backgroundColor": "#F8F8F8"
+  "subPackages": [],
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#3cc51f",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/devices/devices",
+        "text": "设备"
+      },
+      {
+        "pagePath": "pages/rules/rules",
+        "text": "规则"
+      }
+    ]
   },
   "usingComponents": {}
 }

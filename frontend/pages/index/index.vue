@@ -1,52 +1,54 @@
 <template>
-	<view class="content">
-		<image class="logo" src="/static/logo.png"></image>
-		<view class="text-area">
-			<text class="title">{{title}}</text>
-		</view>
-	</view>
+  <view class="dashboard">
+    <!-- 虚拟币余额展示 -->
+    <u-card class="coin-balance">
+      <u-cell title="虚拟币余额" :value="userCoinBalance" />
+    </u-card>
+    
+    <!-- 设备使用统计图表 -->
+    <u-card class="usage-chart">
+      <u-chart type="pie" :chartData="equipmentUsageData" />
+    </u-card>
+    
+    <!-- 近期租用记录 -->
+    <u-card class="rental-history">
+      <u-cell-group>
+        <u-cell v-for="(record, index) in recentRentals" :key="index" :title="record.deviceName" :value="record.rentalTime + ' 天'" />
+      </u-cell-group>
+    </u-card>
+  </view>
 </template>
 
 <script>
-	export default {
-		data() {
-			return {
-				title: 'Hello'
-			}
-		},
-		onLoad() {
-
-		},
-		methods: {
-
-		}
-	}
+export default {
+  data() {
+    return {
+      userCoinBalance: 1200,
+      recentRentals: [
+        { deviceName: '3D打印机', rentalTime: 5 },
+        { deviceName: '激光切割机', rentalTime: 3 },
+        // 添加更多记录
+      ],
+      equipmentUsageData: {
+        categories: ['3D打印机', '激光切割机', '单反相机'],
+        series: [{ name: '设备使用', data: [40, 30, 20] }],
+      },
+    };
+  },
+};
 </script>
 
-<style>
-	.content {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.logo {
-		height: 200rpx;
-		width: 200rpx;
-		margin-top: 200rpx;
-		margin-left: auto;
-		margin-right: auto;
-		margin-bottom: 50rpx;
-	}
-
-	.text-area {
-		display: flex;
-		justify-content: center;
-	}
-
-	.title {
-		font-size: 36rpx;
-		color: #8f8f94;
-	}
+<style scoped>
+.dashboard {
+  padding: 20px;
+}
+.coin-balance {
+  margin-bottom: 20px;
+}
+.usage-chart {
+  margin-bottom: 20px;
+}
+.rental-history {
+  margin-bottom: 20px;
+}
 </style>

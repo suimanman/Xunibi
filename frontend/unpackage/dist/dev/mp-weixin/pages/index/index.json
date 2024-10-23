@@ -1,4 +1,7 @@
 {
-  "navigationBarTitleText": "uni-app",
-  "usingComponents": {}
+  "navigationBarTitleText": "首页",
+  "usingComponents": {
+    "u-cell": "/uni_modules/uview-ui/components/u-cell/u-cell",
+    "u-cell-group": "/uni_modules/uview-ui/components/u-cell-group/u-cell-group"
+  }
 }

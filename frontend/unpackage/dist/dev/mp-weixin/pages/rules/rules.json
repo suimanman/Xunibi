@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "规则",
+  "usingComponents": {
+    "u-list": "/uni_modules/uview-ui/components/u-list/u-list",
+    "u-list-item": "/uni_modules/uview-ui/components/u-list-item/u-list-item"
+  }
+}

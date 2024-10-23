@@ -3,15 +3,48 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "uni-app"
+				"navigationBarTitleText": "首页"
+			}
+		},
+		{
+			"path" : "pages/devices/devices",
+			"style" : 
+			{
+				"navigationBarTitleText" : "设备"
+			}
+		},
+		{
+			"path" : "pages/rules/rules",
+			"style" : 
+			{
+				"navigationBarTitleText" : "规则"
 			}
 		}
 	],
-	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
-	},
-	"uniIdRouter": {}
+	"tabBar": {
+	    "color": "#7A7E83",
+	    "selectedColor": "#3cc51f",
+	    "borderStyle": "black",
+	    "backgroundColor": "#ffffff",
+	    "list": [
+	      {
+	        "pagePath": "pages/index/index",
+	        "text": "首页"
+	        // "iconPath": "static/home.png"
+	        // "selectedIconPath": "static/home-selected.png"
+	      },
+	      {
+	        "pagePath": "pages/devices/devices",
+	        "text": "设备"
+	        // "iconPath": "static/devices.png"
+	        // "selectedIconPath": "static/devices-selected.png"
+	      },
+	      {
+	        "pagePath": "pages/rules/rules",
+	        "text": "规则"
+	        // "iconPath": "static/rules.png"
+	        // "selectedIconPath": "static/rules-selected.png"
+	      }
+	    ]
+	  }
 }
