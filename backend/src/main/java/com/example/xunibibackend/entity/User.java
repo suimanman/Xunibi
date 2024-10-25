@@ -1,12 +1,15 @@
 package com.example.xunibibackend.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
 @Data
+@TableName("user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,10 +23,8 @@ public class User {
 
     private String role;
 
-    @ManyToOne
-    @JoinColumn(name = "team_id", nullable = false)
-    private Team team_id;
+    private Integer teamId;
 
     @Column(name = "registration_date", nullable = false)
-    private Date date;
+    private LocalDate date;
 }

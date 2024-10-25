@@ -1,21 +1,21 @@
 package com.example.xunibibackend.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.example.xunibibackend.entity.Team;
 import com.example.xunibibackend.entity.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
+    @Select("select * from user where username=#{username}")
+    User getByUsername(String username);
+
     @Select("select * from user where user_id=#{id}")
     User getByUserId(Integer id);
 
-    @Insert("insert into user values (#{username},#{password})")
-    User addUser(String username,String password);
+    @Insert("insert into user(username,password,role,registration_date) " +
+            "values (#{user.username},#{user.password},#{user.role},#{user.date})")
+    Integer addUser(@Param("user") User user);
 
-    @Update("update user set password = #{password} where user_id=#{userId}")
-    User updateUser(String password,Integer userId);
+    @Update("update user set password = #{user.password} where user_id=#{user.userId}")
+    User update(@Param("user") User user);
 }
