@@ -2,6 +2,7 @@ package com.example.xunibibackend.controller;
 
 import com.example.xunibibackend.entity.dto.RentalRequest;
 import com.example.xunibibackend.entity.dto.ReturnRequest;
+import com.example.xunibibackend.response.XunibiResult;
 import com.example.xunibibackend.service.ConsumerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,22 +21,22 @@ public class ConsumerController {
     private ConsumerService consumerService;
 
     @PostMapping("/rent")
-    public ResponseEntity<String> rentEquipment(@RequestBody RentalRequest rentalRequest) {
+    public XunibiResult rentEquipment(@RequestBody RentalRequest rentalRequest) {
         boolean success = consumerService.rentEquipment(rentalRequest);
         if (success) {
-            return ResponseEntity.ok("Equipment rented successfully.");
+            return XunibiResult.success("租用成功！");
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to rent equipment.");
+            return XunibiResult.error("租用失败！");
         }
     }
 
     @PostMapping("/return")
-    public ResponseEntity<String> returnEquipment(@RequestBody ReturnRequest returnRequest) {
+    public XunibiResult returnEquipment(@RequestBody ReturnRequest returnRequest) {
         boolean success = consumerService.returnEquipment(returnRequest);
         if (success) {
-            return ResponseEntity.ok("Equipment returned successfully.");
+            return XunibiResult.success("归还成功！");
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to return equipment.");
+            return XunibiResult.error("归还失败！");
         }
     }
 }

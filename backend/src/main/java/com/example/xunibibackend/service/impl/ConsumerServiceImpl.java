@@ -8,12 +8,13 @@ import com.example.xunibibackend.service.ConsumerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.concurrent.TimeUnit;
 @Slf4j
-@Service
+@Component
 public class ConsumerServiceImpl implements ConsumerService {
     @Autowired
     private TeamMapper teamMapper;

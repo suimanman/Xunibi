@@ -1,9 +1,10 @@
 package com.example.xunibibackend.service;
 
 import com.example.xunibibackend.entity.Team;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public interface TeamsService {
     Integer createTeam(Team team);
 
