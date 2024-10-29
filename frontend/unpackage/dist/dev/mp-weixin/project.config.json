@@ -19,7 +19,7 @@
     }
   },
   "compileType": "miniprogram",
-  "libVersion": "3.6.1",
+  "libVersion": "3.6.3",
   "projectname": "frontend",
   "condition": {},
   "editorSetting": {

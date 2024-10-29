@@ -1,6 +1,7 @@
 package com.example.xunibibackend.service.impl;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
+import com.example.xunibibackend.constants.HttpStatus;
 import com.example.xunibibackend.controller.UserController;
 import com.example.xunibibackend.entity.User;
 import com.example.xunibibackend.mapper.TeamMapper;
@@ -24,9 +25,9 @@ public class UserServiceImpl implements UserService {
     TeamMapper teamMapper;
     @Override
     public MyResult register(User user) {
-        User getUser=userMapper.getByUsername(user.getUsername());
+        User getUser=userMapper.getByUserId(user.getUserId());
         if(getUser != null){
-            return MyResult.error("用户名已经存在");
+            return MyResult.error("用户已经存在");
         }
         user.setPassword(DigestUtil.md5Hex(user.getPassword()));
         user.setDate(LocalDate.now());
@@ -38,10 +39,10 @@ public class UserServiceImpl implements UserService {
     public MyResult login(User user) {
         User getUser=userMapper.getByUsername(user.getUsername());
         if(getUser==null){
-            return MyResult.error("用户名不存在！");
+            return MyResult.error(HttpStatus.BAD_REQUEST,"用户名不存在！");
         }
         if(!getUser.getPassword().equals(DigestUtil.md5Hex(user.getPassword()))){
-            return MyResult.error("用户名密码错误！");
+            return MyResult.error(HttpStatus.WRONG_PARAM,"用户名密码错误！");
         }
         return MyResult.success("登录成功！",getUser);
     }

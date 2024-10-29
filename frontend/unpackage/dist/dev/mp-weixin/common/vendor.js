@@ -19235,23 +19235,1209 @@ exports.default = _default;
 /* 164 */,
 /* 165 */,
 /* 166 */,
-/* 167 */,
-/* 168 */,
-/* 169 */,
-/* 170 */,
-/* 171 */,
-/* 172 */,
-/* 173 */,
-/* 174 */,
-/* 175 */,
-/* 176 */,
-/* 177 */,
-/* 178 */,
-/* 179 */,
-/* 180 */,
-/* 181 */,
-/* 182 */,
-/* 183 */,
+/* 167 */
+/*!*******************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/utils/auth.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getToken = getToken;
+exports.getUserId = getUserId;
+exports.isLogin = isLogin;
+exports.removeToken = removeToken;
+exports.setToken = setToken;
+exports.setUserId = setUserId;
+var TokenKey = 'App-Token';
+function getToken() {
+  return uni.getStorageSync(TokenKey);
+}
+function setToken(token) {
+  return uni.setStorageSync(TokenKey, token);
+}
+function removeToken() {
+  return uni.removeStorageSync(TokenKey);
+}
+function setUserId(userId) {
+  return uni.setStorageSync("userId", userId);
+}
+function getUserId() {
+  return uni.getStorageSync("userId");
+}
+function isLogin() {
+  if (getToken() == "" || getToken() == "no_account") {
+    return false;
+  } else {
+    return true;
+  }
+}
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+/* 168 */
+/*!***************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/api/me.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.login = login;
+exports.logout = logout;
+exports.register = register;
+var _request = _interopRequireDefault(__webpack_require__(/*! @/utils/request */ 169));
+// 登录方法
+function login(userInfo) {
+  return (0, _request.default)({
+    url: '/user/login',
+    header: {
+      isToken: false
+    },
+    method: 'post',
+    data: userInfo
+  });
+}
+
+// 注册方法
+function register(data) {
+  return (0, _request.default)({
+    url: '/user/register',
+    header: {
+      isToken: false
+    },
+    method: 'post',
+    data: data
+  });
+}
+
+// 退出方法
+function logout() {
+  return (0, _request.default)({
+    url: '/user/logout',
+    method: 'post'
+  });
+}
+
+/***/ }),
+/* 169 */
+/*!**********************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/utils/request.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _uAjax = _interopRequireDefault(__webpack_require__(/*! @/uni_modules/u-ajax */ 170));
+var _auth = __webpack_require__(/*! @/utils/auth */ 167);
+var _common = __webpack_require__(/*! @/utils/common */ 182);
+var _config = _interopRequireDefault(__webpack_require__(/*! @/config */ 183));
+var baseUrl = _config.default.baseURL;
+// 创建请求实例
+var instance = _uAjax.default.create({
+  // 默认配置
+  baseURL: baseUrl
+});
+
+// 添加请求拦截器
+instance.interceptors.request.use(function (config) {
+  // 在发送请求前做些什么
+  var isToken = config.header['isToken'] === false;
+  if ((0, _auth.getToken)() && !isToken) {
+    console.log('Token', (0, _auth.getToken)());
+    config.header['Authorization'] = 'userInfo ' + (0, _auth.getToken)();
+  }
+  // console.log('发送请求前', config)
+  return config;
+}, function (error) {
+  // 对请求错误做些什么
+  // console.log('发请求错误', error)
+  uni.showToast({
+    icon: 'error',
+    title: '后端接口请求异常'
+  });
+  return Promise.reject(error);
+});
+
+// 添加响应拦截器
+instance.interceptors.response.use(
+//响应成功后
+function (response) {
+  console.log('响应成功后', response);
+  // 未设置状态码则默认成功状态
+  var code = response.data.code || 200;
+  // 获取错误信息
+  var msg = response.data.msg;
+  if (code == 401) {
+    (0, _auth.removeToken)();
+    uni.showModal({
+      title: '提示',
+      content: '登录状态已过期，您可以继续留在该页面，或者重新登录?',
+      confirmText: '登录',
+      success: function success(res) {
+        if (res.confirm) {
+          uni.navigateTo({
+            url: '/pages/me/me'
+          });
+          return Promise.reject("");
+        } else if (res.cancel) {
+          // console.log('用户点击取消');
+        }
+      }
+    });
+    (0, _common.toast)('无效的会话，或者会话已过期，请重新登录。');
+    return Promise.reject("无效的会话，或者会话已过期，请重新登录。");
+  } else if (code == 500) {
+    (0, _common.toast)(msg);
+    return Promise.reject(msg);
+  } else if (code !== 200) {
+    (0, _common.toast)(msg);
+    return Promise.reject(msg);
+  }
+  return response;
+}, function (error) {
+  // 对响应错误做些什么
+  uni.showToast({
+    icon: 'error',
+    title: '后端接口响应异常'
+  });
+  // console.log('响应错误后', error)
+  return Promise.reject(error);
+});
+var _default = instance;
+exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+/* 170 */
+/*!****************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/u-ajax/js_sdk/index.js ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+Object.defineProperty(exports, "Fetcher", {
+  enumerable: true,
+  get: function get() {
+    return _Fetcher.default;
+  }
+});
+exports.default = void 0;
+var _Ajax = _interopRequireDefault(__webpack_require__(/*! ./lib/core/Ajax */ 171));
+var _Fetcher = _interopRequireDefault(__webpack_require__(/*! ./lib/adapters/Fetcher */ 181));
+var ajax = (0, _Ajax.default)();
+ajax.create = function create(instanceConfig) {
+  return (0, _Ajax.default)(instanceConfig);
+};
+ajax.Fetcher = _Fetcher.default;
+var _default = ajax;
+exports.default = _default;
+
+/***/ }),
+/* 171 */
+/*!************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/u-ajax/js_sdk/lib/core/Ajax.js ***!
+  \************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+var _typeof3 = __webpack_require__(/*! @babel/runtime/helpers/typeof */ 13);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = Ajax;
+var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 58));
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 60));
+var _typeof2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/typeof */ 13));
+var _InterceptorManager = _interopRequireDefault(__webpack_require__(/*! ./InterceptorManager */ 172));
+var _buildURL = _interopRequireDefault(__webpack_require__(/*! ../helpers/buildURL */ 173));
+var _mergeConfig = _interopRequireDefault(__webpack_require__(/*! ../helpers/mergeConfig */ 175));
+var _dispatchRequest = _interopRequireDefault(__webpack_require__(/*! ./dispatchRequest */ 176));
+var _handleCancel = __webpack_require__(/*! ./handleCancel */ 180);
+var _defaults = _interopRequireWildcard(__webpack_require__(/*! ../defaults */ 178));
+var _utils = __webpack_require__(/*! ../utils */ 174);
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof3(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function Ajax(defaultConfig) {
+  // 挂载当前实例配置
+  ajax.config = Object.freeze((0, _typeof2.default)(defaultConfig) === 'object' ? (0, _utils.merge)(defaultConfig) : defaultConfig);
+
+  // 挂载全局默认配置引用
+  ajax.defaults = _defaults.default;
+
+  // 挂载拦截器
+  ajax.interceptors = {
+    request: new _InterceptorManager.default(),
+    response: new _InterceptorManager.default()
+  };
+
+  // 挂载获取实例请求地址方法
+  ajax.getURL = /*#__PURE__*/function () {
+    var _getURL = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee(config) {
+      var combineConfig;
+      return _regenerator.default.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return (0, _mergeConfig.default)(_defaults.default, defaultConfig, config);
+            case 2:
+              combineConfig = _context.sent;
+              return _context.abrupt("return", (0, _buildURL.default)(combineConfig).replace(/^\?/, ''));
+            case 4:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }));
+    function getURL(_x) {
+      return _getURL.apply(this, arguments);
+    }
+    return getURL;
+  }();
+
+  // 挂载对应的 method 方法
+  (0, _utils.forEach)(_defaults.METHOD, function (method) {
+    ajax[method] = function methodAjax(url, data, config) {
+      if (typeof url === 'string') return ajax(url, data, _objectSpread(_objectSpread({}, config), {}, {
+        method: method
+      }));
+      return ajax(_objectSpread(_objectSpread({}, url), {}, {
+        method: method
+      }));
+    };
+  });
+  function ajax(url, data, config) {
+    var newConfig = typeof url === 'string' ? _objectSpread(_objectSpread({}, config), {}, {
+      url: url,
+      data: data
+    }) : _objectSpread({}, url);
+
+    // 声明 Promise 链
+    var chain = [_dispatchRequest.default, _handleCancel.dispatchCancel];
+
+    // 将请求拦截遍历添加到链前面
+    ajax.interceptors.request.forEach(function (_ref) {
+      var fulfilled = _ref.fulfilled,
+        rejected = _ref.rejected;
+      return chain.unshift(fulfilled, rejected);
+    }, true);
+
+    // 将响应拦截遍历添加到链后面
+    ajax.interceptors.response.forEach(function (_ref2) {
+      var fulfilled = _ref2.fulfilled,
+        rejected = _ref2.rejected;
+      return chain.push(fulfilled, (0, _handleCancel.interceptCancel)(rejected));
+    }, false);
+
+    // 先执行获取 config 请求配置
+    chain.unshift(function (config) {
+      return (0, _mergeConfig.default)(_defaults.default, defaultConfig, config);
+    }, undefined);
+
+    // 处理发起请求前的错误数据
+    chain.push(undefined, _handleCancel.detachCancel);
+
+    // 创建请求Promise，后面遍历链将链上方法传递到then回调
+    var request = Promise.resolve(newConfig);
+    while (chain.length) {
+      request = request.then(chain.shift(), chain.shift());
+    }
+    return request;
+  }
+  return ajax;
+}
+
+/***/ }),
+/* 172 */
+/*!**************************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/u-ajax/js_sdk/lib/core/InterceptorManager.js ***!
+  \**************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _classCallCheck2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ 23));
+var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/createClass */ 24));
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
+/**
+ * 拦截器类
+ */
+var InterceptorManager = /*#__PURE__*/function () {
+  function InterceptorManager() {
+    (0, _classCallCheck2.default)(this, InterceptorManager);
+    (0, _defineProperty2.default)(this, "handlers", []);
+  }
+  (0, _createClass2.default)(InterceptorManager, [{
+    key: "use",
+    value: function use(fulfilled, rejected) {
+      this.handlers.push({
+        fulfilled: fulfilled,
+        rejected: rejected
+      });
+      return this.handlers.length - 1;
+    }
+  }, {
+    key: "eject",
+    value: function eject(id) {
+      if (this.handlers[id]) {
+        this.handlers[id] = null;
+      }
+    }
+  }, {
+    key: "forEach",
+    value: function forEach(fn) {
+      var reverse = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+      if (reverse) {
+        for (var i = this.handlers.length - 1; i >= 0; i--) {
+          this.handlers[i] !== null && fn(this.handlers[i]);
+        }
+      } else {
+        for (var _i = 0, l = this.handlers.length; _i < l; _i++) {
+          this.handlers[_i] !== null && fn(this.handlers[_i]);
+        }
+      }
+    }
+  }]);
+  return InterceptorManager;
+}();
+exports.default = InterceptorManager;
+
+/***/ }),
+/* 173 */
+/*!*******************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/u-ajax/js_sdk/lib/helpers/buildURL.js ***!
+  \*******************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = buildURL;
+var _typeof2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/typeof */ 13));
+var _utils = __webpack_require__(/*! ../utils */ 174);
+/**
+ * 根据 baseURL 和 url 拼接
+ * @param {string} baseURL 请求根地址
+ * @param {string} relativeURL 请求参数地址
+ * @returns {string} 拼接后的地址
+ */
+function combineURL() {
+  var baseURL = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  var relativeURL = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  // 判断是否 http:// 或 https:// 开头
+  if (/^https?:\/\//.test(relativeURL)) return relativeURL;
+  // 去除 baseURL 结尾斜杠，去除 relativeURL 开头斜杠，再判断拼接
+  return relativeURL ? baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '') : baseURL;
+}
+function encode(val) {
+  return encodeURIComponent(val).replace(/%3A/gi, ':').replace(/%24/g, '$').replace(/%2C/gi, ',').replace(/%20/g, '+').replace(/%5B/gi, '[').replace(/%5D/gi, ']');
+}
+function querystring(url, params) {
+  var query;
+  var parts = [];
+  (0, _utils.forEach)(params, function (val, key) {
+    if (val === null || typeof val === 'undefined') return;
+    if ((0, _utils.isArray)(val)) key = key + '[]';else val = [val];
+    (0, _utils.forEach)(val, function (v) {
+      if (v !== null && (0, _typeof2.default)(v) === 'object') {
+        v = JSON.stringify(v);
+      }
+      parts.push(encode(key) + '=' + encode(v));
+    });
+  });
+  query = parts.join('&');
+  if (query) {
+    var hashmarkIndex = url.indexOf('#');
+    hashmarkIndex !== -1 && (url = url.slice(0, hashmarkIndex));
+    url += (url.indexOf('?') === -1 ? '?' : '&') + query;
+  }
+  return url;
+}
+
+/**
+ * 根据 baseURL、url、params query 编译请求URL
+ * @returns {string} 处理后的地址
+ */
+function buildURL() {
+  var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+    baseURL = _ref.baseURL,
+    relativeURL = _ref.url,
+    params = _ref.params,
+    query = _ref.query;
+  var url = combineURL(baseURL, relativeURL);
+  if (!params && !query) {
+    return url;
+  }
+  if (params) {
+    if (/\/:/.test(url)) {
+      // 是否是 params 参数地址，并对应设置
+      (0, _utils.forEach)(params, function (val, key) {
+        url = url.replace("/:".concat(key), "/".concat(encode(String(val))));
+      });
+    } else if (!query) {
+      // 兼容旧的 params 属性设置 query
+      url = querystring(url, params);
+    }
+  }
+
+  // 设置 query 参数
+  if (query) {
+    url = querystring(url, query);
+  }
+  return url;
+}
+
+/***/ }),
+/* 174 */
+/*!********************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/u-ajax/js_sdk/lib/utils.js ***!
+  \********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.assign = assign;
+exports.forEach = forEach;
+exports.isArray = isArray;
+exports.isPlainObject = isPlainObject;
+exports.merge = merge;
+var _typeof2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/typeof */ 13));
+/**
+ * 获取值的原始类型字符串，例如 [object Object]
+ */
+var _toString = Object.prototype.toString;
+
+/**
+ * 判断是否为数组
+ * @param {*} val 要判断的值
+ * @returns {boolean} 返回判断结果
+ */
+function isArray(val) {
+  return _toString.call(val) === '[object Array]';
+}
+
+/**
+ * 判断是否为普通对象
+ * @param {*} val 要判断的值
+ * @returns {boolean} 返回判断结果
+ */
+function isPlainObject(val) {
+  return _toString.call(val) === '[object Object]';
+}
+
+/**
+ * 遍历
+ * @param {object|array} obj 要迭代的对象
+ * @param {function} fn 为每个项调用的回调
+ */
+function forEach(obj, fn) {
+  if (obj === null || obj === undefined) return;
+  if ((0, _typeof2.default)(obj) !== 'object') obj = [obj];
+  if (isArray(obj)) {
+    for (var i = 0, l = obj.length; i < l; i++) {
+      fn.call(null, obj[i], i, obj);
+    }
+  } else {
+    for (var k in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, k)) {
+        fn.call(null, obj[k], k, obj);
+      }
+    }
+  }
+}
+
+/**
+ * 对象深合并
+ * @param  {...object} args 对象
+ * @returns {object} 合并后的对象
+ */
+function merge() {
+  var result = {};
+  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+  for (var i = 0, l = args.length; i < l; i++) {
+    if (isPlainObject(args[i])) {
+      forEach(args[i], function (val, key) {
+        result[key] = assign(result[key], val);
+      });
+    }
+  }
+  return result;
+}
+
+/**
+ * 合并分配到目标对象
+ * @param {*} target 目标对象
+ * @param {*} source 源对象
+ * @returns {*} 目标对象
+ */
+function assign(target, source) {
+  if (isPlainObject(target) && isPlainObject(source)) {
+    return merge(target, source);
+  } else if (isPlainObject(source)) {
+    return merge({}, source);
+  } else if (isArray(source)) {
+    return source.slice();
+  }
+  return source;
+}
+
+/***/ }),
+/* 175 */
+/*!**********************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/u-ajax/js_sdk/lib/helpers/mergeConfig.js ***!
+  \**********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = mergeConfig;
+var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 58));
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 60));
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
+var _utils = __webpack_require__(/*! ../utils */ 174);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+/**
+ * 深度合并，且不合并 undefined 值
+ * @param {object} obj1 前对象
+ * @param {object} obj2 后对象
+ * @returns {object} 合并后的对象
+ */
+function merge() {
+  var obj1 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var obj2 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var obj = {};
+  var objKeys = Object.keys(_objectSpread(_objectSpread({}, obj1), obj2));
+  (0, _utils.forEach)(objKeys, function (prop) {
+    if (obj2[prop] !== undefined) {
+      obj[prop] = (0, _utils.assign)(obj1[prop], obj2[prop]);
+    } else if (obj1[prop] !== undefined) {
+      obj[prop] = (0, _utils.assign)(undefined, obj1[prop]);
+    }
+  });
+  return obj;
+}
+
+/**
+ * 合并请求配置
+ * @param  {...object|function} args 请求配置
+ * @returns {object} 合并后的请求配置
+ */
+function mergeConfig() {
+  return _mergeConfig.apply(this, arguments);
+}
+function _mergeConfig() {
+  _mergeConfig = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+    var config,
+      _len,
+      args,
+      _key,
+      i,
+      l,
+      current,
+      _args = arguments;
+    return _regenerator.default.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            config = {};
+            for (_len = _args.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+              args[_key] = _args[_key];
+            }
+            i = 0, l = args.length;
+          case 3:
+            if (!(i < l)) {
+              _context.next = 16;
+              break;
+            }
+            if (!(typeof args[i] === 'function')) {
+              _context.next = 10;
+              break;
+            }
+            _context.next = 7;
+            return args[i]();
+          case 7:
+            _context.t0 = _context.sent;
+            _context.next = 11;
+            break;
+          case 10:
+            _context.t0 = args[i];
+          case 11:
+            current = _context.t0;
+            config = merge(config, current);
+          case 13:
+            i++;
+            _context.next = 3;
+            break;
+          case 16:
+            config.method = config.method.toUpperCase();
+            return _context.abrupt("return", config);
+          case 18:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _mergeConfig.apply(this, arguments);
+}
+
+/***/ }),
+/* 176 */
+/*!***********************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/u-ajax/js_sdk/lib/core/dispatchRequest.js ***!
+  \***********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = dispatchRequest;
+var _buildURL = _interopRequireDefault(__webpack_require__(/*! ../helpers/buildURL */ 173));
+var _isCallback = _interopRequireDefault(__webpack_require__(/*! ../helpers/isCallback */ 177));
+var _utils = __webpack_require__(/*! ../utils */ 174);
+var _defaults = __webpack_require__(/*! ../defaults */ 178);
+/** 派发请求方法 */
+function dispatchRequest(config) {
+  // 拼接 url
+  config.url = (0, _buildURL.default)(config);
+
+  // 请求方法转大写
+  config.method = (config.method || 'get').toUpperCase();
+
+  // 调整 header 优先级
+  config.header = (0, _utils.merge)(config.header.common, config.header[config.method.toLowerCase()], config.header);
+
+  // 清除多余的请求头
+  (0, _utils.forEach)(_defaults.HEADER, function (h) {
+    return (0, _utils.isPlainObject)(config.header[h]) && delete config.header[h];
+  });
+
+  // 清除回调函数
+  (0, _utils.forEach)(config, function (val, key) {
+    return (0, _isCallback.default)(key) && delete config[key];
+  });
+
+  // 执行请求方法
+  return config.adapter(config);
+}
+
+/***/ }),
+/* 177 */
+/*!*********************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/u-ajax/js_sdk/lib/helpers/isCallback.js ***!
+  \*********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isCallback;
+/**
+ * 判断参数是否含有回调参数 success / fail / complete 之一
+ * @param {string} field 参数的 Key 值字符串
+ * @returns {boolean} 返回判断值
+ */
+function isCallback(field) {
+  return ['success', 'fail', 'complete'].includes(field);
+}
+
+/***/ }),
+/* 178 */
+/*!***********************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/u-ajax/js_sdk/lib/defaults.js ***!
+  \***********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports.METHOD = exports.HEADER = void 0;
+var _http = _interopRequireDefault(__webpack_require__(/*! ./adapters/http */ 179));
+var _utils = __webpack_require__(/*! ./utils */ 174);
+var METHOD = ['get', 'post', 'put', 'delete', 'connect', 'head', 'options', 'trace'];
+exports.METHOD = METHOD;
+var HEADER = ['common'].concat(METHOD);
+exports.HEADER = HEADER;
+var defaults = {
+  adapter: _http.default,
+  header: {},
+  method: 'GET',
+  validateStatus: function validateStatus(statusCode) {
+    return statusCode >= 200 && statusCode < 300;
+  }
+};
+(0, _utils.forEach)(HEADER, function (h) {
+  return defaults.header[h] = {};
+});
+var _default = defaults;
+exports.default = _default;
+
+/***/ }),
+/* 179 */
+/*!****************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/u-ajax/js_sdk/lib/adapters/http.js ***!
+  \****************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = adapter;
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function adapter(config) {
+  return new Promise(function (resolve, reject) {
+    var _config$fetcher;
+    var requestTask = uni.request(_objectSpread(_objectSpread({}, config), {}, {
+      complete: function complete(result) {
+        // 根据状态码判断要执行的触发的状态
+        var response = _objectSpread({
+          config: config
+        }, result);
+        !config.validateStatus || config.validateStatus(result.statusCode) ? resolve(response) : reject(response);
+      }
+    }));
+    (_config$fetcher = config.fetcher) === null || _config$fetcher === void 0 ? void 0 : _config$fetcher.resolve(requestTask);
+  });
+}
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+/* 180 */
+/*!********************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/u-ajax/js_sdk/lib/core/handleCancel.js ***!
+  \********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.detachCancel = detachCancel;
+exports.dispatchCancel = dispatchCancel;
+exports.interceptCancel = interceptCancel;
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
+var CANCEL = Symbol('$$cancel');
+function hasCancel(target) {
+  return target === null || target === undefined ? false : Object.prototype.hasOwnProperty.call(target, CANCEL);
+}
+
+/**
+ * 派发请求拒绝方法，处理发起请求前错误，取消执行请求，并防止进入响应拦截器
+ * @param {*} reason 错误原因
+ * @returns {Promise} 封装了 CANCEL 的失败对象
+ */
+function dispatchCancel(reason) {
+  return Promise.reject((0, _defineProperty2.default)({}, CANCEL, reason));
+}
+
+/**
+ * 拦截失败对象
+ * @param {Function} rejected 响应错误拦截器
+ */
+function interceptCancel(rejected) {
+  // 判断发起请求前是否发生错误，如果发生错误则不执行后面的响应错误拦截器
+  return rejected && function (response) {
+    return hasCancel(response) ? Promise.reject(response) : rejected(response);
+  };
+}
+
+/**
+ * 分离失败对象
+ * @param {*} response 封装了 CANCEL 的失败对象
+ */
+function detachCancel(error) {
+  return Promise.reject(hasCancel(error) ? error[CANCEL] : error);
+}
+
+/***/ }),
+/* 181 */
+/*!*******************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/u-ajax/js_sdk/lib/adapters/Fetcher.js ***!
+  \*******************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 58));
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 60));
+var _classCallCheck2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ 23));
+var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/createClass */ 24));
+var PROMISE = Symbol('$$promise');
+var Fetcher = /*#__PURE__*/function (_Symbol$toStringTag) {
+  function Fetcher() {
+    var _this = this;
+    (0, _classCallCheck2.default)(this, Fetcher);
+    this[PROMISE] = new Promise(function (resolve, reject) {
+      _this.resolve = resolve;
+      _this.reject = reject;
+    });
+  }
+  (0, _createClass2.default)(Fetcher, [{
+    key: _Symbol$toStringTag,
+    get: function get() {
+      return '[object Fetcher]';
+    }
+  }, {
+    key: "source",
+    value: function () {
+      var _source = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+        return _regenerator.default.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                return _context.abrupt("return", this[PROMISE]);
+              case 1:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+      function source() {
+        return _source.apply(this, arguments);
+      }
+      return source;
+    }()
+  }, {
+    key: "abort",
+    value: function () {
+      var _abort = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+        var _yield$this$source;
+        return _regenerator.default.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                ;
+                _context2.next = 3;
+                return this.source();
+              case 3:
+                _context2.t1 = _yield$this$source = _context2.sent;
+                _context2.t0 = _context2.t1 === null;
+                if (_context2.t0) {
+                  _context2.next = 7;
+                  break;
+                }
+                _context2.t0 = _yield$this$source === void 0;
+              case 7:
+                if (!_context2.t0) {
+                  _context2.next = 11;
+                  break;
+                }
+                void 0;
+                _context2.next = 12;
+                break;
+              case 11:
+                _yield$this$source.abort();
+              case 12:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+      function abort() {
+        return _abort.apply(this, arguments);
+      }
+      return abort;
+    }()
+  }]);
+  return Fetcher;
+}(Symbol.toStringTag);
+exports.default = Fetcher;
+
+/***/ }),
+/* 182 */
+/*!*********************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/utils/common.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.handleTree = handleTree;
+exports.parseTime = parseTime;
+exports.showConfirm = showConfirm;
+exports.toast = toast;
+var _typeof2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/typeof */ 13));
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+/**
+ * 显示消息提示框
+ * @param content 提示的标题
+ */
+function toast(content) {
+  uni.showToast({
+    icon: 'none',
+    title: content
+  });
+}
+
+/**
+ * 显示模态弹窗
+ * @param content 提示的标题
+ */
+function showConfirm(content) {
+  return new Promise(function (resolve, reject) {
+    uni.showModal({
+      title: '提示',
+      content: content,
+      cancelText: '取消',
+      confirmText: '确定',
+      success: function success(res) {
+        resolve(res);
+      }
+    });
+  });
+}
+
+/**
+ * 通用js方法封装处理
+ * Copyright (c) 2019 ruoyi
+ */
+
+// 日期格式化
+function parseTime(time, pattern) {
+  if (arguments.length === 0 || !time) {
+    return null;
+  }
+  var format = pattern || '{y}-{m}-{d} {h}:{i}:{s}';
+  var date;
+  if ((0, _typeof2.default)(time) === 'object') {
+    date = time;
+  } else {
+    if (typeof time === 'string' && /^[0-9]+$/.test(time)) {
+      time = parseInt(time);
+    } else if (typeof time === 'string') {
+      time = time.replace(new RegExp(/-/gm), '/').replace('T', ' ').replace(new RegExp(/\.[\d]{3}/gm), '');
+    }
+    if (typeof time === 'number' && time.toString().length === 10) {
+      time = time * 1000;
+    }
+    date = new Date(time);
+  }
+  var formatObj = {
+    y: date.getFullYear(),
+    m: date.getMonth() + 1,
+    d: date.getDate(),
+    h: date.getHours(),
+    i: date.getMinutes(),
+    s: date.getSeconds(),
+    a: date.getDay()
+  };
+  var time_str = format.replace(/{(y|m|d|h|i|s|a)+}/g, function (result, key) {
+    var value = formatObj[key];
+    // Note: getDay() returns 0 on Sunday
+    if (key === 'a') {
+      return ['日', '一', '二', '三', '四', '五', '六'][value];
+    }
+    if (result.length > 0 && value < 10) {
+      value = '0' + value;
+    }
+    return value || 0;
+  });
+  return time_str;
+}
+
+/**
+ * 构造树型结构数据
+ * @param {*} data 数据源
+ * @param {*} id id字段 默认 'id'
+ * @param {*} parentId 父节点字段 默认 'parentId'
+ * @param {*} children 孩子节点字段 默认 'children'
+ */
+function handleTree(data, id, parentId, children) {
+  var config = {
+    id: id || 'id',
+    parentId: parentId || 'parentId',
+    childrenList: children || 'children'
+  };
+  var childrenListMap = {};
+  var nodeIds = {};
+  var treetree = [];
+  var _iterator = _createForOfIteratorHelper(data),
+    _step;
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var d = _step.value;
+      var _parentId = d[config.parentId];
+      if (childrenListMap[_parentId] == null) {
+        childrenListMap[_parentId] = [];
+      }
+      nodeIds[d[config.id]] = d;
+      childrenListMap[_parentId].push(d);
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+  var _iterator2 = _createForOfIteratorHelper(data),
+    _step2;
+  try {
+    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+      var _d = _step2.value;
+      var _parentId2 = _d[config.parentId];
+      if (nodeIds[_parentId2] == null) {
+        treetree.push(_d);
+      }
+    }
+  } catch (err) {
+    _iterator2.e(err);
+  } finally {
+    _iterator2.f();
+  }
+  for (var _i = 0, _treetree = treetree; _i < _treetree.length; _i++) {
+    var t = _treetree[_i];
+    adaptToChildrenList(t);
+  }
+  function adaptToChildrenList(o) {
+    if (childrenListMap[o[config.id]] !== null) {
+      o[config.childrenList] = childrenListMap[o[config.id]];
+    }
+    if (o[config.childrenList]) {
+      var _iterator3 = _createForOfIteratorHelper(o[config.childrenList]),
+        _step3;
+      try {
+        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+          var c = _step3.value;
+          adaptToChildrenList(c);
+        }
+      } catch (err) {
+        _iterator3.e(err);
+      } finally {
+        _iterator3.f();
+      }
+    }
+  }
+  return treetree;
+}
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+/* 183 */
+/*!***************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/config.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// 应用全局配置
+module.exports = {
+  baseURL: 'http://localhost:8080',
+  // baseURL: 'http://82.156.57.90:8160',
+  // baseURL: 'https://v1.campus.oddfar.com',
+  // 应用信息
+  appInfo: {
+    // 应用名称
+    name: "campus-nuxt",
+    // 应用版本
+    version: "1.0.1",
+    // 应用logo
+    logo: "/static/logo.png"
+  }
+};
+
+/***/ }),
 /* 184 */,
 /* 185 */,
 /* 186 */,
@@ -19262,7 +20448,24 @@ exports.default = _default;
 /* 191 */,
 /* 192 */,
 /* 193 */,
-/* 194 */
+/* 194 */,
+/* 195 */,
+/* 196 */,
+/* 197 */,
+/* 198 */,
+/* 199 */,
+/* 200 */,
+/* 201 */,
+/* 202 */,
+/* 203 */,
+/* 204 */,
+/* 205 */,
+/* 206 */,
+/* 207 */,
+/* 208 */,
+/* 209 */,
+/* 210 */,
+/* 211 */
 /*!*******************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-tabbar/props.js ***!
   \*******************************************************************************************************/
@@ -19324,14 +20527,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 195 */,
-/* 196 */,
-/* 197 */,
-/* 198 */,
-/* 199 */,
-/* 200 */,
-/* 201 */,
-/* 202 */
+/* 212 */,
+/* 213 */,
+/* 214 */,
+/* 215 */,
+/* 216 */,
+/* 217 */,
+/* 218 */,
+/* 219 */
 /*!************************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-tabbar-item/props.js ***!
   \************************************************************************************************************/
@@ -19383,109 +20586,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 203 */,
-/* 204 */,
-/* 205 */,
-/* 206 */,
-/* 207 */,
-/* 208 */,
-/* 209 */,
-/* 210 */
-/*!***********************************************************************************************************!*\
-  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-notice-bar/props.js ***!
-  \***********************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _default = {
-  props: {
-    // 显示的内容，数组
-    text: {
-      type: [Array, String],
-      default: uni.$u.props.noticeBar.text
-    },
-    // 通告滚动模式，row-横向滚动，column-竖向滚动
-    direction: {
-      type: String,
-      default: uni.$u.props.noticeBar.direction
-    },
-    // direction = row时，是否使用步进形式滚动
-    step: {
-      type: Boolean,
-      default: uni.$u.props.noticeBar.step
-    },
-    // 是否显示左侧的音量图标
-    icon: {
-      type: String,
-      default: uni.$u.props.noticeBar.icon
-    },
-    // 通告模式，link-显示右箭头，closable-显示右侧关闭图标
-    mode: {
-      type: String,
-      default: uni.$u.props.noticeBar.mode
-    },
-    // 文字颜色，各图标也会使用文字颜色
-    color: {
-      type: String,
-      default: uni.$u.props.noticeBar.color
-    },
-    // 背景颜色
-    bgColor: {
-      type: String,
-      default: uni.$u.props.noticeBar.bgColor
-    },
-    // 水平滚动时的滚动速度，即每秒滚动多少px(px)，这有利于控制文字无论多少时，都能有一个恒定的速度
-    speed: {
-      type: [String, Number],
-      default: uni.$u.props.noticeBar.speed
-    },
-    // 字体大小
-    fontSize: {
-      type: [String, Number],
-      default: uni.$u.props.noticeBar.fontSize
-    },
-    // 滚动一个周期的时间长，单位ms
-    duration: {
-      type: [String, Number],
-      default: uni.$u.props.noticeBar.duration
-    },
-    // 是否禁止用手滑动切换
-    // 目前HX2.6.11，只支持App 2.5.5+、H5 2.5.5+、支付宝小程序、字节跳动小程序
-    disableTouch: {
-      type: Boolean,
-      default: uni.$u.props.noticeBar.disableTouch
-    },
-    // 跳转的页面路径
-    url: {
-      type: String,
-      default: uni.$u.props.noticeBar.url
-    },
-    // 页面跳转的类型
-    linkType: {
-      type: String,
-      default: uni.$u.props.noticeBar.linkType
-    }
-  }
-};
-exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
-
-/***/ }),
-/* 211 */,
-/* 212 */,
-/* 213 */,
-/* 214 */,
-/* 215 */,
-/* 216 */,
-/* 217 */,
-/* 218 */
+/* 220 */,
+/* 221 */,
+/* 222 */,
+/* 223 */,
+/* 224 */,
+/* 225 */,
+/* 226 */,
+/* 227 */
 /*!*******************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-avatar/props.js ***!
   \*******************************************************************************************************/
@@ -19581,14 +20689,283 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 219 */,
-/* 220 */,
-/* 221 */,
-/* 222 */,
-/* 223 */,
-/* 224 */,
-/* 225 */,
-/* 226 */
+/* 228 */,
+/* 229 */,
+/* 230 */,
+/* 231 */,
+/* 232 */,
+/* 233 */,
+/* 234 */,
+/* 235 */
+/*!***********************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-cell-group/props.js ***!
+  \***********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  props: {
+    // 分组标题
+    title: {
+      type: String,
+      default: uni.$u.props.cellGroup.title
+    },
+    // 是否显示外边框
+    border: {
+      type: Boolean,
+      default: uni.$u.props.cellGroup.border
+    }
+  }
+};
+exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+/* 236 */,
+/* 237 */,
+/* 238 */,
+/* 239 */,
+/* 240 */,
+/* 241 */,
+/* 242 */,
+/* 243 */
+/*!*****************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-cell/props.js ***!
+  \*****************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default2 = {
+  props: {
+    // 标题
+    title: {
+      type: [String, Number],
+      default: uni.$u.props.cell.title
+    },
+    // 标题下方的描述信息
+    label: {
+      type: [String, Number],
+      default: uni.$u.props.cell.label
+    },
+    // 右侧的内容
+    value: {
+      type: [String, Number],
+      default: uni.$u.props.cell.value
+    },
+    // 左侧图标名称，或者图片链接(本地文件建议使用绝对地址)
+    icon: {
+      type: String,
+      default: uni.$u.props.cell.icon
+    },
+    // 是否禁用cell
+    disabled: {
+      type: Boolean,
+      default: uni.$u.props.cell.disabled
+    },
+    // 是否显示下边框
+    border: {
+      type: Boolean,
+      default: uni.$u.props.cell.border
+    },
+    // 内容是否垂直居中(主要是针对右侧的value部分)
+    center: {
+      type: Boolean,
+      default: uni.$u.props.cell.center
+    },
+    // 点击后跳转的URL地址
+    url: {
+      type: String,
+      default: uni.$u.props.cell.url
+    },
+    // 链接跳转的方式，内部使用的是uView封装的route方法，可能会进行拦截操作
+    linkType: {
+      type: String,
+      default: uni.$u.props.cell.linkType
+    },
+    // 是否开启点击反馈(表现为点击时加上灰色背景)
+    clickable: {
+      type: Boolean,
+      default: uni.$u.props.cell.clickable
+    },
+    // 是否展示右侧箭头并开启点击反馈
+    isLink: {
+      type: Boolean,
+      default: uni.$u.props.cell.isLink
+    },
+    // 是否显示表单状态下的必填星号(此组件可能会内嵌入input组件)
+    required: {
+      type: Boolean,
+      default: uni.$u.props.cell.required
+    },
+    // 右侧的图标箭头
+    rightIcon: {
+      type: String,
+      default: uni.$u.props.cell.rightIcon
+    },
+    // 右侧箭头的方向，可选值为：left，up，down
+    arrowDirection: {
+      type: String,
+      default: uni.$u.props.cell.arrowDirection
+    },
+    // 左侧图标样式
+    iconStyle: {
+      type: [Object, String],
+      default: function _default() {
+        return uni.$u.props.cell.iconStyle;
+      }
+    },
+    // 右侧箭头图标的样式
+    rightIconStyle: {
+      type: [Object, String],
+      default: function _default() {
+        return uni.$u.props.cell.rightIconStyle;
+      }
+    },
+    // 标题的样式
+    titleStyle: {
+      type: [Object, String],
+      default: function _default() {
+        return uni.$u.props.cell.titleStyle;
+      }
+    },
+    // 单位元的大小，可选值为large
+    size: {
+      type: String,
+      default: uni.$u.props.cell.size
+    },
+    // 点击cell是否阻止事件传播
+    stop: {
+      type: Boolean,
+      default: uni.$u.props.cell.stop
+    },
+    // 标识符，cell被点击时返回
+    name: {
+      type: [Number, String],
+      default: uni.$u.props.cell.name
+    }
+  }
+};
+exports.default = _default2;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+/* 244 */,
+/* 245 */,
+/* 246 */,
+/* 247 */,
+/* 248 */,
+/* 249 */,
+/* 250 */,
+/* 251 */
+/*!***********************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-notice-bar/props.js ***!
+  \***********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  props: {
+    // 显示的内容，数组
+    text: {
+      type: [Array, String],
+      default: uni.$u.props.noticeBar.text
+    },
+    // 通告滚动模式，row-横向滚动，column-竖向滚动
+    direction: {
+      type: String,
+      default: uni.$u.props.noticeBar.direction
+    },
+    // direction = row时，是否使用步进形式滚动
+    step: {
+      type: Boolean,
+      default: uni.$u.props.noticeBar.step
+    },
+    // 是否显示左侧的音量图标
+    icon: {
+      type: String,
+      default: uni.$u.props.noticeBar.icon
+    },
+    // 通告模式，link-显示右箭头，closable-显示右侧关闭图标
+    mode: {
+      type: String,
+      default: uni.$u.props.noticeBar.mode
+    },
+    // 文字颜色，各图标也会使用文字颜色
+    color: {
+      type: String,
+      default: uni.$u.props.noticeBar.color
+    },
+    // 背景颜色
+    bgColor: {
+      type: String,
+      default: uni.$u.props.noticeBar.bgColor
+    },
+    // 水平滚动时的滚动速度，即每秒滚动多少px(px)，这有利于控制文字无论多少时，都能有一个恒定的速度
+    speed: {
+      type: [String, Number],
+      default: uni.$u.props.noticeBar.speed
+    },
+    // 字体大小
+    fontSize: {
+      type: [String, Number],
+      default: uni.$u.props.noticeBar.fontSize
+    },
+    // 滚动一个周期的时间长，单位ms
+    duration: {
+      type: [String, Number],
+      default: uni.$u.props.noticeBar.duration
+    },
+    // 是否禁止用手滑动切换
+    // 目前HX2.6.11，只支持App 2.5.5+、H5 2.5.5+、支付宝小程序、字节跳动小程序
+    disableTouch: {
+      type: Boolean,
+      default: uni.$u.props.noticeBar.disableTouch
+    },
+    // 跳转的页面路径
+    url: {
+      type: String,
+      default: uni.$u.props.noticeBar.url
+    },
+    // 页面跳转的类型
+    linkType: {
+      type: String,
+      default: uni.$u.props.noticeBar.linkType
+    }
+  }
+};
+exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+/* 252 */,
+/* 253 */,
+/* 254 */,
+/* 255 */,
+/* 256 */,
+/* 257 */,
+/* 258 */,
+/* 259 */
 /*!***********************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/libs/mixin/button.js ***!
   \***********************************************************************************************/
@@ -19618,7 +20995,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 227 */
+/* 260 */
 /*!*************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/libs/mixin/openType.js ***!
   \*************************************************************************************************/
@@ -19660,7 +21037,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 228 */
+/* 261 */
 /*!*******************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-button/props.js ***!
   \*******************************************************************************************************/
@@ -19839,14 +21216,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 229 */,
-/* 230 */,
-/* 231 */,
-/* 232 */,
-/* 233 */,
-/* 234 */,
-/* 235 */,
-/* 236 */
+/* 262 */,
+/* 263 */,
+/* 264 */,
+/* 265 */,
+/* 266 */,
+/* 267 */,
+/* 268 */,
+/* 269 */
 /*!********************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-divider/props.js ***!
   \********************************************************************************************************/
@@ -19908,14 +21285,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 237 */,
-/* 238 */,
-/* 239 */,
-/* 240 */,
-/* 241 */,
-/* 242 */,
-/* 243 */,
-/* 244 */
+/* 270 */,
+/* 271 */,
+/* 272 */,
+/* 273 */,
+/* 274 */,
+/* 275 */,
+/* 276 */,
+/* 277 */
 /*!*****************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-list/props.js ***!
   \*****************************************************************************************************/
@@ -20008,14 +21385,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 245 */,
-/* 246 */,
-/* 247 */,
-/* 248 */,
-/* 249 */,
-/* 250 */,
-/* 251 */,
-/* 252 */
+/* 278 */,
+/* 279 */,
+/* 280 */,
+/* 281 */,
+/* 282 */,
+/* 283 */,
+/* 284 */,
+/* 285 */
 /*!**********************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-list-item/props.js ***!
   \**********************************************************************************************************/
@@ -20042,149 +21419,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 253 */,
-/* 254 */,
-/* 255 */,
-/* 256 */,
-/* 257 */,
-/* 258 */,
-/* 259 */,
-/* 260 */
-/*!*****************************************************************************************************!*\
-  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-cell/props.js ***!
-  \*****************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _default2 = {
-  props: {
-    // 标题
-    title: {
-      type: [String, Number],
-      default: uni.$u.props.cell.title
-    },
-    // 标题下方的描述信息
-    label: {
-      type: [String, Number],
-      default: uni.$u.props.cell.label
-    },
-    // 右侧的内容
-    value: {
-      type: [String, Number],
-      default: uni.$u.props.cell.value
-    },
-    // 左侧图标名称，或者图片链接(本地文件建议使用绝对地址)
-    icon: {
-      type: String,
-      default: uni.$u.props.cell.icon
-    },
-    // 是否禁用cell
-    disabled: {
-      type: Boolean,
-      default: uni.$u.props.cell.disabled
-    },
-    // 是否显示下边框
-    border: {
-      type: Boolean,
-      default: uni.$u.props.cell.border
-    },
-    // 内容是否垂直居中(主要是针对右侧的value部分)
-    center: {
-      type: Boolean,
-      default: uni.$u.props.cell.center
-    },
-    // 点击后跳转的URL地址
-    url: {
-      type: String,
-      default: uni.$u.props.cell.url
-    },
-    // 链接跳转的方式，内部使用的是uView封装的route方法，可能会进行拦截操作
-    linkType: {
-      type: String,
-      default: uni.$u.props.cell.linkType
-    },
-    // 是否开启点击反馈(表现为点击时加上灰色背景)
-    clickable: {
-      type: Boolean,
-      default: uni.$u.props.cell.clickable
-    },
-    // 是否展示右侧箭头并开启点击反馈
-    isLink: {
-      type: Boolean,
-      default: uni.$u.props.cell.isLink
-    },
-    // 是否显示表单状态下的必填星号(此组件可能会内嵌入input组件)
-    required: {
-      type: Boolean,
-      default: uni.$u.props.cell.required
-    },
-    // 右侧的图标箭头
-    rightIcon: {
-      type: String,
-      default: uni.$u.props.cell.rightIcon
-    },
-    // 右侧箭头的方向，可选值为：left，up，down
-    arrowDirection: {
-      type: String,
-      default: uni.$u.props.cell.arrowDirection
-    },
-    // 左侧图标样式
-    iconStyle: {
-      type: [Object, String],
-      default: function _default() {
-        return uni.$u.props.cell.iconStyle;
-      }
-    },
-    // 右侧箭头图标的样式
-    rightIconStyle: {
-      type: [Object, String],
-      default: function _default() {
-        return uni.$u.props.cell.rightIconStyle;
-      }
-    },
-    // 标题的样式
-    titleStyle: {
-      type: [Object, String],
-      default: function _default() {
-        return uni.$u.props.cell.titleStyle;
-      }
-    },
-    // 单位元的大小，可选值为large
-    size: {
-      type: String,
-      default: uni.$u.props.cell.size
-    },
-    // 点击cell是否阻止事件传播
-    stop: {
-      type: Boolean,
-      default: uni.$u.props.cell.stop
-    },
-    // 标识符，cell被点击时返回
-    name: {
-      type: [Number, String],
-      default: uni.$u.props.cell.name
-    }
-  }
-};
-exports.default = _default2;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
-
-/***/ }),
-/* 261 */,
-/* 262 */,
-/* 263 */,
-/* 264 */,
-/* 265 */,
-/* 266 */,
-/* 267 */,
-/* 268 */
+/* 286 */,
+/* 287 */,
+/* 288 */,
+/* 289 */,
+/* 290 */,
+/* 291 */,
+/* 292 */,
+/* 293 */
 /*!*****************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-tabs/props.js ***!
   \*****************************************************************************************************/
@@ -20266,53 +21508,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 269 */,
-/* 270 */,
-/* 271 */,
-/* 272 */,
-/* 273 */,
-/* 274 */,
-/* 275 */,
-/* 276 */
-/*!***********************************************************************************************************!*\
-  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-cell-group/props.js ***!
-  \***********************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _default = {
-  props: {
-    // 分组标题
-    title: {
-      type: String,
-      default: uni.$u.props.cellGroup.title
-    },
-    // 是否显示外边框
-    border: {
-      type: Boolean,
-      default: uni.$u.props.cellGroup.border
-    }
-  }
-};
-exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
-
-/***/ }),
-/* 277 */,
-/* 278 */,
-/* 279 */,
-/* 280 */,
-/* 281 */,
-/* 282 */,
-/* 283 */,
-/* 284 */
+/* 294 */,
+/* 295 */,
+/* 296 */,
+/* 297 */,
+/* 298 */,
+/* 299 */,
+/* 300 */,
+/* 301 */
 /*!************************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-safe-bottom/props.js ***!
   \************************************************************************************************************/
@@ -20332,14 +21535,14 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 285 */,
-/* 286 */,
-/* 287 */,
-/* 288 */,
-/* 289 */,
-/* 290 */,
-/* 291 */,
-/* 292 */
+/* 302 */,
+/* 303 */,
+/* 304 */,
+/* 305 */,
+/* 306 */,
+/* 307 */,
+/* 308 */,
+/* 309 */
 /*!*****************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-icon/icons.js ***!
   \*****************************************************************************************************/
@@ -20570,7 +21773,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 293 */
+/* 310 */
 /*!*****************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-icon/props.js ***!
   \*****************************************************************************************************/
@@ -20677,14 +21880,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 294 */,
-/* 295 */,
-/* 296 */,
-/* 297 */,
-/* 298 */,
-/* 299 */,
-/* 300 */,
-/* 301 */
+/* 311 */,
+/* 312 */,
+/* 313 */,
+/* 314 */,
+/* 315 */,
+/* 316 */,
+/* 317 */,
+/* 318 */
 /*!******************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-badge/props.js ***!
   \******************************************************************************************************/
@@ -20774,158 +21977,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 302 */,
-/* 303 */,
-/* 304 */,
-/* 305 */,
-/* 306 */,
-/* 307 */,
-/* 308 */,
-/* 309 */
-/*!**************************************************************************************************************!*\
-  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-column-notice/props.js ***!
-  \**************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _default = {
-  props: {
-    // 显示的内容，字符串
-    text: {
-      type: [Array],
-      default: uni.$u.props.columnNotice.text
-    },
-    // 是否显示左侧的音量图标
-    icon: {
-      type: String,
-      default: uni.$u.props.columnNotice.icon
-    },
-    // 通告模式，link-显示右箭头，closable-显示右侧关闭图标
-    mode: {
-      type: String,
-      default: uni.$u.props.columnNotice.mode
-    },
-    // 文字颜色，各图标也会使用文字颜色
-    color: {
-      type: String,
-      default: uni.$u.props.columnNotice.color
-    },
-    // 背景颜色
-    bgColor: {
-      type: String,
-      default: uni.$u.props.columnNotice.bgColor
-    },
-    // 字体大小，单位px
-    fontSize: {
-      type: [String, Number],
-      default: uni.$u.props.columnNotice.fontSize
-    },
-    // 水平滚动时的滚动速度，即每秒滚动多少px(px)，这有利于控制文字无论多少时，都能有一个恒定的速度
-    speed: {
-      type: [String, Number],
-      default: uni.$u.props.columnNotice.speed
-    },
-    // direction = row时，是否使用步进形式滚动
-    step: {
-      type: Boolean,
-      default: uni.$u.props.columnNotice.step
-    },
-    // 滚动一个周期的时间长，单位ms
-    duration: {
-      type: [String, Number],
-      default: uni.$u.props.columnNotice.duration
-    },
-    // 是否禁止用手滑动切换
-    // 目前HX2.6.11，只支持App 2.5.5+、H5 2.5.5+、支付宝小程序、字节跳动小程序
-    disableTouch: {
-      type: Boolean,
-      default: uni.$u.props.columnNotice.disableTouch
-    }
-  }
-};
-exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
-
-/***/ }),
-/* 310 */,
-/* 311 */,
-/* 312 */,
-/* 313 */,
-/* 314 */,
-/* 315 */,
-/* 316 */,
-/* 317 */
-/*!***********************************************************************************************************!*\
-  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-row-notice/props.js ***!
-  \***********************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _default = {
-  props: {
-    // 显示的内容，字符串
-    text: {
-      type: String,
-      default: uni.$u.props.rowNotice.text
-    },
-    // 是否显示左侧的音量图标
-    icon: {
-      type: String,
-      default: uni.$u.props.rowNotice.icon
-    },
-    // 通告模式，link-显示右箭头，closable-显示右侧关闭图标
-    mode: {
-      type: String,
-      default: uni.$u.props.rowNotice.mode
-    },
-    // 文字颜色，各图标也会使用文字颜色
-    color: {
-      type: String,
-      default: uni.$u.props.rowNotice.color
-    },
-    // 背景颜色
-    bgColor: {
-      type: String,
-      default: uni.$u.props.rowNotice.bgColor
-    },
-    // 字体大小，单位px
-    fontSize: {
-      type: [String, Number],
-      default: uni.$u.props.rowNotice.fontSize
-    },
-    // 水平滚动时的滚动速度，即每秒滚动多少px(rpx)，这有利于控制文字无论多少时，都能有一个恒定的速度
-    speed: {
-      type: [String, Number],
-      default: uni.$u.props.rowNotice.speed
-    }
-  }
-};
-exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
-
-/***/ }),
-/* 318 */,
 /* 319 */,
 /* 320 */,
 /* 321 */,
 /* 322 */,
 /* 323 */,
 /* 324 */,
-/* 325 */
+/* 325 */,
+/* 326 */
 /*!*****************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-text/props.js ***!
   \*****************************************************************************************************/
@@ -21053,12 +22112,214 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 326 */,
 /* 327 */,
 /* 328 */,
 /* 329 */,
 /* 330 */,
-/* 331 */
+/* 331 */,
+/* 332 */
+/*!*****************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-line/props.js ***!
+  \*****************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  props: {
+    color: {
+      type: String,
+      default: uni.$u.props.line.color
+    },
+    // 长度，竖向时表现为高度，横向时表现为长度，可以为百分比，带px单位的值等
+    length: {
+      type: [String, Number],
+      default: uni.$u.props.line.length
+    },
+    // 线条方向，col-竖向，row-横向
+    direction: {
+      type: String,
+      default: uni.$u.props.line.direction
+    },
+    // 是否显示细边框
+    hairline: {
+      type: Boolean,
+      default: uni.$u.props.line.hairline
+    },
+    // 线条与上下左右元素的间距，字符串形式，如"30px"、"20px 30px"
+    margin: {
+      type: [String, Number],
+      default: uni.$u.props.line.margin
+    },
+    // 是否虚线，true-虚线，false-实线
+    dashed: {
+      type: Boolean,
+      default: uni.$u.props.line.dashed
+    }
+  }
+};
+exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+/* 333 */,
+/* 334 */,
+/* 335 */,
+/* 336 */,
+/* 337 */,
+/* 338 */,
+/* 339 */,
+/* 340 */
+/*!**************************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-column-notice/props.js ***!
+  \**************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  props: {
+    // 显示的内容，字符串
+    text: {
+      type: [Array],
+      default: uni.$u.props.columnNotice.text
+    },
+    // 是否显示左侧的音量图标
+    icon: {
+      type: String,
+      default: uni.$u.props.columnNotice.icon
+    },
+    // 通告模式，link-显示右箭头，closable-显示右侧关闭图标
+    mode: {
+      type: String,
+      default: uni.$u.props.columnNotice.mode
+    },
+    // 文字颜色，各图标也会使用文字颜色
+    color: {
+      type: String,
+      default: uni.$u.props.columnNotice.color
+    },
+    // 背景颜色
+    bgColor: {
+      type: String,
+      default: uni.$u.props.columnNotice.bgColor
+    },
+    // 字体大小，单位px
+    fontSize: {
+      type: [String, Number],
+      default: uni.$u.props.columnNotice.fontSize
+    },
+    // 水平滚动时的滚动速度，即每秒滚动多少px(px)，这有利于控制文字无论多少时，都能有一个恒定的速度
+    speed: {
+      type: [String, Number],
+      default: uni.$u.props.columnNotice.speed
+    },
+    // direction = row时，是否使用步进形式滚动
+    step: {
+      type: Boolean,
+      default: uni.$u.props.columnNotice.step
+    },
+    // 滚动一个周期的时间长，单位ms
+    duration: {
+      type: [String, Number],
+      default: uni.$u.props.columnNotice.duration
+    },
+    // 是否禁止用手滑动切换
+    // 目前HX2.6.11，只支持App 2.5.5+、H5 2.5.5+、支付宝小程序、字节跳动小程序
+    disableTouch: {
+      type: Boolean,
+      default: uni.$u.props.columnNotice.disableTouch
+    }
+  }
+};
+exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+/* 341 */,
+/* 342 */,
+/* 343 */,
+/* 344 */,
+/* 345 */,
+/* 346 */,
+/* 347 */,
+/* 348 */
+/*!***********************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-row-notice/props.js ***!
+  \***********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  props: {
+    // 显示的内容，字符串
+    text: {
+      type: String,
+      default: uni.$u.props.rowNotice.text
+    },
+    // 是否显示左侧的音量图标
+    icon: {
+      type: String,
+      default: uni.$u.props.rowNotice.icon
+    },
+    // 通告模式，link-显示右箭头，closable-显示右侧关闭图标
+    mode: {
+      type: String,
+      default: uni.$u.props.rowNotice.mode
+    },
+    // 文字颜色，各图标也会使用文字颜色
+    color: {
+      type: String,
+      default: uni.$u.props.rowNotice.color
+    },
+    // 背景颜色
+    bgColor: {
+      type: String,
+      default: uni.$u.props.rowNotice.bgColor
+    },
+    // 字体大小，单位px
+    fontSize: {
+      type: [String, Number],
+      default: uni.$u.props.rowNotice.fontSize
+    },
+    // 水平滚动时的滚动速度，即每秒滚动多少px(rpx)，这有利于控制文字无论多少时，都能有一个恒定的速度
+    speed: {
+      type: [String, Number],
+      default: uni.$u.props.rowNotice.speed
+    }
+  }
+};
+exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+/* 349 */,
+/* 350 */,
+/* 351 */,
+/* 352 */,
+/* 353 */,
+/* 354 */,
+/* 355 */,
+/* 356 */
 /*!*************************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-loading-icon/props.js ***!
   \*************************************************************************************************************/
@@ -21135,72 +22396,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 332 */,
-/* 333 */,
-/* 334 */,
-/* 335 */,
-/* 336 */,
-/* 337 */,
-/* 338 */,
-/* 339 */
-/*!*****************************************************************************************************!*\
-  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-line/props.js ***!
-  \*****************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _default = {
-  props: {
-    color: {
-      type: String,
-      default: uni.$u.props.line.color
-    },
-    // 长度，竖向时表现为高度，横向时表现为长度，可以为百分比，带px单位的值等
-    length: {
-      type: [String, Number],
-      default: uni.$u.props.line.length
-    },
-    // 线条方向，col-竖向，row-横向
-    direction: {
-      type: String,
-      default: uni.$u.props.line.direction
-    },
-    // 是否显示细边框
-    hairline: {
-      type: Boolean,
-      default: uni.$u.props.line.hairline
-    },
-    // 线条与上下左右元素的间距，字符串形式，如"30px"、"20px 30px"
-    margin: {
-      type: [String, Number],
-      default: uni.$u.props.line.margin
-    },
-    // 是否虚线，true-虚线，false-实线
-    dashed: {
-      type: Boolean,
-      default: uni.$u.props.line.dashed
-    }
-  }
-};
-exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
-
-/***/ }),
-/* 340 */,
-/* 341 */,
-/* 342 */,
-/* 343 */,
-/* 344 */,
-/* 345 */,
-/* 346 */,
-/* 347 */
+/* 357 */,
+/* 358 */,
+/* 359 */,
+/* 360 */,
+/* 361 */,
+/* 362 */,
+/* 363 */,
+/* 364 */
 /*!*****************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-text/value.js ***!
   \*****************************************************************************************************/
@@ -21308,14 +22511,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 348 */,
-/* 349 */,
-/* 350 */,
-/* 351 */,
-/* 352 */,
-/* 353 */,
-/* 354 */,
-/* 355 */
+/* 365 */,
+/* 366 */,
+/* 367 */,
+/* 368 */,
+/* 369 */,
+/* 370 */,
+/* 371 */,
+/* 372 */
 /*!*****************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-link/props.js ***!
   \*****************************************************************************************************/

@@ -3,7 +3,8 @@
     "pages/me/me",
     "pages/home/home",
     "pages/gain/gain",
-    "pages/rental/rental"
+    "pages/rental/rental",
+    "pages/login/login"
   ],
   "subPackages": [],
   "window": {

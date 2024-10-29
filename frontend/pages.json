@@ -25,6 +25,13 @@
 			{
 				"navigationBarTitleText" : "资源租用"
 			}
+		},
+		{
+			"path" : "pages/login/login",
+			"style" : 
+			{
+				"navigationBarTitleText" : "登录"
+			}
 		}
 	],
 	"globalStyle": {

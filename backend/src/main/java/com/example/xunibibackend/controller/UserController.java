@@ -35,13 +35,16 @@ public class UserController {
      */
     @PostMapping("/login")
     public MyResult login(@RequestBody User user, HttpServletRequest request){
-        MyResult result=new MyResult();
+        log.info("-------{}",user);
+        MyResult result;
         result=userService.login(user);
         // 如果登录成功，则设定session
         if (result.isSuccess()) {
             request.getSession().setAttribute(SESSION_NAME, result.DATA_TAG);
         }
+//        result.put(MyResult.CODE_TAG,200);
         log.info("-----{}",request.getSession().getId());
+        log.info("{}",result);
         return result;
     }
     /**

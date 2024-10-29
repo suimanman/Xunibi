@@ -1,33 +1,6 @@
 <template>
 	<view class="me">
-		<view v-if="!isLogin" class="contaier">
-			<!-- 页面装饰图片 -->
-			<image class="img-a" src="https://zhoukaiwen.com/img/loginImg/2.png"></image>
-			<image class="img-b" src="https://zhoukaiwen.com/img/loginImg/3.png"></image>
-			<!-- 标题 -->
-			<view class="t-b">{{ title }}</view>
-			<view class="t-b2">欢迎使用，虚拟币服务小程序</view>
-			<form class="cl">
-				<view class="t-a">
-					<image src="/static/icon/userId.png"></image>
-					<view class="line"></view>
-					<input type="number" placeholder="请输入学号" maxlength="6" v-model="userId" />
-				</view>
-				<view class="t-a">
-					<image src="/static/icon/password.png"></image>
-					<view class="line"></view>
-					<input type="number" name="password" password=true placeholder="请输入密码" v-model="password" />
-				</view>
-				<button @tap="login()">登 录</button>
-				<button class="register" @tap="register()">注 册</button>
-			</form>
-			<!-- <view class="t-f"><text>————— 第三方账号登录 —————</text></view>
-			 		<view class="t-e cl">
-			 			<view class="t-g" @tap="wxLogin()"><image src="https://zhoukaiwen.com/img/loginImg/wx.png"></image></view>
-			 			<view class="t-g" @tap="zfbLogin()"><image src="https://zhoukaiwen.com/img/loginImg/qq.png"></image></view>
-			 		</view> -->
-		</view>
-		<view v-else class="profile-page">
+		<view class="profile-page">
 
 			<image class="img-b" src="https://zhoukaiwen.com/img/loginImg/3.png"></image>
 			<!-- Centered Avatar -->
@@ -48,21 +21,58 @@
 </template>
 
 <script>
+	import {
+		isLogin,setUserId
+	} from "@/utils/auth";
+	import{
+		login,register,logout
+	} from "@/api/me"
 	export default {
 		data() {
 			return {
 				title: "众创空间",
 				isLogin: false,
-				login: {
-					user: {
-						userId: '',
-						password: '',
-					}
-
+				user: {
+					userId: '',
+					password: '',
+				},
+				userinfo:{
+					username: '',
+					
 				}
 			}
 		},
+		created() {
+			this.loginHandle();
+			if (isLogin()) {
+				console.log(isLogin());
+				this.isLogin = true;
+				this.getUserInfo();
+			}
+		},
 		methods: {
+			async loginHandle() {
+				if (!isLogin()) {
+					uni.navigateTo({
+						url: '/pages/login/login'
+					})
+				} else {
+					this.isLogin = true;
+					await this.getUserInfo();
+				}
+			},
+			async logout() {
+			    await logout();
+			    sessionStorage.removeItem('user');
+			    uni.showToast({
+			      title: "已退出登录",
+			      icon: "success"
+			    });
+			    this.isLogin = false;
+			    uni.navigateTo({
+			      url: '/pages/login/login'
+			    });
+			  },
 			goEditUsername() {
 				uni.navigateTo({
 					url: '/pages/me/editUsername'
@@ -73,9 +83,6 @@
 					url: '/pages/me/editGender'
 				});
 			},
-			logout() {
-				// Handle logout
-			}
 		},
 	};
 </script>

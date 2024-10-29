@@ -26,6 +26,8 @@ public interface HttpStatus {
     public static final int NOT_FOUND=404;
     //不允许的http方法
     public static final int BAD_METHOD=405;
+    //参数错误
+    public static final int WRONG_PARAM=406;
     //资源冲突，或者资源被锁
     public static final int CONFLICT=409;
     //不支持的数据，媒体类型
@@ -36,7 +38,6 @@ public interface HttpStatus {
     public static final int NOT_IMPLEMENTED=501;
     //系统警告实现
     public static final int WARN=601;
-
 
 
 }
