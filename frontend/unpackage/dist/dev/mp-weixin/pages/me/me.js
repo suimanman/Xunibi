@@ -100,9 +100,6 @@ __webpack_require__.r(__webpack_exports__);
 var components
 try {
   components = {
-    uAvatar: function () {
-      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-avatar/u-avatar */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-avatar/u-avatar")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-avatar/u-avatar.vue */ 222))
-    },
     uCellGroup: function () {
       return Promise.all(/*! import() | uni_modules/uview-ui/components/u-cell-group/u-cell-group */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-cell-group/u-cell-group")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-cell-group/u-cell-group.vue */ 230))
     },
@@ -190,13 +187,6 @@ var _me = __webpack_require__(/*! @/api/me */ 168);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 var _default = {
   data: function data() {
     return {
@@ -258,16 +248,29 @@ var _default = {
                 _context2.next = 2;
                 return (0, _me.logout)();
               case 2:
-                sessionStorage.removeItem('user');
+                uni.removeStorage({
+                  key: 'user',
+                  success: function success() {
+                    console.log('User data removed successfully');
+                  },
+                  fail: function fail(error) {
+                    console.log('Failed to remove user data:', error);
+                  }
+                });
                 uni.showToast({
                   title: "已退出登录",
-                  icon: "success"
+                  icon: "success",
+                  duration: 2000,
+                  complete: function complete() {
+                    _this2.isLogin = false;
+                    setTimeout(function () {
+                      uni.navigateTo({
+                        url: '/pages/login/login'
+                      });
+                    }, 1000); // 延迟跳转，确保提示框显示完成
+                  }
                 });
-                _this2.isLogin = false;
-                uni.navigateTo({
-                  url: '/pages/login/login'
-                });
-              case 6:
+              case 4:
               case "end":
                 return _context2.stop();
             }

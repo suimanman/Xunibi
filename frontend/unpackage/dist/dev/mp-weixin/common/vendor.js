@@ -19326,7 +19326,7 @@ function register(data) {
 function logout() {
   return (0, _request.default)({
     url: '/user/logout',
-    method: 'post'
+    method: 'get'
   });
 }
 

@@ -19,7 +19,7 @@
 					<input type="password"  placeholder="请输入密码" v-model="user.password" />
 				</view>
 				<button @click="loginUser()">登 录</button>
-				<button class="register" @click="register()">注 册</button>
+				<button class="register" @click="registerUser()">注 册</button>
 			</form>
 			<!-- <view class="t-f"><text>————— 第三方账号登录 —————</text></view>
 			 		<view class="t-e cl">
@@ -50,25 +50,56 @@
 		},
 		created() {
 			if (isLogin()) {
-				uni.navigateTo({
-					url: '/pages/me/me'
-				})
+				uni.switchTab({
+				  url: '/pages/home/home' // tabBar 页面的路径
+				});
 				this.getUserInfo();
 			}
 		},
 		methods: {
+			async registerUser() {
+			  try {
+			    const result = await register(this.user); // 调用 register 方法发送注册请求
+			    if (result.data.code === 200) {
+			      uni.showToast({
+			        title: "注册成功，正在登录...",
+			        icon: "success",
+			        duration: 2000
+			      });
+			      // 调用登录方法实现自动登录
+			      await this.loginUser();
+			    } else {
+			      uni.showToast({
+			        title: result.data.msg || "注册失败",
+			        icon: "none"
+			      });
+			    }
+			  } catch (error) {
+			    uni.showToast({
+			      title: "注册请求异常，请检查网络连接",
+			      icon: "none"
+			    });
+			  }
+			},
 			async loginUser() {
 			  try {
 			    const result = await login(this.user);
-				console.log('hhhhhh',result)
-				console.log('hhhhhh',result.data.code===200)
 			    if (result.data.code === 200) {
-					
-			      sessionStorage.setItem('user', JSON.stringify(result.DATA_TAG));
-				  this.isLogin = true;
+					console.log("here")
+			      uni.setStorageSync('user', JSON.stringify(result.data.DATA_TAG)); // 使用 setStorageSync 存储数据
+			      this.isLogin = true;
+			      
 			      uni.showToast({
 			        title: "登录成功",
-			        icon: "success"
+			        icon: "success",
+			        duration: 2000,
+			        success: () => {
+			          setTimeout(() => {
+			            uni.switchTab({
+			              url: '/pages/home/home' // tabBar 页面的路径
+			            });
+			          }, 1000);
+			        }
 			      });
 			      return { success: true, message: "登录成功" };
 			    } else if (result.data.code === 400) {
@@ -98,19 +129,6 @@
 			    return { success: false, message: "登录请求异常，请检查网络连接" };
 			  }
 			},
-			goEditUsername() {
-				uni.navigateTo({
-					url: '/pages/me/editUsername'
-				});
-			},
-			goEditGender() {
-				uni.navigateTo({
-					url: '/pages/me/editGender'
-				});
-			},
-			logout() {
-				// Handle logout
-			}
 		},
 	};
 </script>

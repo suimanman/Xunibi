@@ -191,14 +191,15 @@ var _default = {
   },
   created: function created() {
     if ((0, _auth.isLogin)()) {
-      uni.navigateTo({
-        url: '/pages/me/me'
+      uni.switchTab({
+        url: '/pages/home/home' // tabBar 页面的路径
       });
+
       this.getUserInfo();
     }
   },
   methods: {
-    loginUser: function loginUser() {
+    registerUser: function registerUser() {
       var _this = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
         var result;
@@ -208,94 +209,139 @@ var _default = {
               case 0:
                 _context.prev = 0;
                 _context.next = 3;
-                return (0, _me.login)(_this.user);
+                return (0, _me.register)(_this.user);
               case 3:
                 result = _context.sent;
-                console.log('hhhhhh', result);
-                console.log('hhhhhh', result.data.code === 200);
                 if (!(result.data.code === 200)) {
-                  _context.next = 13;
+                  _context.next = 10;
                   break;
                 }
-                sessionStorage.setItem('user', JSON.stringify(result.DATA_TAG));
-                _this.isLogin = true;
+                uni.showToast({
+                  title: "注册成功，正在登录...",
+                  icon: "success",
+                  duration: 2000
+                });
+                // 调用登录方法实现自动登录
+                _context.next = 8;
+                return _this.loginUser();
+              case 8:
+                _context.next = 11;
+                break;
+              case 10:
+                uni.showToast({
+                  title: result.data.msg || "注册失败",
+                  icon: "none"
+                });
+              case 11:
+                _context.next = 16;
+                break;
+              case 13:
+                _context.prev = 13;
+                _context.t0 = _context["catch"](0);
+                uni.showToast({
+                  title: "注册请求异常，请检查网络连接",
+                  icon: "none"
+                });
+              case 16:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[0, 13]]);
+      }))();
+    },
+    loginUser: function loginUser() {
+      var _this2 = this;
+      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+        var result;
+        return _regenerator.default.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                _context2.next = 3;
+                return (0, _me.login)(_this2.user);
+              case 3:
+                result = _context2.sent;
+                if (!(result.data.code === 200)) {
+                  _context2.next = 12;
+                  break;
+                }
+                console.log("here");
+                uni.setStorageSync('user', JSON.stringify(result.data.DATA_TAG)); // 使用 setStorageSync 存储数据
+                _this2.isLogin = true;
                 uni.showToast({
                   title: "登录成功",
-                  icon: "success"
+                  icon: "success",
+                  duration: 2000,
+                  success: function success() {
+                    setTimeout(function () {
+                      uni.switchTab({
+                        url: '/pages/home/home' // tabBar 页面的路径
+                      });
+                    }, 1000);
+                  }
                 });
-                return _context.abrupt("return", {
+                return _context2.abrupt("return", {
                   success: true,
                   message: "登录成功"
                 });
-              case 13:
+              case 12:
                 if (!(result.data.code === 400)) {
-                  _context.next = 18;
+                  _context2.next = 17;
                   break;
                 }
                 uni.showToast({
                   title: "用户名不存在",
                   icon: "none"
                 });
-                return _context.abrupt("return", {
+                return _context2.abrupt("return", {
                   success: false,
                   message: "用户名不存在"
                 });
-              case 18:
+              case 17:
                 if (!(result.data.code === 406)) {
-                  _context.next = 23;
+                  _context2.next = 22;
                   break;
                 }
                 uni.showToast({
                   title: "用户名或密码错误",
                   icon: "none"
                 });
-                return _context.abrupt("return", {
+                return _context2.abrupt("return", {
                   success: false,
                   message: "用户名或密码错误"
                 });
-              case 23:
+              case 22:
                 uni.showToast({
                   title: "未知错误，请联系管理员",
                   icon: "none"
                 });
-                return _context.abrupt("return", {
+                return _context2.abrupt("return", {
                   success: false,
                   message: "未知错误，请联系管理员"
                 });
-              case 25:
-                _context.next = 31;
+              case 24:
+                _context2.next = 30;
                 break;
-              case 27:
-                _context.prev = 27;
-                _context.t0 = _context["catch"](0);
+              case 26:
+                _context2.prev = 26;
+                _context2.t0 = _context2["catch"](0);
                 uni.showToast({
                   title: "登录请求异常，请检查网络连接",
                   icon: "none"
                 });
-                return _context.abrupt("return", {
+                return _context2.abrupt("return", {
                   success: false,
                   message: "登录请求异常，请检查网络连接"
                 });
-              case 31:
+              case 30:
               case "end":
-                return _context.stop();
+                return _context2.stop();
             }
           }
-        }, _callee, null, [[0, 27]]);
+        }, _callee2, null, [[0, 26]]);
       }))();
-    },
-    goEditUsername: function goEditUsername() {
-      uni.navigateTo({
-        url: '/pages/me/editUsername'
-      });
-    },
-    goEditGender: function goEditGender() {
-      uni.navigateTo({
-        url: '/pages/me/editGender'
-      });
-    },
-    logout: function logout() {
-      // Handle logout
     }
   }
 };

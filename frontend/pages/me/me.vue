@@ -1,31 +1,27 @@
 <template>
 	<view class="me">
-		<view class="profile-page">
 
-			<image class="img-b" src="https://zhoukaiwen.com/img/loginImg/3.png"></image>
-			<!-- Centered Avatar -->
-			<view class="avatar-section">
-				<u-avatar class="avatar" size="100" src="/static/avatar.png"></u-avatar>
-				<text class="edit-avatar">编辑头像</text>
-			</view>
+		<image class="img-b" src="https://zhoukaiwen.com/img/loginImg/3.png"></image>
 
-			<u-cell-group class="cell-group">
-				<u-cell title="用户名" value="河工大不知名学生" is-link @click="goEditUsername" />
-				<u-cell title="修改密码" is-link @click="goEditUsername" />
-				<u-cell title="人脸照片上传" @click="uploadPicture" />
-				<u-cell title="所属团队" value="河工大" />
-			</u-cell-group>
-			<button @tap="login()">退 出 登 录</button>
-		</view>
+		<u-cell-group class="cell-group">
+			<u-cell title="用户名" value="河工大不知名学生" is-link @click="goEditUsername" />
+			<u-cell title="修改密码" is-link @click="goEditUsername" />
+			<u-cell title="人脸照片上传" @click="uploadPicture" />
+			<u-cell title="所属团队" value="河工大" />
+		</u-cell-group>
+		<button @click="logout()">退 出 登 录</button>
 	</view>
 </template>
 
 <script>
 	import {
-		isLogin,setUserId
+		isLogin,
+		setUserId
 	} from "@/utils/auth";
-	import{
-		login,register,logout
+	import {
+		login,
+		register,
+		logout
 	} from "@/api/me"
 	export default {
 		data() {
@@ -36,9 +32,9 @@
 					userId: '',
 					password: '',
 				},
-				userinfo:{
+				userinfo: {
 					username: '',
-					
+
 				}
 			}
 		},
@@ -62,17 +58,30 @@
 				}
 			},
 			async logout() {
-			    await logout();
-			    sessionStorage.removeItem('user');
-			    uni.showToast({
-			      title: "已退出登录",
-			      icon: "success"
-			    });
-			    this.isLogin = false;
-			    uni.navigateTo({
-			      url: '/pages/login/login'
-			    });
-			  },
+				await logout();
+				uni.removeStorage({
+				    key: 'user',
+				    success: function () {
+				        console.log('User data removed successfully');
+				    },
+				    fail: function (error) {
+				        console.log('Failed to remove user data:', error);
+				    }
+				});
+				uni.showToast({
+				    title: "已退出登录",
+				    icon: "success",
+				    duration: 2000,
+				    complete: () => {
+				        this.isLogin = false;
+				        setTimeout(() => {
+				            uni.navigateTo({
+				                url: '/pages/login/login'
+				            });
+				        }, 1000); // 延迟跳转，确保提示框显示完成
+				    }
+				});
+			},
 			goEditUsername() {
 				uni.navigateTo({
 					url: '/pages/me/editUsername'
@@ -264,7 +273,8 @@
 		height: 0;
 		content: '\20';
 	}
-	.register{
+
+	.register {
 		top: 10px;
 	}
 </style>

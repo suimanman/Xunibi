@@ -12,8 +12,8 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("select * from user where user_id=#{id}")
     User getByUserId(Integer id);
 
-    @Insert("insert into user(username,password,role,registration_date) " +
-            "values (#{user.username},#{user.password},#{user.role},#{user.date})")
+    @Insert("insert into user(username,password,registration_date) " +
+            "values (#{user.username},#{user.password},#{user.date})")
     Integer addUser(@Param("user") User user);
 
     @Update("update user set password = #{user.password} where user_id=#{user.userId}")

@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
     TeamMapper teamMapper;
     @Override
     public MyResult register(User user) {
-        User getUser=userMapper.getByUserId(user.getUserId());
+        User getUser=userMapper.getByUsername(user.getUsername());
         if(getUser != null){
             return MyResult.error("用户已经存在");
         }
