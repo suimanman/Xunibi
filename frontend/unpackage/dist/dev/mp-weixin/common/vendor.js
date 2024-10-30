@@ -19254,7 +19254,7 @@ exports.isLogin = isLogin;
 exports.removeToken = removeToken;
 exports.setToken = setToken;
 exports.setUserId = setUserId;
-var TokenKey = 'App-Token';
+var TokenKey = 'cookie';
 function getToken() {
   return uni.getStorageSync(TokenKey);
 }
@@ -19294,6 +19294,7 @@ var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/inte
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.isLogin = isLogin;
 exports.login = login;
 exports.logout = logout;
 exports.register = register;
@@ -19321,7 +19322,16 @@ function register(data) {
     data: data
   });
 }
-
+//验证是否登录
+function isLogin() {
+  return (0, _request.default)({
+    url: '/user/isLogin',
+    header: {
+      isToken: true
+    },
+    method: 'get'
+  });
+}
 // 退出方法
 function logout() {
   return (0, _request.default)({
@@ -19364,6 +19374,11 @@ instance.interceptors.request.use(function (config) {
   if ((0, _auth.getToken)() && !isToken) {
     console.log('Token', (0, _auth.getToken)());
     config.header['Authorization'] = 'userInfo ' + (0, _auth.getToken)();
+  }
+  // 手动添加 Cookie，以确保后端能接收到
+  var cookie = uni.getStorageSync('cookie');
+  if (cookie) {
+    config.header['Cookie'] = cookie;
   }
   // console.log('发送请求前', config)
   return config;

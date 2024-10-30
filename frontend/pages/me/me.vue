@@ -15,19 +15,18 @@
 
 <script>
 	import {
-		isLogin,
 		setUserId
 	} from "@/utils/auth";
 	import {
 		login,
 		register,
+		isLogin,
 		logout
 	} from "@/api/me"
 	export default {
 		data() {
 			return {
 				title: "众创空间",
-				isLogin: false,
 				user: {
 					userId: '',
 					password: '',
@@ -41,9 +40,10 @@
 		created() {
 			this.loginHandle();
 			if (isLogin()) {
-				console.log(isLogin());
-				this.isLogin = true;
+				console.log("登录");
 				this.getUserInfo();
+			}else{
+				console.log("未登录");
 			}
 		},
 		methods: {
@@ -53,34 +53,31 @@
 						url: '/pages/login/login'
 					})
 				} else {
-					this.isLogin = true;
 					await this.getUserInfo();
 				}
 			},
 			async logout() {
-				await logout();
-				uni.removeStorage({
-				    key: 'user',
-				    success: function () {
-				        console.log('User data removed successfully');
-				    },
-				    fail: function (error) {
-				        console.log('Failed to remove user data:', error);
-				    }
-				});
-				uni.showToast({
-				    title: "已退出登录",
-				    icon: "success",
-				    duration: 2000,
-				    complete: () => {
-				        this.isLogin = false;
-				        setTimeout(() => {
-				            uni.navigateTo({
-				                url: '/pages/login/login'
-				            });
-				        }, 1000); // 延迟跳转，确保提示框显示完成
-				    }
-				});
+			    await logout();
+			    uni.removeStorage({
+			        key: 'userInfo',
+			        success: function () {
+			            console.log('User data removed successfully');
+			        },
+			        fail: function (error) {
+			            console.log('Failed to remove user data:', error);
+			        }
+			    });
+			    uni.showToast({
+			        title: "已退出登录",
+			        icon: "success",
+			        duration: 2000,
+			        success: () => {
+			            // 使用 reLaunch 进行跳转，确保退出后返回登录页面
+			            uni.reLaunch({
+			                url: '/pages/login/login'
+			            });
+			        }
+			    });
 			},
 			goEditUsername() {
 				uni.navigateTo({

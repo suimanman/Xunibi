@@ -11,12 +11,12 @@
 				<view class="t-a">
 					<image src="@/static/icon/userId.png"></image>
 					<view class="line"></view>
-					<input placeholder="请输入学号"  v-model="user.username" />
+					<input placeholder="请输入学号" v-model="user.username" />
 				</view>
 				<view class="t-a">
 					<image src="/static/icon/password.png"></image>
 					<view class="line"></view>
-					<input type="password"  placeholder="请输入密码" v-model="user.password" />
+					<input type="password" placeholder="请输入密码" v-model="user.password" />
 				</view>
 				<button @click="loginUser()">登 录</button>
 				<button class="register" @click="registerUser()">注 册</button>
@@ -32,102 +32,122 @@
 
 <script>
 	import {
-		isLogin,setUserId
+		setUserId
 	} from "@/utils/auth";
-	import{
-		login,register,logout
+	import {
+		login,
+		register,
+		logout,
+		isLogin
 	} from "@/api/me"
 	export default {
 		data() {
 			return {
 				title: "众创空间",
-				isLogin: false,
 				user: {
 					username: '',
 					password: '',
 				},
 			}
 		},
-		created() {
-			if (isLogin()) {
-				uni.switchTab({
-				  url: '/pages/home/home' // tabBar 页面的路径
-				});
-				this.getUserInfo();
-			}
-		},
+		// created() {
+		// 	if (isLogin()) {
+		// 		// console.log("hhh")
+		// 		uni.switchTab({
+		// 		  url: '/pages/home/home' // tabBar 页面的路径
+		// 		});
+		// 		this.getUserInfo();
+		// 	}
+		// },
 		methods: {
 			async registerUser() {
-			  try {
-			    const result = await register(this.user); // 调用 register 方法发送注册请求
-			    if (result.data.code === 200) {
-			      uni.showToast({
-			        title: "注册成功，正在登录...",
-			        icon: "success",
-			        duration: 2000
-			      });
-			      // 调用登录方法实现自动登录
-			      await this.loginUser();
-			    } else {
-			      uni.showToast({
-			        title: result.data.msg || "注册失败",
-			        icon: "none"
-			      });
-			    }
-			  } catch (error) {
-			    uni.showToast({
-			      title: "注册请求异常，请检查网络连接",
-			      icon: "none"
-			    });
-			  }
+				try {
+					const result = await register(this.user); // 调用 register 方法发送注册请求
+					if (result.data.code === 200) {
+						uni.showToast({
+							title: "注册成功，正在登录...",
+							icon: "success",
+							duration: 2000
+						});
+						// 调用登录方法实现自动登录
+						await this.loginUser();
+					} else {
+						uni.showToast({
+							title: result.data.msg || "注册失败",
+							icon: "none"
+						});
+					}
+				} catch (error) {
+					uni.showToast({
+						title: "注册请求异常，请检查网络连接",
+						icon: "none"
+					});
+				}
 			},
 			async loginUser() {
-			  try {
-			    const result = await login(this.user);
-			    if (result.data.code === 200) {
-					console.log("here")
-			      uni.setStorageSync('user', JSON.stringify(result.data.DATA_TAG)); // 使用 setStorageSync 存储数据
-			      this.isLogin = true;
-			      
-			      uni.showToast({
-			        title: "登录成功",
-			        icon: "success",
-			        duration: 2000,
-			        success: () => {
-			          setTimeout(() => {
-			            uni.switchTab({
-			              url: '/pages/home/home' // tabBar 页面的路径
-			            });
-			          }, 1000);
-			        }
-			      });
-			      return { success: true, message: "登录成功" };
-			    } else if (result.data.code === 400) {
-			      uni.showToast({
-			        title: "用户名不存在",
-			        icon: "none"
-			      });
-			      return { success: false, message: "用户名不存在" };
-			    } else if (result.data.code === 406) {
-			      uni.showToast({
-			        title: "用户名或密码错误",
-			        icon: "none"
-			      });
-			      return { success: false, message: "用户名或密码错误" };
-			    } else {
-			      uni.showToast({
-			        title: "未知错误，请联系管理员",
-			        icon: "none"
-			      });
-			      return { success: false, message: "未知错误，请联系管理员" };
-			    }
-			  } catch (error) {
-			    uni.showToast({
-			      title: "登录请求异常，请检查网络连接",
-			      icon: "none"
-			    });
-			    return { success: false, message: "登录请求异常，请检查网络连接" };
-			  }
+				try {
+					const result = await login(this.user);
+					if (result.data.code === 200) {
+						console.log("here")
+						// 获取并存储 Cookie
+						const cookies = result.header['Set-Cookie'] || result.header['set-cookie'];
+						if (cookies) {
+							uni.setStorageSync('cookie', cookies);
+						}
+						uni.showToast({
+							title: "登录成功",
+							icon: "success",
+							duration: 2000,
+							success: () => {
+								setTimeout(() => {
+									uni.switchTab({
+										url: '/pages/home/home' // tabBar 页面的路径
+									});
+								}, 1000);
+							}
+						});
+						return {
+							success: true,
+							message: "登录成功"
+						};
+					} else if (result.data.code === 400) {
+						uni.showToast({
+							title: "用户名不存在",
+							icon: "none"
+						});
+						return {
+							success: false,
+							message: "用户名不存在"
+						};
+					} else if (result.data.code === 406) {
+						uni.showToast({
+							title: "用户名或密码错误",
+							icon: "none"
+						});
+						return {
+							success: false,
+							message: "用户名或密码错误"
+						};
+					} else {
+						uni.showToast({
+							title: "未知错误，请联系管理员",
+							icon: "none"
+						});
+						return {
+							success: false,
+							message: "未知错误，请联系管理员"
+						};
+					}
+				} catch (error) {
+					uni.showToast({
+						title: "登录请求异常，请检查网络连接",
+						icon: "none"
+					});
+					return {
+						success: false,
+						message: "登录请求异常，请检查网络连接"
+					};
+				}
 			},
 		},
 	};
@@ -310,7 +330,8 @@
 		height: 0;
 		content: '\20';
 	}
-	.register{
+
+	.register {
 		top: 10px;
 	}
 </style>

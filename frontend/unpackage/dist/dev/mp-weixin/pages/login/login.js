@@ -182,22 +182,21 @@ var _default = {
   data: function data() {
     return {
       title: "众创空间",
-      isLogin: false,
       user: {
         username: '',
         password: ''
       }
     };
   },
-  created: function created() {
-    if ((0, _auth.isLogin)()) {
-      uni.switchTab({
-        url: '/pages/home/home' // tabBar 页面的路径
-      });
-
-      this.getUserInfo();
-    }
-  },
+  // created() {
+  // 	if (isLogin()) {
+  // 		// console.log("hhh")
+  // 		uni.switchTab({
+  // 		  url: '/pages/home/home' // tabBar 页面的路径
+  // 		});
+  // 		this.getUserInfo();
+  // 	}
+  // },
   methods: {
     registerUser: function registerUser() {
       var _this = this;
@@ -253,7 +252,7 @@ var _default = {
     loginUser: function loginUser() {
       var _this2 = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-        var result;
+        var result, cookies;
         return _regenerator.default.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
@@ -268,8 +267,11 @@ var _default = {
                   break;
                 }
                 console.log("here");
-                uni.setStorageSync('user', JSON.stringify(result.data.DATA_TAG)); // 使用 setStorageSync 存储数据
-                _this2.isLogin = true;
+                // 获取并存储 Cookie
+                cookies = result.header['Set-Cookie'] || result.header['set-cookie'];
+                if (cookies) {
+                  uni.setStorageSync('cookie', cookies);
+                }
                 uni.showToast({
                   title: "登录成功",
                   icon: "success",

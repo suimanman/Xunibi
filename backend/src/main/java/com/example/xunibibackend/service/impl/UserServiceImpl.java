@@ -71,14 +71,19 @@ public class UserServiceImpl implements UserService {
         User sessionUser=(User) session.getAttribute(UserController.SESSION_NAME);
         //如果session中没有用户信息说明用户未登录
         if(sessionUser==null){
+//            log.info("未登录");
             return MyResult.error("用户未登录！");
         }
+//        log.info("---sessionUser{}",sessionUser);
         // 登录了则去数据库取出信息进行比对
-        User getUser = userMapper.getByUserId(sessionUser.getUserId());
+        User getUser = userMapper.getByUsername(sessionUser.getUsername());
+//        log.info("---getUser{}",getUser);
         // 如果session用户找不到对应的数据库中的用户或者找出的用户密码和session中用户不一致则说明session中用户信息无效
-        if (getUser == null || !getUser.getPassword().equals(sessionUser.getPassword())) {
+        if (getUser == null || !getUser.getPassword().equals(DigestUtil.md5Hex(sessionUser.getPassword()))){
+//            log.info("password{}",DigestUtil.md5Hex(getUser.getPassword()));
             return MyResult.error("用户信息无效！");
         }
+//        log.info("登录");
         return MyResult.success("用户已登录！",getUser);
     }
 }

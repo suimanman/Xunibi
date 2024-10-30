@@ -23,7 +23,16 @@ export function register(data) {
 		data: data
 	})
 }
-
+//验证是否登录
+export function isLogin(){
+	return request({
+		url: '/user/isLogin',
+		header: {
+			isToken: true
+		},
+		method: 'get'
+	})
+}
 // 退出方法
 export function logout() {
 	return request({

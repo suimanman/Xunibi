@@ -191,7 +191,6 @@ var _default = {
   data: function data() {
     return {
       title: "众创空间",
-      isLogin: false,
       user: {
         userId: '',
         password: ''
@@ -203,10 +202,11 @@ var _default = {
   },
   created: function created() {
     this.loginHandle();
-    if ((0, _auth.isLogin)()) {
-      console.log((0, _auth.isLogin)());
-      this.isLogin = true;
+    if ((0, _me.isLogin)()) {
+      console.log("登录");
       this.getUserInfo();
+    } else {
+      console.log("未登录");
     }
   },
   methods: {
@@ -217,20 +217,19 @@ var _default = {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                if ((0, _auth.isLogin)()) {
+                if ((0, _me.isLogin)()) {
                   _context.next = 4;
                   break;
                 }
                 uni.navigateTo({
                   url: '/pages/login/login'
                 });
-                _context.next = 7;
+                _context.next = 6;
                 break;
               case 4:
-                _this.isLogin = true;
-                _context.next = 7;
+                _context.next = 6;
                 return _this.getUserInfo();
-              case 7:
+              case 6:
               case "end":
                 return _context.stop();
             }
@@ -239,7 +238,6 @@ var _default = {
       }))();
     },
     logout: function logout() {
-      var _this2 = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
         return _regenerator.default.wrap(function _callee2$(_context2) {
           while (1) {
@@ -249,7 +247,7 @@ var _default = {
                 return (0, _me.logout)();
               case 2:
                 uni.removeStorage({
-                  key: 'user',
+                  key: 'userInfo',
                   success: function success() {
                     console.log('User data removed successfully');
                   },
@@ -261,13 +259,11 @@ var _default = {
                   title: "已退出登录",
                   icon: "success",
                   duration: 2000,
-                  complete: function complete() {
-                    _this2.isLogin = false;
-                    setTimeout(function () {
-                      uni.navigateTo({
-                        url: '/pages/login/login'
-                      });
-                    }, 1000); // 延迟跳转，确保提示框显示完成
+                  success: function success() {
+                    // 使用 reLaunch 进行跳转，确保退出后返回登录页面
+                    uni.reLaunch({
+                      url: '/pages/login/login'
+                    });
                   }
                 });
               case 4:

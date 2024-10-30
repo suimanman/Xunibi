@@ -40,7 +40,7 @@ public class UserController {
         result=userService.login(user);
         // 如果登录成功，则设定session
         if (result.isSuccess()) {
-            request.getSession().setAttribute(SESSION_NAME, result.DATA_TAG);
+            request.getSession().setAttribute(SESSION_NAME, user);
         }
 //        result.put(MyResult.CODE_TAG,200);
         log.info("-----{}",request.getSession().getId());
@@ -55,6 +55,7 @@ public class UserController {
      */
     @GetMapping("/isLogin")
     public MyResult isLogin(HttpServletRequest request) {
+        log.info("你好哈哈");
         // 传入session到用户服务层
         return userService.isLogin(request.getSession());
     }

@@ -1,4 +1,4 @@
-const TokenKey = 'App-Token'
+const TokenKey = 'cookie'
 
 export function getToken() {
 	return uni.getStorageSync(TokenKey)

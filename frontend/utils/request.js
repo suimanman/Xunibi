@@ -23,8 +23,13 @@ instance.interceptors.request.use(
 		// 在发送请求前做些什么
 		const isToken = config.header['isToken'] === false
 		if (getToken() && !isToken) {
-			console.log('Token',getToken())
+			console.log('Token', getToken())
 			config.header['Authorization'] = 'userInfo ' + getToken()
+		}
+		// 手动添加 Cookie，以确保后端能接收到
+		const cookie = uni.getStorageSync('cookie');
+		if (cookie) {
+			config.header['Cookie'] = cookie;
 		}
 		// console.log('发送请求前', config)
 		return config
@@ -55,7 +60,7 @@ instance.interceptors.response.use(
 				title: '提示',
 				content: '登录状态已过期，您可以继续留在该页面，或者重新登录?',
 				confirmText: '登录',
-				success: function (res) {
+				success: function(res) {
 					if (res.confirm) {
 						uni.navigateTo({
 							url: '/pages/me/me'
