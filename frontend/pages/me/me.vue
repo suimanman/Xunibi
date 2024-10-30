@@ -9,7 +9,7 @@
 			<u-cell title="修改密码" is-link @click="goEditUsername" />
 			<u-cell title="人脸照片上传" is-link @click="uploadPicture" />
 		</u-cell-group>
-		<button @click="logout()">退 出 登 录</button>
+		<button class="logout-button" @click="logout()">退 出 登 录</button>
 	</view>
 </template>
 
@@ -271,4 +271,14 @@
 	.register {
 		top: 10px;
 	}
+	.logout-button {
+			margin-top: 30px; /* 调整按钮的顶部间距 */
+			font-size: 28rpx;
+			background: #5677fc;
+			color: #fff;
+			height: 90rpx;
+			line-height: 90rpx;
+			border-radius: 50rpx;
+			box-shadow: 0 5px 7px 0 rgba(86, 119, 252, 0.2);
+		}
 </style>
