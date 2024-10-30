@@ -26,4 +26,7 @@ public interface TeamMapper extends BaseMapper<Team> {
 
     @Select("select team_id from team where team_name=#{name}")
     Integer getByTeamName(String name);
+
+    @Select("select team_name from team where team_id=#{teamId}")
+    String getNameByteamId(Integer teamId);
 }

@@ -49,7 +49,7 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
 	//响应成功后
 	response => {
-		console.log('响应成功后', response)
+		// console.log('响应成功后', response)
 		// 未设置状态码则默认成功状态
 		const code = response.data.code || 200;
 		// 获取错误信息

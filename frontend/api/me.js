@@ -23,8 +23,18 @@ export function register(data) {
 		data: data
 	})
 }
+//获取用户信息
+export function getUserInfo() {
+	return request({
+		url: '/user/getUserInfo',
+		header: {
+			isToken: true
+		},
+		method: 'get'
+	})
+}
 //验证是否登录
-export function isLogin(){
+export function isLogin() {
 	return request({
 		url: '/user/isLogin',
 		header: {
@@ -39,4 +49,16 @@ export function logout() {
 		url: '/user/logout',
 		method: 'get'
 	})
+}
+//修改密码
+export function editPassword(data) {
+	return request({
+		url: '/user/editPassword',
+		method: 'put',
+		data: {
+			oldPassword: data.oldPassword,
+			newPassword: data.newPassword
+		}
+	})
+
 }

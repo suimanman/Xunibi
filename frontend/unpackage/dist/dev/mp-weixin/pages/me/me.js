@@ -192,18 +192,17 @@ var _default = {
     return {
       title: "众创空间",
       user: {
-        userId: '',
-        password: ''
-      },
-      userinfo: {
-        username: ''
+        username: '',
+        password: '',
+        role: '',
+        teamName: ''
       }
     };
   },
   created: function created() {
     this.loginHandle();
     if ((0, _me.isLogin)()) {
-      console.log("登录");
+      // console.log("登录");
       this.getUserInfo();
     } else {
       console.log("未登录");
@@ -213,23 +212,25 @@ var _default = {
     loginHandle: function loginHandle() {
       var _this = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+        var loginResult;
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                if ((0, _me.isLogin)()) {
-                  _context.next = 4;
-                  break;
+                _context.next = 2;
+                return (0, _me.isLogin)();
+              case 2:
+                loginResult = _context.sent;
+                if (!(0, _me.isLogin)()) {
+                  uni.navigateTo({
+                    url: '/pages/login/login'
+                  });
+                } else {
+                  // 获取用户数据
+                  _this.user = loginResult.data.data; // data 中包含返回的用户数据
+                  console.log(_this.user);
                 }
-                uni.navigateTo({
-                  url: '/pages/login/login'
-                });
-                _context.next = 6;
-                break;
               case 4:
-                _context.next = 6;
-                return _this.getUserInfo();
-              case 6:
               case "end":
                 return _context.stop();
             }
@@ -276,12 +277,7 @@ var _default = {
     },
     goEditUsername: function goEditUsername() {
       uni.navigateTo({
-        url: '/pages/me/editUsername'
-      });
-    },
-    goEditGender: function goEditGender() {
-      uni.navigateTo({
-        url: '/pages/me/editGender'
+        url: '/pages/me/editPassword'
       });
     }
   }

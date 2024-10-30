@@ -11,7 +11,9 @@ public interface UserService {
 
     MyResult login(User user);
 
-    MyResult update(User user) throws Exception;
+    MyResult update(User user ,String teamName) throws Exception;
 
     MyResult isLogin(HttpSession session);
+
+    MyResult editPassword(User sessionUser, String oldPassword, String newPassword);
 }

@@ -4,10 +4,10 @@
 		<image class="img-b" src="https://zhoukaiwen.com/img/loginImg/3.png"></image>
 
 		<u-cell-group class="cell-group">
-			<u-cell title="用户名" value="河工大不知名学生" is-link @click="goEditUsername" />
+			<u-cell title="用户名" v-model="user.username" />
+			<u-cell title="所属团队" v-model="user.teamName" />
 			<u-cell title="修改密码" is-link @click="goEditUsername" />
-			<u-cell title="人脸照片上传" @click="uploadPicture" />
-			<u-cell title="所属团队" value="河工大" />
+			<u-cell title="人脸照片上传" is-link @click="uploadPicture" />
 		</u-cell-group>
 		<button @click="logout()">退 出 登 录</button>
 	</view>
@@ -28,65 +28,62 @@
 			return {
 				title: "众创空间",
 				user: {
-					userId: '',
-					password: '',
-				},
-				userinfo: {
 					username: '',
-
-				}
+					password: '',
+					role: '',
+					teamName: '',
+				},
 			}
 		},
 		created() {
 			this.loginHandle();
 			if (isLogin()) {
-				console.log("登录");
+				// console.log("登录");
 				this.getUserInfo();
-			}else{
+			} else {
 				console.log("未登录");
 			}
 		},
 		methods: {
 			async loginHandle() {
+				// 调用 isLogin 并等待其返回结果
+				const loginResult = await isLogin();
 				if (!isLogin()) {
 					uni.navigateTo({
 						url: '/pages/login/login'
 					})
 				} else {
-					await this.getUserInfo();
+					// 获取用户数据
+					this.user = loginResult.data.data; // data 中包含返回的用户数据
+					console.log(this.user);
 				}
 			},
 			async logout() {
-			    await logout();
-			    uni.removeStorage({
-			        key: 'userInfo',
-			        success: function () {
-			            console.log('User data removed successfully');
-			        },
-			        fail: function (error) {
-			            console.log('Failed to remove user data:', error);
-			        }
-			    });
-			    uni.showToast({
-			        title: "已退出登录",
-			        icon: "success",
-			        duration: 2000,
-			        success: () => {
-			            // 使用 reLaunch 进行跳转，确保退出后返回登录页面
-			            uni.reLaunch({
-			                url: '/pages/login/login'
-			            });
-			        }
-			    });
+				await logout();
+				uni.removeStorage({
+					key: 'userInfo',
+					success: function() {
+						console.log('User data removed successfully');
+					},
+					fail: function(error) {
+						console.log('Failed to remove user data:', error);
+					}
+				});
+				uni.showToast({
+					title: "已退出登录",
+					icon: "success",
+					duration: 2000,
+					success: () => {
+						// 使用 reLaunch 进行跳转，确保退出后返回登录页面
+						uni.reLaunch({
+							url: '/pages/login/login'
+						});
+					}
+				});
 			},
 			goEditUsername() {
 				uni.navigateTo({
-					url: '/pages/me/editUsername'
-				});
-			},
-			goEditGender() {
-				uni.navigateTo({
-					url: '/pages/me/editGender'
+					url: '/pages/me/editPassword'
 				});
 			},
 		},

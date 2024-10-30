@@ -4,7 +4,8 @@
     "pages/home/home",
     "pages/gain/gain",
     "pages/rental/rental",
-    "pages/login/login"
+    "pages/login/login",
+    "pages/me/editPassword"
   ],
   "subPackages": [],
   "window": {

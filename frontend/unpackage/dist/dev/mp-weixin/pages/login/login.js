@@ -188,15 +188,6 @@ var _default = {
       }
     };
   },
-  // created() {
-  // 	if (isLogin()) {
-  // 		// console.log("hhh")
-  // 		uni.switchTab({
-  // 		  url: '/pages/home/home' // tabBar 页面的路径
-  // 		});
-  // 		this.getUserInfo();
-  // 	}
-  // },
   methods: {
     registerUser: function registerUser() {
       var _this = this;

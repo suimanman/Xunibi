@@ -8,6 +8,9 @@ import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
 @Slf4j
 @RestController
 @RequestMapping("/user")
@@ -55,26 +58,44 @@ public class UserController {
      */
     @GetMapping("/isLogin")
     public MyResult isLogin(HttpServletRequest request) {
-        log.info("你好哈哈");
+//        log.info("你好哈哈");
         // 传入session到用户服务层
         return userService.isLogin(request.getSession());
     }
+    /*
+     * 用户更新
+     * @param user    传入登录用户信息
+     * @param teamName 用户所属团队
+     */
     @PutMapping("/update")
-    public MyResult update(@RequestBody User user, HttpServletRequest request) throws Exception {
+    public MyResult update(@RequestBody User user, @PathVariable String teamName,HttpServletRequest request) throws Exception {
         HttpSession session = request.getSession();
         // 检查session中的用户（即当前登录用户）是否和当前被修改用户一致
         User sessionUser = (User) session.getAttribute(SESSION_NAME);
         if (sessionUser.getUserId() != user.getUserId().intValue()) {
             return MyResult.error("当前登录用户和被修改用户不一致，终止！");
         }
-        MyResult result = userService.update(user);
+        MyResult result = userService.update(user,teamName);
         // 修改成功则刷新session信息
         if (result.isSuccess()) {
             session.setAttribute(SESSION_NAME, result.DATA_TAG);
         }
         return result;
     }
-
+    /**
+     * 修改密码
+     *
+     * @param request 请求，用于操作session
+     * @return 结果对象
+     */
+    @PutMapping("/editPassword")
+    public MyResult update(@RequestBody Map<String, String> passwords, HttpServletRequest request) throws Exception {
+        HttpSession session = request.getSession();
+        User sessionUser = (User) session.getAttribute(SESSION_NAME);
+        String oldPassword = passwords.get("oldPassword");
+        String newPassword = passwords.get("newPassword");
+        return userService.editPassword(sessionUser, oldPassword, newPassword);
+    }
     /**
      * 用户登出
      *

@@ -32,6 +32,13 @@
 			{
 				"navigationBarTitleText" : "登录"
 			}
+		},
+		{
+			"path" : "pages/me/editPassword",
+			"style" : 
+			{
+				"navigationBarTitleText" : "修改密码"
+			}
 		}
 	],
 	"globalStyle": {

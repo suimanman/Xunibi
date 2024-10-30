@@ -19,11 +19,11 @@ public class User {
 
     private String password;
 
-    private String email;
-
     private String role;
 
     private Integer teamId;
+
+    private String teamName;
 
     @Column(name = "registration_date", nullable = false)
     private LocalDate date;

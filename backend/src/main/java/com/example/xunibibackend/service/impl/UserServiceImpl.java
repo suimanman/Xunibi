@@ -3,6 +3,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.example.xunibibackend.constants.HttpStatus;
 import com.example.xunibibackend.controller.UserController;
+import com.example.xunibibackend.entity.Team;
 import com.example.xunibibackend.entity.User;
 import com.example.xunibibackend.mapper.TeamMapper;
 import com.example.xunibibackend.mapper.UserMapper;
@@ -48,8 +49,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public MyResult update(User user) throws Exception {
+    public MyResult update(User user,String teamName) throws Exception {
         User getUser=userMapper.getByUsername(user.getUsername());
+        Integer getTeamId=teamMapper.getByTeamName(teamName);
         if(getUser==null){
             return MyResult.error("用户名不存在！");
         }
@@ -60,7 +62,7 @@ public class UserServiceImpl implements UserService {
         }
         // 对象互补
         ClassExamine.objectOverlap(user, getUser);
-
+        user.setTeamId(getTeamId);
         userMapper.update(user);
         return MyResult.success("修改成功！",user);
     }
@@ -84,6 +86,18 @@ public class UserServiceImpl implements UserService {
             return MyResult.error("用户信息无效！");
         }
 //        log.info("登录");
+        getUser.setTeamName(teamMapper.getNameByteamId(getUser.getTeamId()));
         return MyResult.success("用户已登录！",getUser);
+    }
+
+    @Override
+    public MyResult editPassword(User sessionUser, String oldPassword, String newPassword) {
+//        log.info("1:{},2:{}",sessionUser.getPassword(),DigestUtil.md5Hex(oldPassword));
+        if(!sessionUser.getPassword().equals(oldPassword)){
+            return MyResult.error("原密码输入错误！");
+        }
+        Integer id=userMapper.getByUsername(sessionUser.getUsername()).getUserId();
+        userMapper.editPassword(id,DigestUtil.md5Hex(newPassword));
+        return MyResult.success("修改密码成功！");
     }
 }
