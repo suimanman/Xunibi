@@ -24546,6 +24546,36 @@ var _default = {
 exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
+/***/ }),
+/* 438 */,
+/* 439 */,
+/* 440 */,
+/* 441 */,
+/* 442 */,
+/* 443 */
+/*!*****************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/api/home.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getNotice = getNotice;
+var _request = _interopRequireDefault(__webpack_require__(/*! @/utils/request */ 169));
+//获取公告
+function getNotice() {
+  return (0, _request.default)({
+    url: '/manage/notice',
+    method: 'get'
+  });
+}
+
 /***/ })
 ]]);
 //# sourceMappingURL=../../.sourcemap/mp-weixin/common/vendor.js.map

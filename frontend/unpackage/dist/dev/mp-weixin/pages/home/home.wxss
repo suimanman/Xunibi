@@ -1,33 +1,39 @@
 
 .home-page.data-v-92bb8f34 {
-  padding: 10px;
+	padding: 10px;
 }
 .welcome-section.data-v-92bb8f34 {
-  background-color: white; /* 背景色 */
-  border-radius: 15px; /* 通过 border-radius 实现椭圆效果 */
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  display: flex;
-  align-items: center;
-  padding: 20px 0;
-}
-.info.data-v-92bb8f34{
-	font-size: 15px;
-	margin-left: 10px;
-	padding: 10px;
+	margin-top: 10px;
+	background-color: white;
+	border-radius: 15px;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	padding: 20px 10px;
+}
+.button-container.data-v-92bb8f34 {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-right: 10px;
+}
+.info.data-v-92bb8f34 {
+	font-size: 15px;
+	padding: 10px;
 }
 .quick-actions.data-v-92bb8f34 {
-  margin-top: 20px;
+	margin-top: 20px;
 }
 .activity-list.data-v-92bb8f34 {
-  margin-top: 20px;
+	margin-top: 20px;
 }
-.u-list-item.data-v-92bb8f34{
-	background-color: white; /* 背景色 */
-	border-radius: 15px; /* 通过 border-radius 实现椭圆效果 */
+.u-list-item.data-v-92bb8f34 {
+	background-color: white;
+	border-radius: 15px;
+}
+.sign-text.data-v-92bb8f34 {
+	font-size: 13px;
+	margin-top: 2px;
+	/* 调整文字和图标的间距 */
 }
 

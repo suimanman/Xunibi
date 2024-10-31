@@ -192,7 +192,7 @@ var _default = {
     registerUser: function registerUser() {
       var _this = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-        var result;
+        var _result;
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -201,8 +201,8 @@ var _default = {
                 _context.next = 3;
                 return (0, _me.register)(_this.user);
               case 3:
-                result = _context.sent;
-                if (!(result.data.code === 200)) {
+                _result = _context.sent;
+                if (!(_result.data.code === 200)) {
                   _context.next = 10;
                   break;
                 }
@@ -219,7 +219,7 @@ var _default = {
                 break;
               case 10:
                 uni.showToast({
-                  title: result.data.msg || "注册失败",
+                  title: _result.data.msg || "注册失败",
                   icon: "none"
                 });
               case 11:
@@ -243,7 +243,7 @@ var _default = {
     loginUser: function loginUser() {
       var _this2 = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-        var result, cookies;
+        var _result2, cookies;
         return _regenerator.default.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
@@ -252,14 +252,14 @@ var _default = {
                 _context2.next = 3;
                 return (0, _me.login)(_this2.user);
               case 3:
-                result = _context2.sent;
-                if (!(result.data.code === 200)) {
+                _result2 = _context2.sent;
+                if (!(_result2.data.code === 200)) {
                   _context2.next = 12;
                   break;
                 }
                 console.log("here");
                 // 获取并存储 Cookie
-                cookies = result.header['Set-Cookie'] || result.header['set-cookie'];
+                cookies = _result2.header['Set-Cookie'] || _result2.header['set-cookie'];
                 if (cookies) {
                   uni.setStorageSync('cookie', cookies);
                 }
@@ -280,7 +280,7 @@ var _default = {
                   message: "登录成功"
                 });
               case 12:
-                if (!(result.data.code === 400)) {
+                if (!(_result2.data.code === 400)) {
                   _context2.next = 17;
                   break;
                 }
@@ -293,7 +293,7 @@ var _default = {
                   message: "用户名不存在"
                 });
               case 17:
-                if (!(result.data.code === 406)) {
+                if (!(_result2.data.code === 406)) {
                   _context2.next = 22;
                   break;
                 }
@@ -321,12 +321,12 @@ var _default = {
                 _context2.prev = 26;
                 _context2.t0 = _context2["catch"](0);
                 uni.showToast({
-                  title: "登录请求异常，请检查网络连接",
+                  title: result.data.msg || "登录请求异常，请检查网络连接",
                   icon: "none"
                 });
                 return _context2.abrupt("return", {
                   success: false,
-                  message: "登录请求异常，请检查网络连接"
+                  message: result.data.msg || "登录请求异常，请检查网络连接"
                 });
               case 30:
               case "end":

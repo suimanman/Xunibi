@@ -131,12 +131,12 @@
 					}
 				} catch (error) {
 					uni.showToast({
-						title: "登录请求异常，请检查网络连接",
+						title: result.data.msg ||"登录请求异常，请检查网络连接",
 						icon: "none"
 					});
 					return {
 						success: false,
-						message: "登录请求异常，请检查网络连接"
+						message: result.data.msg || "登录请求异常，请检查网络连接"
 					};
 				}
 			},
