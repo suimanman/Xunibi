@@ -30,14 +30,15 @@
 </template>
 
 <script>
-	import {
-		getNotice
+	import { isLogin } from '@/api/me.js';
+import {
+		getNotice,
+		getCoin
 	} from '@/api/home';
 	export default {
 		data() {
 			return {
 				notice:'',
-				teamName: "创新团队",
 				virtualCoins: '',
 				signInStatus: "未签到",
 				indexList: [],
@@ -57,6 +58,11 @@
 		},
 		created() {
 			this.getNotice();
+			if(isLogin())
+			{
+				this.getCoin();
+			}
+			
 		},
 		onLoad() {
 			this.loadmore();
@@ -77,6 +83,15 @@
 					const result = await getNotice();
 					console.log("通知公告：", result.data.msg);
 					this.notice = result.data.msg; // 根据实际字段更新
+				} catch (error) {
+					console.error('方法异常！', error);
+				}
+			},
+			async getCoin() {
+				try {
+					const result = await getCoin();
+					console.log("虚拟币数量：", result.data);
+					this.virtualCoins = result.data.data; // 根据实际字段更新
 				} catch (error) {
 					console.error('方法异常！', error);
 				}

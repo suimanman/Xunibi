@@ -1,12 +1,18 @@
 package com.example.xunibibackend.controller;
 
+import com.example.xunibibackend.entity.User;
 import com.example.xunibibackend.response.MyResult;
 import com.example.xunibibackend.service.ManageService;
+import com.example.xunibibackend.service.TeamsService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+
+import static com.example.xunibibackend.controller.UserController.SESSION_NAME;
 
 @RestController
 @RequestMapping("/manage")
@@ -14,6 +20,8 @@ import java.util.Map;
 public class manageController {
     @Autowired
     ManageService manageService;
+    @Autowired
+    TeamsService teamsService;
     /*
         微信小程序获取通知公告
      */
@@ -30,6 +38,7 @@ public class manageController {
         }
     }
     /*
+        上传通知
         @Param content notice内容
      */
 
@@ -52,5 +61,16 @@ public class manageController {
         } else {
             return MyResult.error("通知发布失败，请重试");
         }
+    }
+    /*
+        获取团队虚拟币数量
+     */
+    @GetMapping("/getCoin")
+    public MyResult getCoin(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        User sessionUser = (User) session.getAttribute(SESSION_NAME);
+        Double coin= teamsService.getCoin(request.getSession());
+        log.info("虚拟币数量：{}",coin);
+        return MyResult.success(coin);
     }
 }

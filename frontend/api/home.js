@@ -7,3 +7,13 @@ export function getNotice(){
 		method: 'get',
 	})
 }
+//获取团队虚拟币
+export function getCoin(){
+	return request({
+		url: '/manage/getCoin',
+		header:{
+			isToken: true
+		},
+		method: 'get'
+	})
+}
