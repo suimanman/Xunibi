@@ -58,7 +58,7 @@
 	      {
 	        "pagePath": "pages/home/home",
 	        "text": "主页",
-	        "iconPath": "static/icon/me.png",
+	        "iconPath": "static/icon/home.png",
 	        "selectedIconPath": "static/icon/home_selected.png"
 	      },
 		  {

@@ -173,7 +173,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {
+
 
 var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
 Object.defineProperty(exports, "__esModule", {
@@ -220,6 +220,15 @@ var _home = __webpack_require__(/*! @/api/home */ 192);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   data: function data() {
     return {
@@ -229,10 +238,12 @@ var _default = {
       indexList: [{
         description: "购买设备",
         type: "支出",
+        amount: 20,
         date: "2024-10-29"
       }, {
         description: "团队奖励",
         type: "收入",
+        amount: 40,
         date: "2024-10-28"
       }]
     };
@@ -243,19 +254,9 @@ var _default = {
       this.getCoin();
     }
   },
-  onLoad: function onLoad() {
-    this.loadmore();
-  },
   methods: {
     scrolltolower: function scrolltolower() {
       this.loadmore();
-    },
-    loadmore: function loadmore() {
-      for (var i = 0; i < 30; i++) {
-        this.indexList.push({
-          url: this.urls[uni.$u.random(0, this.urls.length - 1)]
-        });
-      }
     },
     getNotice: function getNotice() {
       var _this = this;
@@ -270,20 +271,19 @@ var _default = {
                 return (0, _home.getNotice)();
               case 3:
                 result = _context.sent;
-                console.log("通知公告：", result.data.msg);
-                _this.notice = result.data.msg; // 根据实际字段更新
-                _context.next = 11;
+                _this.notice = result.data.msg;
+                _context.next = 10;
                 break;
-              case 8:
-                _context.prev = 8;
+              case 7:
+                _context.prev = 7;
                 _context.t0 = _context["catch"](0);
                 console.error('方法异常！', _context.t0);
-              case 11:
+              case 10:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[0, 8]]);
+        }, _callee, null, [[0, 7]]);
       }))();
     },
     getCoin: function getCoin() {
@@ -299,26 +299,24 @@ var _default = {
                 return (0, _home.getCoin)();
               case 3:
                 result = _context2.sent;
-                console.log("虚拟币数量：", result.data);
-                _this2.virtualCoins = result.data.data; // 根据实际字段更新
-                _context2.next = 11;
+                _this2.virtualCoins = result.data.data;
+                _context2.next = 10;
                 break;
-              case 8:
-                _context2.prev = 8;
+              case 7:
+                _context2.prev = 7;
                 _context2.t0 = _context2["catch"](0);
                 console.error('方法异常！', _context2.t0);
-              case 11:
+              case 10:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, null, [[0, 8]]);
+        }, _callee2, null, [[0, 7]]);
       }))();
     }
   }
 };
 exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
 

@@ -21,47 +21,58 @@
 	font-size: 15px;
 	padding: 10px;
 }
-.quick-actions.data-v-92bb8f34 {
+.transaction-section.data-v-92bb8f34 {
 	margin-top: 20px;
 }
-.activity-list.data-v-92bb8f34 {
-	margin-top: 20px;
+.transaction-header.data-v-92bb8f34 {
+	display: flex;
+	align-items: center;
+	padding: 10px;
+	border-radius: 8px;
+	margin-bottom: 10px;
 }
-.u-list-item.data-v-92bb8f34 {
-	background-color: white;
-	border-radius: 15px;
+.transaction-text.data-v-92bb8f34 {
+	font-size: 16px;
+	font-weight: bold;
+	color: #333;
+	margin-left: 8px;
 }
-.sign-text.data-v-92bb8f34 {
-	font-size: 13px;
-	margin-top: 2px;
-	/* 调整文字和图标的间距 */
+.transaction-list.data-v-92bb8f34 {
+	height: 400px; /* 根据需要调整高度 */
+	overflow: auto;
 }
-.left-content.data-v-92bb8f34 {
+.transaction-content.data-v-92bb8f34 {
 	display: flex;
 	justify-content: space-between;
-	/* 左右对齐 */
 	align-items: center;
-	/* 垂直居中 */
 	width: 100%;
-	/* 占满父容器的宽度 */
 }
 .left-section.data-v-92bb8f34 {
 	display: flex;
 	flex-shrink: 0;
-	/* 防止内容收缩 */
 	color: #333;
 	font-size: 14px;
+}
+.amount.data-v-92bb8f34 {
+	font-size: 14px;
+	font-weight: bold;
+	flex-shrink: 0;
+	margin: 0 10px;
 }
 .type.data-v-92bb8f34 {
 	color: #999;
 	margin-left: 5px;
 }
+.income.data-v-92bb8f34 {
+	color: #4caf50;
+}
+.expense.data-v-92bb8f34 {
+	color: #f44336;
+}
 .date.data-v-92bb8f34 {
 	color: #666;
 	font-size: 13px;
 	flex-shrink: 0;
-	/* 防止日期被挤压 */
 	text-align: right;
-	/* 确保日期靠右 */
 }
 
