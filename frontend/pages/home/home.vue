@@ -19,9 +19,14 @@
 			<text>虚拟币交易记录</text>
 			<u-list @scrolltolower="scrolltolower">
 				<u-list-item v-for="(item, index) in indexList" :key="index">
-					<u-cell :title="`列表长度-${index + 1}`">
-						<u-avatar slot="icon" shape="square" size="35" :src="item.url"
-							customStyle="margin: -3px 5px -3px 0"></u-avatar>
+					<u-cell>
+						<view slot="title" class="left-content">
+							<view class="left-section">
+								<text class="description">{{ item.description }}</text> -
+								<text class="type">{{ item.type }}</text>
+							</view>
+							<text class="date">{{ item.date }}</text>
+						</view>
 					</u-cell>
 				</u-list-item>
 			</u-list>
@@ -30,39 +35,38 @@
 </template>
 
 <script>
-	import { isLogin } from '@/api/me.js';
-import {
+	import {
+		isLogin
+	} from '@/api/me.js';
+	import {
 		getNotice,
 		getCoin
 	} from '@/api/home';
 	export default {
 		data() {
 			return {
-				notice:'',
+				notice: '',
 				virtualCoins: '',
 				signInStatus: "未签到",
-				indexList: [],
-				urls: [
-					'https://cdn.uviewui.com/uview/album/1.jpg',
-					'https://cdn.uviewui.com/uview/album/2.jpg',
-					'https://cdn.uviewui.com/uview/album/3.jpg',
-					'https://cdn.uviewui.com/uview/album/4.jpg',
-					'https://cdn.uviewui.com/uview/album/5.jpg',
-					'https://cdn.uviewui.com/uview/album/6.jpg',
-					'https://cdn.uviewui.com/uview/album/7.jpg',
-					'https://cdn.uviewui.com/uview/album/8.jpg',
-					'https://cdn.uviewui.com/uview/album/9.jpg',
-					'https://cdn.uviewui.com/uview/album/10.jpg',
+				indexList: [{
+						description: "购买设备",
+						type: "支出",
+						date: "2024-10-29"
+					},
+					{
+						description: "团队奖励",
+						type: "收入",
+						date: "2024-10-28"
+					}
 				]
 			};
 		},
 		created() {
 			this.getNotice();
-			if(isLogin())
-			{
+			if (isLogin()) {
 				this.getCoin();
 			}
-			
+
 		},
 		onLoad() {
 			this.loadmore();
@@ -144,5 +148,37 @@ import {
 		font-size: 13px;
 		margin-top: 2px;
 		/* 调整文字和图标的间距 */
+	}
+
+	.left-content {
+		display: flex;
+		justify-content: space-between;
+		/* 左右对齐 */
+		align-items: center;
+		/* 垂直居中 */
+		width: 100%;
+		/* 占满父容器的宽度 */
+	}
+
+	.left-section {
+		display: flex;
+		flex-shrink: 0;
+		/* 防止内容收缩 */
+		color: #333;
+		font-size: 14px;
+	}
+
+	.type {
+		color: #999;
+		margin-left: 5px;
+	}
+
+	.date {
+		color: #666;
+		font-size: 13px;
+		flex-shrink: 0;
+		/* 防止日期被挤压 */
+		text-align: right;
+		/* 确保日期靠右 */
 	}
 </style>

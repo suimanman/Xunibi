@@ -36,4 +36,32 @@
 	margin-top: 2px;
 	/* 调整文字和图标的间距 */
 }
+.left-content.data-v-92bb8f34 {
+	display: flex;
+	justify-content: space-between;
+	/* 左右对齐 */
+	align-items: center;
+	/* 垂直居中 */
+	width: 100%;
+	/* 占满父容器的宽度 */
+}
+.left-section.data-v-92bb8f34 {
+	display: flex;
+	flex-shrink: 0;
+	/* 防止内容收缩 */
+	color: #333;
+	font-size: 14px;
+}
+.type.data-v-92bb8f34 {
+	color: #999;
+	margin-left: 5px;
+}
+.date.data-v-92bb8f34 {
+	color: #666;
+	font-size: 13px;
+	flex-shrink: 0;
+	/* 防止日期被挤压 */
+	text-align: right;
+	/* 确保日期靠右 */
+}
 
