@@ -59,7 +59,7 @@ public class GainServiceImpl implements GainService {
         VirtualCoinTransaction coinTransaction=new VirtualCoinTransaction();
         coinTransaction.setCoinAmount(achievementCoin);
         coinTransaction.setTransactionDate(LocalDate.now());
-        coinTransaction.setTransactionType("获取虚拟币");
+        coinTransaction.setTransactionType("收入");
         coinTransaction.setDescription(achievement.getDescription());
         coinTransaction.setTeamId(teamId);
         coinTransactionMapper.insert(coinTransaction);
@@ -80,7 +80,7 @@ public class GainServiceImpl implements GainService {
         VirtualCoinTransaction coinTransaction=new VirtualCoinTransaction();
         coinTransaction.setCoinAmount(20.0);
         coinTransaction.setTransactionDate(LocalDate.now());
-        coinTransaction.setTransactionType("获取虚拟币");
+        coinTransaction.setTransactionType("收入");
         coinTransaction.setDescription(dutyRecord.getDescription());
         coinTransaction.setTeamId(teamId);
         coinTransactionMapper.insert(coinTransaction);
@@ -119,7 +119,7 @@ public class GainServiceImpl implements GainService {
         VirtualCoinTransaction coinTransaction=new VirtualCoinTransaction();
         coinTransaction.setCoinAmount(trainingCoin);
         coinTransaction.setTransactionDate(LocalDate.now());
-        coinTransaction.setTransactionType("获取虚拟币");
+        coinTransaction.setTransactionType("收入");
         coinTransaction.setDescription(trainRecord.getDescription());
         coinTransaction.setTeamId(teamId);
         coinTransactionMapper.insert(coinTransaction);

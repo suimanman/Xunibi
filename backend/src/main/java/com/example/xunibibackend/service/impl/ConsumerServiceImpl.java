@@ -44,7 +44,7 @@ public class ConsumerServiceImpl implements ConsumerService {
         //虚拟币交易记录
         VirtualCoinTransaction coinTransaction=new VirtualCoinTransaction();
         coinTransaction.setTransactionDate(LocalDate.now());
-        coinTransaction.setTransactionType("消耗虚拟币");
+        coinTransaction.setTransactionType("支出");
 
         int rentalDays = rentalRequest.getRentalDays();
         Integer type1 = rentalRequest.getType1();
