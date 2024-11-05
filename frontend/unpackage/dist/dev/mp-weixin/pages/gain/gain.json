@@ -1,4 +1,5 @@
 {
   "navigationBarTitleText": "奖励",
+  "enablePullDownRefresh": true,
   "usingComponents": {}
 }

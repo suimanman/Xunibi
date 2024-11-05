@@ -1,6 +1,6 @@
 package com.example.xunibibackend.controller;
 
-import com.example.xunibibackend.entity.User;
+import com.example.xunibibackend.entity.VirtualCoinTransaction;
 import com.example.xunibibackend.response.MyResult;
 import com.example.xunibibackend.service.ManageService;
 import com.example.xunibibackend.service.TeamsService;
@@ -10,9 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
-import static com.example.xunibibackend.controller.UserController.SESSION_NAME;
 
 @RestController
 @RequestMapping("/manage")
@@ -22,6 +22,18 @@ public class manageController {
     ManageService manageService;
     @Autowired
     TeamsService teamsService;
+    /*
+        获取团队虚拟币交易记录
+     */
+    @GetMapping("/getRecord")
+    public MyResult getRecord(HttpServletRequest request){
+        log.info("-------虚拟币");
+        //根据登录情况前端传来的cookie获取用户
+        HttpSession session= request.getSession();
+        List<VirtualCoinTransaction> records;
+        records = manageService.getRecords(request.getSession());
+        return MyResult.success(records);
+    }
     /*
         微信小程序获取通知公告
      */
@@ -67,10 +79,10 @@ public class manageController {
      */
     @GetMapping("/getCoin")
     public MyResult getCoin(HttpServletRequest request){
+        //根据登录情况前端传来的cookie获取用户
         HttpSession session = request.getSession();
-        User sessionUser = (User) session.getAttribute(SESSION_NAME);
         Double coin= teamsService.getCoin(request.getSession());
-        log.info("虚拟币数量：{}",coin);
+//        log.info("虚拟币数量：{}",coin);
         return MyResult.success(coin);
     }
 }

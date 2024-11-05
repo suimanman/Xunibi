@@ -4,26 +4,30 @@
 			"path" : "pages/me/me",
 			"style" : 
 			{
-				"navigationBarTitleText" : "个人中心"
+				"navigationBarTitleText" : "个人中心",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
 			"path": "pages/home/home",
 			"style": {
-				"navigationBarTitleText": "主页"
+				"navigationBarTitleText": "主页",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
 			"path": "pages/gain/gain",
 			"style": {
-				"navigationBarTitleText": "奖励"
+				"navigationBarTitleText": "奖励",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
 			"path" : "pages/rental/rental",
 			"style" : 
 			{
-				"navigationBarTitleText" : "资源租用"
+				"navigationBarTitleText" : "资源租用",
+				"enablePullDownRefresh": true
 			}
 		},
 		{

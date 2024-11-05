@@ -2,7 +2,7 @@
 	<view class="home-page">
 		<!-- 公告栏/通知 -->
 		<u-notice-bar :text="notice" />
-		
+
 		<!-- 欢迎消息与用户状态 -->
 		<view class="welcome-section">
 			<view class="info">
@@ -13,7 +13,7 @@
 				<text class="sign-text">签到</text>
 			</view>
 		</view>
-		
+
 		<!-- 活动记录 -->
 		<u-divider content-position="left">最近活动</u-divider>
 		<view class="transaction-section">
@@ -30,10 +30,13 @@
 									<text class="description">{{ item.description }}</text> -
 									<text class="type">{{ item.type }}</text>
 								</view>
-								<text class="amount" :class="{ 'income': item.type === '收入', 'expense': item.type === '支出' }">
-									{{ item.type === '收入' ? '+' : '-' }}{{ item.amount }}
-								</text>
-								<text class="date">{{ item.date }}</text>
+								<view class="right-section">
+									<text class="amount"
+										:class="{ 'income': item.type === '收入', 'expense': item.type === '支出' }">
+										{{ item.type === '收入' ? '+' : '-' }}{{ item.amount }}
+									</text>
+									<text class="date">{{ item.date }}</text>
+								</view>
 							</view>
 						</u-cell>
 					</u-list-item>
@@ -44,36 +47,42 @@
 </template>
 
 <script>
-	import { isLogin } from '@/api/me.js';
-	import { getNotice, getCoin } from '@/api/home';
+	import {
+		isLogin
+	} from '@/api/me.js';
+	import {
+		getNotice,
+		getCoin,
+		getRecords
+	} from '@/api/home';
 	export default {
 		data() {
 			return {
 				notice: '',
 				virtualCoins: '',
 				signInStatus: "未签到",
-				indexList: [
-					{
-						description: "购买设备",
-						type: "支出",
-						amount: 20,
-						date: "2024-10-29"
-					},
-					{
-						description: "团队奖励",
-						type: "收入",
-						amount: 40,
-						date: "2024-10-28"
-					}
-				]
+				indexList: [],
 			};
 		},
 		created() {
 			this.getNotice();
 			if (isLogin()) {
 				this.getCoin();
+				this.getRecords();
 			}
 		},
+		//下拉刷新
+		onPullDownRefresh() {
+		    // 处理刷新逻辑，比如重新请求数据
+			this.getNotice();
+		    this.getCoin();
+		    this.getRecords();
+		
+		    // 模拟数据请求完成，调用 stopPullDownRefresh 停止刷新动画
+		    setTimeout(() => {
+		      uni.stopPullDownRefresh();
+		    }, 1000); // 1秒后停止刷新动画，可以根据实际情况调整时间
+		  },
 		methods: {
 			scrolltolower() {
 				this.loadmore();
@@ -93,7 +102,21 @@
 				} catch (error) {
 					console.error('方法异常！', error);
 				}
-			}
+			},
+			async getRecords() {
+				try {
+					const result = await getRecords();
+					// 将数据映射到 indexList 格式
+					this.indexList = result.data.data.map(item => ({
+						description: item.description,
+						type: item.transactionType === '收入' ? '收入' : '支出', // 根据逻辑设置类型
+						amount: item.coinAmount,
+						date: item.transactionDate
+					}));
+				} catch (error) {
+					console.error('方法异常！', error);
+				}
+			},
 		}
 	};
 </script>
@@ -145,7 +168,8 @@
 	}
 
 	.transaction-list {
-		height: 400px; /* 根据需要调整高度 */
+		max-height: 660px;
+		/* 根据需要调整高度 */
 		overflow: auto;
 	}
 
@@ -163,11 +187,22 @@
 		font-size: 14px;
 	}
 
+	.right-section {
+		display: flex;
+		align-items: center;
+		margin-left: auto;
+		/* 将 right-section 推到右边 */
+	}
+
 	.amount {
 		font-size: 14px;
 		font-weight: bold;
-		flex-shrink: 0;
-		margin: 0 10px;
+		display: flex;
+		/* 使用 flexbox 布局 */
+		width: 60px;
+		/* 固定宽度，可以根据需要调整 */
+		margin-left: 20px;
+		/* 控制 amount 和 date 之间的间距 */
 	}
 
 	.type {

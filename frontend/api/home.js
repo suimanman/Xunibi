@@ -17,3 +17,13 @@ export function getCoin(){
 		method: 'get'
 	})
 }
+//获取虚拟币交易记录
+export function getRecords(){
+	return request({
+		url: '/manage/getRecord',
+		header:{
+			isToken: true
+		},
+		method: 'get'
+	})
+}

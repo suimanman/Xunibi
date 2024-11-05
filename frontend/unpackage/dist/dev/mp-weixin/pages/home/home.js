@@ -173,7 +173,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
+/* WEBPACK VAR INJECTION */(function(uni) {
 
 var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
 Object.defineProperty(exports, "__esModule", {
@@ -229,31 +229,38 @@ var _home = __webpack_require__(/*! @/api/home */ 192);
 //
 //
 //
+//
+//
+//
 var _default = {
   data: function data() {
     return {
       notice: '',
       virtualCoins: '',
       signInStatus: "未签到",
-      indexList: [{
-        description: "购买设备",
-        type: "支出",
-        amount: 20,
-        date: "2024-10-29"
-      }, {
-        description: "团队奖励",
-        type: "收入",
-        amount: 40,
-        date: "2024-10-28"
-      }]
+      indexList: []
     };
   },
   created: function created() {
     this.getNotice();
     if ((0, _me.isLogin)()) {
       this.getCoin();
+      this.getRecords();
     }
   },
+  //下拉刷新
+  onPullDownRefresh: function onPullDownRefresh() {
+    // 处理刷新逻辑，比如重新请求数据
+    this.getNotice();
+    this.getCoin();
+    this.getRecords();
+
+    // 模拟数据请求完成，调用 stopPullDownRefresh 停止刷新动画
+    setTimeout(function () {
+      uni.stopPullDownRefresh();
+    }, 1000); // 1秒后停止刷新动画，可以根据实际情况调整时间
+  },
+
   methods: {
     scrolltolower: function scrolltolower() {
       this.loadmore();
@@ -313,10 +320,48 @@ var _default = {
           }
         }, _callee2, null, [[0, 7]]);
       }))();
+    },
+    getRecords: function getRecords() {
+      var _this3 = this;
+      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
+        var result;
+        return _regenerator.default.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                _context3.next = 3;
+                return (0, _home.getRecords)();
+              case 3:
+                result = _context3.sent;
+                // 将数据映射到 indexList 格式
+                _this3.indexList = result.data.data.map(function (item) {
+                  return {
+                    description: item.description,
+                    type: item.transactionType === '收入' ? '收入' : '支出',
+                    // 根据逻辑设置类型
+                    amount: item.coinAmount,
+                    date: item.transactionDate
+                  };
+                });
+                _context3.next = 10;
+                break;
+              case 7:
+                _context3.prev = 7;
+                _context3.t0 = _context3["catch"](0);
+                console.error('方法异常！', _context3.t0);
+              case 10:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, null, [[0, 7]]);
+      }))();
     }
   }
 };
 exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
 

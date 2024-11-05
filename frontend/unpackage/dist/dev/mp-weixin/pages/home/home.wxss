@@ -38,7 +38,8 @@
 	margin-left: 8px;
 }
 .transaction-list.data-v-92bb8f34 {
-	height: 400px; /* 根据需要调整高度 */
+	max-height: 660px;
+	/* 根据需要调整高度 */
 	overflow: auto;
 }
 .transaction-content.data-v-92bb8f34 {
@@ -53,11 +54,21 @@
 	color: #333;
 	font-size: 14px;
 }
+.right-section.data-v-92bb8f34 {
+	display: flex;
+	align-items: center;
+	margin-left: auto;
+	/* 将 right-section 推到右边 */
+}
 .amount.data-v-92bb8f34 {
 	font-size: 14px;
 	font-weight: bold;
-	flex-shrink: 0;
-	margin: 0 10px;
+	display: flex;
+	/* 使用 flexbox 布局 */
+	width: 60px;
+	/* 固定宽度，可以根据需要调整 */
+	margin-left: 20px;
+	/* 控制 amount 和 date 之间的间距 */
 }
 .type.data-v-92bb8f34 {
 	color: #999;

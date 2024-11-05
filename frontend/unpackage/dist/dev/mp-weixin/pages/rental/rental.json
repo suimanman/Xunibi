@@ -1,5 +1,6 @@
 {
   "navigationBarTitleText": "资源租用",
+  "enablePullDownRefresh": true,
   "usingComponents": {
     "u-tabs": "/uni_modules/uview-ui/components/u-tabs/u-tabs"
   }

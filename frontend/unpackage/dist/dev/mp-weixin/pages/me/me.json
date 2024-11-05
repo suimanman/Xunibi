@@ -1,5 +1,6 @@
 {
   "navigationBarTitleText": "个人中心",
+  "enablePullDownRefresh": true,
   "usingComponents": {
     "u-cell-group": "/uni_modules/uview-ui/components/u-cell-group/u-cell-group",
     "u-cell": "/uni_modules/uview-ui/components/u-cell/u-cell"

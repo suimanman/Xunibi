@@ -1,5 +1,6 @@
 {
   "navigationBarTitleText": "主页",
+  "enablePullDownRefresh": true,
   "usingComponents": {
     "u-notice-bar": "/uni_modules/uview-ui/components/u-notice-bar/u-notice-bar",
     "u-icon": "/uni_modules/uview-ui/components/u-icon/u-icon",

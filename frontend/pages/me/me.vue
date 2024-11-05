@@ -44,6 +44,15 @@
 				console.log("未登录");
 			}
 		},
+		onPullDownRefresh() {
+		    // 处理刷新逻辑，比如重新请求数据
+			this.getUserInfo();
+		
+		    // 模拟数据请求完成，调用 stopPullDownRefresh 停止刷新动画
+		    setTimeout(() => {
+		      uni.stopPullDownRefresh();
+		    }, 1000); // 1秒后停止刷新动画，可以根据实际情况调整时间
+		  },
 		methods: {
 			async loginHandle() {
 				// 调用 isLogin 并等待其返回结果

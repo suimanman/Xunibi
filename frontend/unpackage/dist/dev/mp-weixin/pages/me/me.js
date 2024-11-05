@@ -208,6 +208,16 @@ var _default = {
       console.log("未登录");
     }
   },
+  onPullDownRefresh: function onPullDownRefresh() {
+    // 处理刷新逻辑，比如重新请求数据
+    this.getUserInfo();
+
+    // 模拟数据请求完成，调用 stopPullDownRefresh 停止刷新动画
+    setTimeout(function () {
+      uni.stopPullDownRefresh();
+    }, 1000); // 1秒后停止刷新动画，可以根据实际情况调整时间
+  },
+
   methods: {
     loginHandle: function loginHandle() {
       var _this = this;

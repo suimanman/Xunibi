@@ -20500,6 +20500,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.getCoin = getCoin;
 exports.getNotice = getNotice;
+exports.getRecords = getRecords;
 var _request = _interopRequireDefault(__webpack_require__(/*! @/utils/request */ 169));
 //获取公告
 function getNotice() {
@@ -20512,6 +20513,16 @@ function getNotice() {
 function getCoin() {
   return (0, _request.default)({
     url: '/manage/getCoin',
+    header: {
+      isToken: true
+    },
+    method: 'get'
+  });
+}
+//获取虚拟币交易记录
+function getRecords() {
+  return (0, _request.default)({
+    url: '/manage/getRecord',
     header: {
       isToken: true
     },
