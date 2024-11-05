@@ -208,6 +208,7 @@ var _default = {
       console.log("未登录");
     }
   },
+  //下拉刷新
   onPullDownRefresh: function onPullDownRefresh() {
     // 处理刷新逻辑，比如重新请求数据
     this.getUserInfo();
