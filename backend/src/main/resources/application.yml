@@ -13,3 +13,5 @@ spring:
 mybatis-plus:
   mapper-locations: classpath:/mapper/*.xml
   type-aliases-package: com.example.xunibibackend.entity
+file:
+  upload-dir: ./images
