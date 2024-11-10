@@ -46,14 +46,14 @@
 		},
 		//下拉刷新
 		onPullDownRefresh() {
-		    // 处理刷新逻辑，比如重新请求数据
+			// 处理刷新逻辑，比如重新请求数据
 			this.getUserInfo();
-		
-		    // 模拟数据请求完成，调用 stopPullDownRefresh 停止刷新动画
-		    setTimeout(() => {
-		      uni.stopPullDownRefresh();
-		    }, 1000); // 1秒后停止刷新动画，可以根据实际情况调整时间
-		  },
+
+			// 模拟数据请求完成，调用 stopPullDownRefresh 停止刷新动画
+			setTimeout(() => {
+				uni.stopPullDownRefresh();
+			}, 1000); // 1秒后停止刷新动画，可以根据实际情况调整时间
+		},
 		methods: {
 			async loginHandle() {
 				// 调用 isLogin 并等待其返回结果
@@ -281,14 +281,16 @@
 	.register {
 		top: 10px;
 	}
+
 	.logout-button {
-			margin-top: 30px; /* 调整按钮的顶部间距 */
-			font-size: 28rpx;
-			background: #5677fc;
-			color: #fff;
-			height: 90rpx;
-			line-height: 90rpx;
-			border-radius: 50rpx;
-			box-shadow: 0 5px 7px 0 rgba(86, 119, 252, 0.2);
-		}
+		margin-top: 30px;
+		/* 调整按钮的顶部间距 */
+		font-size: 28rpx;
+		background: #5677fc;
+		color: #fff;
+		height: 90rpx;
+		line-height: 90rpx;
+		border-radius: 50rpx;
+		box-shadow: 0 5px 7px 0 rgba(86, 119, 252, 0.2);
+	}
 </style>

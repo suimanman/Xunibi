@@ -21506,7 +21506,32 @@ exports.default = _default;
 /***/ }),
 /* 294 */,
 /* 295 */,
-/* 296 */,
+/* 296 */
+/*!*******************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/api/rental.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getResources = getResources;
+var _request = _interopRequireDefault(__webpack_require__(/*! @/utils/request */ 169));
+// 登录方法
+function getResources(type) {
+  return (0, _request.default)({
+    url: '/consumer/getData',
+    method: 'get',
+    data: type
+  });
+}
+
+/***/ }),
 /* 297 */,
 /* 298 */,
 /* 299 */,
