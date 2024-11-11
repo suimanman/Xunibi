@@ -4,6 +4,7 @@ import com.example.xunibibackend.entity.*;
 import com.example.xunibibackend.entity.dto.RentalRequest;
 import com.example.xunibibackend.entity.dto.ReturnRequest;
 import com.example.xunibibackend.mapper.*;
+import com.example.xunibibackend.response.MyResult;
 import com.example.xunibibackend.service.ConsumerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 @Slf4j
 @Component
@@ -172,7 +174,7 @@ public class ConsumerServiceImpl implements ConsumerService {
         int type1=returnRequest.getType1();
         String type2=returnRequest.getType2();
         // 检查 Redis 中是否存在租用记录
-        if (redisTemplate.hasKey(redisKey)) {
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(redisKey))) {
             //更新借用设备或工位当前状态为可用
             if(type1 == 1){
                 workstationMapper.updateRental(1,null,type2);
@@ -190,6 +192,60 @@ public class ConsumerServiceImpl implements ConsumerService {
         } else {
             // 超时，罚款已触发
             return false; // 超时归还，罚款已扣除
+        }
+    }
+
+    @Override
+    public MyResult getList(String type) {
+        String teamName=null;
+        switch (type) {
+            case "工位" -> {
+                List<Workstation> workstationList = workstationMapper.selectList();
+                for(Workstation workstation: workstationList){
+                    Integer teamId=workstation.getRentedTeamId();
+                    if(teamId != null)
+                        teamName=teamMapper.getNameByteamId(teamId);
+                    workstation.setRentTeamName(teamName);
+                }
+                log.info("资源列表1：{}",workstationList);
+                return MyResult.success(workstationList);
+            }
+            case "固定设备" -> {
+                List<Equipment> equipmentList = equipmentMapper.selectList();
+                for(Equipment equipment: equipmentList){
+                    Integer teamId=equipment.getRentedTeamId();
+                    if(teamId != null)
+                        teamName=teamMapper.getNameByteamId(teamId);
+                    equipment.setRentTeamName(teamName);
+                }
+                log.info("资源列表2：{}",equipmentList);
+                return MyResult.success(equipmentList);
+            }
+            case "摄像" -> {
+                List<Camera> cameraList = cameraMapper.selectList();
+                for(Camera camera: cameraList){
+                    Integer teamId=camera.getRentedTeamId();
+                    if(teamId != null)
+                        teamName=teamMapper.getNameByteamId(teamId);
+                    camera.setRentTeamName(teamName);
+                }
+                log.info("资源列表3：{}",cameraList);
+                return MyResult.success(cameraList);
+            }
+            case "场地" -> {
+                List<Area> areaList = areaMapper.selectList();
+                for(Area area: areaList){
+                    Integer teamId=area.getRentedTeamId();
+                    if(teamId != null)
+                        teamName=teamMapper.getNameByteamId(teamId);
+                    area.setRentTeamName(teamName);
+                }
+                log.info("资源列表4：{}",areaList);
+                return MyResult.success(areaList);
+            }
+            default -> {
+                return MyResult.error("无效的资源类型！");
+            }
         }
     }
 }

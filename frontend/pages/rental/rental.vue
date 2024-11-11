@@ -1,40 +1,40 @@
 <template>
 	<view class="container">
-		<u-tabs :list="list1" @click="click"></u-tabs>
+		<u-tabs :list="list1" @click="click" ></u-tabs>
 
 		<view v-if="nowData && nowData.length" class="device-list">
 			<view class="device-item" v-for="(device, index) in nowData" :key="index">
 				<!-- 左侧图片区域 -->
 				<view class="device-image">
 					<u-image :src="device.imageUrl" width="80px" height="80px" class="image"></u-image>
-					<view class="device-name">{{ device.name }}</view>
+					<view class="device-name">{{ device.type }}</view>
 				</view>
 
 				<!-- 右侧信息区域 -->
 				<view class="device-info">
 					<view class="device-detail">
 						<view class="label">消耗:</view>
-						<view class="value">{{ device.virtualCoins }} 虚拟币</view>
+						<view class="value">{{ device.coinConsumption }} 虚拟币</view>
 					</view>
 					<view class="device-detail">
 						<view class="label">状态:</view>
 						<view class="value">
-							<text :class="device.available ? 'available' : 'unavailable'">
-								{{ device.available ? '可用' : '不可用' }}
+							<text :class="device.isAvailable ? 'available' : 'unavailable'">
+								{{ device.isAvailable ? '可用' : '不可用' }}
 							</text>
 						</view>
 					</view>
-					<view class="device-detail" v-if="!device.available">
+					<view class="device-detail" v-if="!device.isAvailable">
 						<view class="label">占用:</view>
-						<view class="value">{{ device.occupyingTeam }}</view>
+						<view class="value">{{ device.rentTeamName }}</view>
 					</view>
 				</view>
 
 				<!-- 租用按钮 -->
 				<view class="device-rent">
-					<button class="rent-button" :class="{ 'disabled': !device.available }"
-						:disabled="!device.available">
-						{{ device.available ? '租用' : '被租用' }}
+					<button class="rent-button" :class="{ 'disabled': !device.isAvailable }"
+						:disabled="!device.isAvailable">
+						{{ device.isAvailable ? '租用' : '被租用' }}
 					</button>
 				</view>
 			</view>
@@ -44,6 +44,7 @@
 </template>
 
 <script>
+	import { getResources } from '../../api/rental';
 	export default {
 		data() {
 			return {
@@ -51,58 +52,29 @@
 						name: '工位'
 					},
 					{
-						name: '3D打印设备'
+						name: '固定设备'
 					},
 					{
-						name: '激光切割机'
-					},
-					{
-						name: '单反相机'
-					},
-					{
-						name: '摄像机'
+						name: '摄像'
 					},
 					{
 						name: '场地'
 					}
 				],
-				nowData: [{
-						imageUrl: 'https://cdn.uviewui.com/uview/album/1.jpg',
-						name: '3D打印机',
-						virtualCoins: 50,
-						available: true,
-						occupyingTeam: ''
-					},
-					{
-						imageUrl: 'https://cdn.uviewui.com/uview/album/1.jpg',
-						name: '激光切割机',
-						virtualCoins: 100,
-						available: false,
-						occupyingTeam: '团队A'
-					},
-					{
-						imageUrl: 'https://cdn.uviewui.com/uview/album/1.jpg',
-						name: '单反相机',
-						virtualCoins: 30,
-						available: true,
-						occupyingTeam: ''
-					},
-					{
-						imageUrl: 'https://cdn.uviewui.com/uview/album/1.jpg',
-						name: '摄像机',
-						virtualCoins: 80,
-						available: false,
-						occupyingTeam: '团队B'
-					}
-				]
+				nowData:[]
 			};
 		},
+		created() {
+		        // 自动加载第一个选项
+		        this.click(this.list1[0]);
+		    },
 		methods: {
 			async click(item) {
 				try {
 					// 示例请求方法，用于获取设备列表数据
 					const response = await getResources(item.name);
-					this.nowData = response.data;
+					console.log("资源列表："+response.data.data);
+					this.nowData = response.data.data;
 				} catch (error) {
 					console.error('获取数据失败', error);
 				}

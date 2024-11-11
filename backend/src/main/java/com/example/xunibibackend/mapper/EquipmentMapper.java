@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.util.List;
+
 @Mapper
 public interface EquipmentMapper extends BaseMapper<Equipment> {
     @Select("select * from equipment where type = #{type2}")
@@ -13,4 +15,7 @@ public interface EquipmentMapper extends BaseMapper<Equipment> {
 
     @Update("update equipment set is_available = #{i} ,rented_team_id = #{teamId} where type = #{type}")
     void updateRental(Integer i, Integer teamId, String type2);
+
+    @Select("select * from equipment")
+    List<Equipment> selectList();
 }

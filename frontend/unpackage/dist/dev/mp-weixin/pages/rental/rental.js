@@ -179,6 +179,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 58));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 60));
+var _rental = __webpack_require__(/*! ../../api/rental */ 207);
 //
 //
 //
@@ -230,42 +231,18 @@ var _default = {
       list1: [{
         name: '工位'
       }, {
-        name: '3D打印设备'
+        name: '固定设备'
       }, {
-        name: '激光切割机'
-      }, {
-        name: '单反相机'
-      }, {
-        name: '摄像机'
+        name: '摄像'
       }, {
         name: '场地'
       }],
-      nowData: [{
-        imageUrl: 'https://cdn.uviewui.com/uview/album/1.jpg',
-        name: '3D打印机',
-        virtualCoins: 50,
-        available: true,
-        occupyingTeam: ''
-      }, {
-        imageUrl: 'https://cdn.uviewui.com/uview/album/1.jpg',
-        name: '激光切割机',
-        virtualCoins: 100,
-        available: false,
-        occupyingTeam: '团队A'
-      }, {
-        imageUrl: 'https://cdn.uviewui.com/uview/album/1.jpg',
-        name: '单反相机',
-        virtualCoins: 30,
-        available: true,
-        occupyingTeam: ''
-      }, {
-        imageUrl: 'https://cdn.uviewui.com/uview/album/1.jpg',
-        name: '摄像机',
-        virtualCoins: 80,
-        available: false,
-        occupyingTeam: '团队B'
-      }]
+      nowData: []
     };
+  },
+  created: function created() {
+    // 自动加载第一个选项
+    this.click(this.list1[0]);
   },
   methods: {
     click: function click(item) {
@@ -278,22 +255,23 @@ var _default = {
               case 0:
                 _context.prev = 0;
                 _context.next = 3;
-                return getResources(item.name);
+                return (0, _rental.getResources)(item.name);
               case 3:
                 response = _context.sent;
-                _this.nowData = response.data;
-                _context.next = 10;
+                console.log("资源列表：" + response.data.data);
+                _this.nowData = response.data.data;
+                _context.next = 11;
                 break;
-              case 7:
-                _context.prev = 7;
+              case 8:
+                _context.prev = 8;
                 _context.t0 = _context["catch"](0);
                 console.error('获取数据失败', _context.t0);
-              case 10:
+              case 11:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[0, 7]]);
+        }, _callee, null, [[0, 8]]);
       }))();
     }
   }

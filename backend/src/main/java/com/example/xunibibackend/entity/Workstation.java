@@ -16,5 +16,9 @@ public class Workstation {
 
     private Integer rentedTeamId;
 
+    private String rentTeamName;
+
     private Double coinConsumption;
+
+    private String imageUrl;
 }

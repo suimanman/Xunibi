@@ -16,5 +16,9 @@ public class Equipment {
 
     private Integer rentedTeamId;
 
+    private String rentTeamName;
+
     private Double coinConsumption;
+
+    private String imageUrl;
 }

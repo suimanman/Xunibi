@@ -6,10 +6,15 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.util.List;
+
 @Mapper
 public interface CameraMapper extends BaseMapper<Camera> {
     @Select("select from camera where type = #{type2}")
     Camera selectByType(String type2);
     @Update("update camera set is_available = #{i} ,rented_team_id = #{teamId} where type = #{type}")
     void updateRental(Integer i, Integer teamId, String type2);
+
+    @Select("select * from camera")
+    List<Camera> selectList();
 }

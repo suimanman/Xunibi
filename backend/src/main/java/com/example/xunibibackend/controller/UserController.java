@@ -67,7 +67,7 @@ public class UserController {
      * @param user    传入登录用户信息
      * @param teamName 用户所属团队
      */
-    @PutMapping("/update")
+    @PutMapping("/update/{teamName}")
     public MyResult update(@RequestBody User user, @PathVariable String teamName,HttpServletRequest request) throws Exception {
         HttpSession session = request.getSession();
         // 检查session中的用户（即当前登录用户）是否和当前被修改用户一致
