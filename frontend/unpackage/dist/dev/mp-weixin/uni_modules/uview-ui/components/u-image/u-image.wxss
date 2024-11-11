@@ -24,7 +24,7 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
-view.data-v-d3651d6e, scroll-view.data-v-d3651d6e, swiper-item.data-v-d3651d6e {
+view.data-v-042b391e, scroll-view.data-v-042b391e, swiper-item.data-v-042b391e {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -33,23 +33,26 @@ view.data-v-d3651d6e, scroll-view.data-v-d3651d6e, swiper-item.data-v-d3651d6e {
   align-items: stretch;
   align-content: flex-start;
 }
-.u-avatar.data-v-d3651d6e {
+.u-image.data-v-042b391e {
+  position: relative;
+  transition: opacity 0.5s ease-in-out;
+}
+.u-image__image.data-v-042b391e {
+  width: 100%;
+  height: 100%;
+}
+.u-image__loading.data-v-042b391e, .u-image__error.data-v-042b391e {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-}
-.u-avatar--circle.data-v-d3651d6e {
-  border-radius: 100px;
-}
-.u-avatar--square.data-v-d3651d6e {
-  border-radius: 4px;
-}
-.u-avatar__image--circle.data-v-d3651d6e {
-  border-radius: 100px;
-  overflow: hidden;
-}
-.u-avatar__image--square.data-v-d3651d6e {
-  border-radius: 4px;
+  background-color: #f3f4f6;
+  color: #909193;
+  font-size: 46rpx;
 }
 
