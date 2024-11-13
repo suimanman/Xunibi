@@ -11,7 +11,7 @@
  Target Server Version : 80300 (8.3.0)
  File Encoding         : 65001
 
- Date: 22/10/2024 19:07:07
+ Date: 13/11/2024 16:50:20
 */
 
 SET NAMES utf8mb4;
@@ -57,18 +57,24 @@ CREATE TABLE `Area` (
   `is_available` tinyint(1) DEFAULT NULL,
   `rented_team_id` int DEFAULT NULL,
   `coin_consumption` double DEFAULT NULL,
+  `image_url` varchar(255) DEFAULT NULL,
+  `rental_date` datetime DEFAULT NULL,
+  `return_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_team4` (`rented_team_id`),
   CONSTRAINT `fk_team4` FOREIGN KEY (`rented_team_id`) REFERENCES `Team` (`team_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of Area
 -- ----------------------------
 BEGIN;
-INSERT INTO `Area` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`) VALUES (1, 'Conference Room', 0, 1, 30);
-INSERT INTO `Area` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`) VALUES (2, 'Event Space', 0, 3, 40);
-INSERT INTO `Area` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`) VALUES (3, 'Workshop Area', 0, 3, 50);
+INSERT INTO `Area` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`, `image_url`, `rental_date`, `return_date`) VALUES (1, '一楼会议室-1', 1, NULL, 30, 'https://cdn.uviewui.com/uview/album/1.jpg', NULL, NULL);
+INSERT INTO `Area` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`, `image_url`, `rental_date`, `return_date`) VALUES (2, '一楼讨论室-1', 0, 3, 40, 'https://cdn.uviewui.com/uview/album/1.jpg', NULL, NULL);
+INSERT INTO `Area` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`, `image_url`, `rental_date`, `return_date`) VALUES (3, '工作台', 0, 3, 50, 'https://cdn.uviewui.com/uview/album/1.jpg', NULL, NULL);
+INSERT INTO `Area` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`, `image_url`, `rental_date`, `return_date`) VALUES (4, '一楼会议室-2', 1, NULL, 20, 'https://cdn.uviewui.com/uview/album/1.jpg', NULL, NULL);
+INSERT INTO `Area` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`, `image_url`, `rental_date`, `return_date`) VALUES (5, '一楼讨论室-2', 1, NULL, 30, 'https://cdn.uviewui.com/uview/album/1.jpg', NULL, NULL);
+INSERT INTO `Area` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`, `image_url`, `rental_date`, `return_date`) VALUES (6, '二楼会议室-1', 1, NULL, 30, 'https://cdn.uviewui.com/uview/album/1.jpg', NULL, NULL);
 COMMIT;
 
 -- ----------------------------
@@ -81,6 +87,9 @@ CREATE TABLE `Camera` (
   `is_available` tinyint(1) DEFAULT NULL,
   `rented_team_id` int DEFAULT NULL,
   `coin_consumption` double DEFAULT NULL,
+  `image_url` varchar(255) DEFAULT NULL,
+  `rental_date` datetime DEFAULT NULL,
+  `return_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_team3` (`rented_team_id`),
   CONSTRAINT `fk_team3` FOREIGN KEY (`rented_team_id`) REFERENCES `Team` (`team_id`)
@@ -90,9 +99,9 @@ CREATE TABLE `Camera` (
 -- Records of Camera
 -- ----------------------------
 BEGIN;
-INSERT INTO `Camera` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`) VALUES (1, 'DSLR Camera', 1, NULL, 80);
-INSERT INTO `Camera` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`) VALUES (2, 'Video Camera', 0, 1, 100);
-INSERT INTO `Camera` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`) VALUES (3, 'Action Camera', 1, NULL, 60);
+INSERT INTO `Camera` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`, `image_url`, `rental_date`, `return_date`) VALUES (1, 'DSLR 摄像机', 1, NULL, 80, 'https://cdn.uviewui.com/uview/album/1.jpg', NULL, NULL);
+INSERT INTO `Camera` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`, `image_url`, `rental_date`, `return_date`) VALUES (2, 'Video摄像机', 1, NULL, 100, 'https://cdn.uviewui.com/uview/album/1.jpg', NULL, NULL);
+INSERT INTO `Camera` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`, `image_url`, `rental_date`, `return_date`) VALUES (3, 'Action 摄像机', 1, NULL, 60, 'https://cdn.uviewui.com/uview/album/1.jpg', NULL, NULL);
 COMMIT;
 
 -- ----------------------------
@@ -135,7 +144,7 @@ CREATE TABLE `DutyRecords` (
   KEY `user_id` (`user_id`),
   CONSTRAINT `dutyrecords_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `Team` (`team_id`),
   CONSTRAINT `dutyrecords_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of DutyRecords
@@ -153,6 +162,8 @@ INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_a
 INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (10, 1, 1, '2024-10-22', 20.00, '值班201办公室');
 INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (11, 1, 1, '2024-10-22', 20.00, '值班201办公室');
 INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (12, 1, 1, '2024-10-22', 20.00, '值班201办公室');
+INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (13, 1, 1, '2024-10-25', 20.00, NULL);
+INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (14, 1, 1, '2024-10-25', 20.00, NULL);
 COMMIT;
 
 -- ----------------------------
@@ -165,6 +176,9 @@ CREATE TABLE `Equipment` (
   `is_available` tinyint(1) DEFAULT NULL,
   `rented_team_id` int DEFAULT NULL,
   `coin_consumption` double DEFAULT NULL,
+  `image_url` varchar(255) DEFAULT NULL,
+  `rental_date` datetime DEFAULT NULL,
+  `return_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_team2` (`rented_team_id`),
   CONSTRAINT `fk_team2` FOREIGN KEY (`rented_team_id`) REFERENCES `Team` (`team_id`)
@@ -174,9 +188,32 @@ CREATE TABLE `Equipment` (
 -- Records of Equipment
 -- ----------------------------
 BEGIN;
-INSERT INTO `Equipment` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`) VALUES (1, '3D Printer', 0, 3, 120);
-INSERT INTO `Equipment` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`) VALUES (2, 'Laser Cutter', 1, NULL, 150);
-INSERT INTO `Equipment` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`) VALUES (3, 'CNC Machine', 0, 2, 180);
+INSERT INTO `Equipment` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`, `image_url`, `rental_date`, `return_date`) VALUES (1, '3D 打印机-1', 0, 3, 120, 'https://cdn.uviewui.com/uview/album/1.jpg', NULL, NULL);
+INSERT INTO `Equipment` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`, `image_url`, `rental_date`, `return_date`) VALUES (2, '激光打印机', 1, NULL, 150, 'https://cdn.uviewui.com/uview/album/1.jpg', NULL, NULL);
+INSERT INTO `Equipment` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`, `image_url`, `rental_date`, `return_date`) VALUES (3, '3D 打印机-2', 0, 2, 180, 'https://cdn.uviewui.com/uview/album/1.jpg', NULL, NULL);
+COMMIT;
+
+-- ----------------------------
+-- Table structure for notice
+-- ----------------------------
+DROP TABLE IF EXISTS `notice`;
+CREATE TABLE `notice` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `content` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `display` binary(1) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of notice
+-- ----------------------------
+BEGIN;
+INSERT INTO `notice` (`id`, `content`, `created_at`, `display`) VALUES (1, '下周三将举行团队培训，请务必参加！', '2024-10-31 13:48:15', 0x30);
+INSERT INTO `notice` (`id`, `content`, `created_at`, `display`) VALUES (2, '系统将于今晚10点进行维护，预计1小时内完成。', '2024-10-31 13:48:15', 0x31);
+INSERT INTO `notice` (`id`, `content`, `created_at`, `display`) VALUES (3, '新版本上线，增加了虚拟币交易记录功能。', '2024-10-31 13:48:15', 0x30);
+INSERT INTO `notice` (`id`, `content`, `created_at`, `display`) VALUES (4, '国庆节放假安排：10月1日至10月7日，期间不提供服务。', '2024-10-31 13:48:15', 0x30);
+INSERT INTO `notice` (`id`, `content`, `created_at`, `display`) VALUES (5, '团队聚餐定于本周五下午6点，地点为公司附近餐厅。', '2024-10-31 13:48:15', 0x30);
 COMMIT;
 
 -- ----------------------------
@@ -194,7 +231,7 @@ CREATE TABLE `RentalRecords` (
   PRIMARY KEY (`rental_id`),
   KEY `team_id` (`team_id`),
   CONSTRAINT `rentalrecords_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `Team` (`team_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of RentalRecords
@@ -206,6 +243,15 @@ INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`
 INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (4, 1, '2024-10-21', 50.00, 1, 'Shared Desk', 0);
 INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (5, 1, '2024-10-21', 50.00, 1, 'Shared Desk', 0);
 INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (6, 3, '2024-10-22', 80.00, 2, 'Event Space', 1);
+INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (7, 1, '2024-11-13', 50.00, 1, '工位2', 1);
+INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (8, 1, '2024-11-13', 20.00, 1, '一楼会议室-2', 1);
+INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (9, 1, '2024-11-13', 80.00, 1, 'DSLR 摄像机', 1);
+INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (10, 1, '2024-11-13', 30.00, 1, '一楼讨论室-2', 1);
+INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (11, 1, '2024-11-13', 100.00, 1, '工位1', 1);
+INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (12, 1, '2024-11-13', 100.00, 1, '工位1', 1);
+INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (13, 1, '2024-11-13', 200.00, 2, '工位1', 1);
+INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (14, 1, '2024-11-13', 600.00, 6, '工位1', 1);
+INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (15, 1, '2024-11-13', 100.00, 1, '工位1', 1);
 COMMIT;
 
 -- ----------------------------
@@ -251,9 +297,9 @@ CREATE TABLE `Team` (
 -- Records of Team
 -- ----------------------------
 BEGIN;
-INSERT INTO `Team` (`team_id`, `team_name`, `creation_date`, `virtual_coins`) VALUES (1, 'hhh', '2023-01-10', 1240.00);
-INSERT INTO `Team` (`team_id`, `team_name`, `creation_date`, `virtual_coins`) VALUES (2, 'Tech Pioneers', '2023-03-15', 400.00);
-INSERT INTO `Team` (`team_id`, `team_name`, `creation_date`, `virtual_coins`) VALUES (3, 'Creative Minds', '2023-05-20', 670.00);
+INSERT INTO `Team` (`team_id`, `team_name`, `creation_date`, `virtual_coins`) VALUES (1, '河工大众创空间', '2023-01-10', 10000.00);
+INSERT INTO `Team` (`team_id`, `team_name`, `creation_date`, `virtual_coins`) VALUES (2, '先锋者', '2023-03-15', 400.00);
+INSERT INTO `Team` (`team_id`, `team_name`, `creation_date`, `virtual_coins`) VALUES (3, '暴乱头脑', '2023-05-20', 670.00);
 COMMIT;
 
 -- ----------------------------
@@ -294,24 +340,26 @@ DROP TABLE IF EXISTS `User`;
 CREATE TABLE `User` (
   `user_id` int NOT NULL AUTO_INCREMENT,
   `team_id` int DEFAULT NULL,
-  `user_name` varchar(100) NOT NULL,
+  `username` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `password` varchar(255) NOT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `role` varchar(50) NOT NULL,
+  `role` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `registration_date` date NOT NULL,
   PRIMARY KEY (`user_id`),
   KEY `team_id` (`team_id`),
   CONSTRAINT `user_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `Team` (`team_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of User
 -- ----------------------------
 BEGIN;
-INSERT INTO `User` (`user_id`, `team_id`, `user_name`, `password`, `email`, `role`, `registration_date`) VALUES (1, 1, 'Alice', 'password123', 'alice@example.com', 'leader', '2023-01-11');
-INSERT INTO `User` (`user_id`, `team_id`, `user_name`, `password`, `email`, `role`, `registration_date`) VALUES (2, 1, 'Bob', 'password456', 'bob@example.com', 'member', '2023-01-12');
-INSERT INTO `User` (`user_id`, `team_id`, `user_name`, `password`, `email`, `role`, `registration_date`) VALUES (3, 2, 'Charlie', 'password789', 'charlie@example.com', 'leader', '2023-03-16');
-INSERT INTO `User` (`user_id`, `team_id`, `user_name`, `password`, `email`, `role`, `registration_date`) VALUES (4, 3, 'David', 'password101', 'david@example.com', 'leader', '2023-05-21');
+INSERT INTO `User` (`user_id`, `team_id`, `username`, `password`, `role`, `registration_date`) VALUES (1, 1, 'Alice', 'password123', 'leader', '2023-01-11');
+INSERT INTO `User` (`user_id`, `team_id`, `username`, `password`, `role`, `registration_date`) VALUES (2, 1, 'Bob', 'password456', 'member', '2023-01-12');
+INSERT INTO `User` (`user_id`, `team_id`, `username`, `password`, `role`, `registration_date`) VALUES (3, 2, 'Charlie', 'password789', 'leader', '2023-03-16');
+INSERT INTO `User` (`user_id`, `team_id`, `username`, `password`, `role`, `registration_date`) VALUES (4, 3, 'David', 'password101', 'leader', '2023-05-21');
+INSERT INTO `User` (`user_id`, `team_id`, `username`, `password`, `role`, `registration_date`) VALUES (5, 1, '11', '698d51a19d8a121ce581499d7b701668', 'leader', '2024-10-25');
+INSERT INTO `User` (`user_id`, `team_id`, `username`, `password`, `role`, `registration_date`) VALUES (6, NULL, 'wmcc', '96e79218965eb72c92a549dd5a330112', 'leader', '2024-10-25');
+INSERT INTO `User` (`user_id`, `team_id`, `username`, `password`, `role`, `registration_date`) VALUES (7, NULL, '190531', '96e79218965eb72c92a549dd5a330112', NULL, '2024-10-30');
 COMMIT;
 
 -- ----------------------------
@@ -328,21 +376,32 @@ CREATE TABLE `VirtualCoinTransactions` (
   PRIMARY KEY (`transaction_id`),
   KEY `team_id` (`team_id`),
   CONSTRAINT `virtualcointransactions_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `Team` (`team_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of VirtualCoinTransactions
 -- ----------------------------
 BEGIN;
-INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (1, 1, '2023-10-01', 'gain', 10.00, 'Daily sign-in reward');
-INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (2, 2, '2023-10-01', 'spend', 50.00, 'Laser Cutter usage');
-INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (3, 3, '2023-10-01', 'gain', 20.00, 'Duty work reward');
-INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (4, NULL, '2024-10-22', '获取虚拟币', 20.00, '值班201办公室');
-INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (5, NULL, '2024-10-22', '获取虚拟币', 20.00, '值班201办公室');
-INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (6, NULL, '2024-10-22', '获取虚拟币', 20.00, '值班201办公室');
-INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (7, NULL, '2024-10-22', '获取虚拟币', 20.00, '值班201办公室');
-INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (8, 1, '2024-10-22', '获取虚拟币', 20.00, '值班201办公室');
-INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (9, 3, '2024-10-22', '消耗虚拟币', 80.00, '租用Event Space');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (1, 1, '2023-10-01', '收入', 10.00, '签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (2, 1, '2023-10-01', '支出', 50.00, 'Laser Cutter usage');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (3, 1, '2023-10-01', '收入', 20.00, 'Duty work reward');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (4, 1, '2024-10-22', '收入', 20.00, '值班201办公室');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (5, 1, '2024-10-22', '收入', 20.00, '值班201办公室');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (6, 1, '2024-10-22', '收入', 20.00, '值班201办公室');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (7, 1, '2024-10-22', '收入', 20.00, '值班201办公室');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (8, 1, '2024-10-22', '收入', 20.00, '值班201办公室');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (9, 1, '2024-10-22', '支出', 80.00, '租用会议室');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (10, 1, '2024-10-25', '支出', 20.00, '租用相机');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (11, 1, '2024-10-25', '支出', 30.00, '租用相机');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (12, 1, '2024-11-13', '支出', 50.00, '租用工位');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (13, 1, '2024-11-13', '支出', 20.00, '租用一楼会议室-2');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (14, 1, '2024-11-13', '支出', 80.00, '租用DSLR 摄像机');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (15, 1, '2024-11-13', '支出', 30.00, '租用一楼讨论室-2');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (16, 1, '2024-11-13', '支出', 100.00, '租用工位');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (17, 1, '2024-11-13', '支出', 100.00, '租用工位');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (18, 1, '2024-11-13', '支出', 200.00, '租用工位');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (19, 1, '2024-11-13', '支出', 600.00, '租用工位');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (20, 1, '2024-11-13', '支出', 100.00, '租用工位');
 COMMIT;
 
 -- ----------------------------
@@ -355,6 +414,9 @@ CREATE TABLE `Workstation` (
   `is_available` tinyint(1) DEFAULT NULL,
   `rented_team_id` int DEFAULT NULL,
   `coin_consumption` double DEFAULT NULL,
+  `image_url` varchar(255) DEFAULT NULL,
+  `rental_date` datetime DEFAULT NULL,
+  `return_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_team` (`rented_team_id`),
   CONSTRAINT `fk_team` FOREIGN KEY (`rented_team_id`) REFERENCES `Team` (`team_id`)
@@ -364,9 +426,9 @@ CREATE TABLE `Workstation` (
 -- Records of Workstation
 -- ----------------------------
 BEGIN;
-INSERT INTO `Workstation` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`) VALUES (1, 'Private Office', 0, 1, 100);
-INSERT INTO `Workstation` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`) VALUES (2, 'Shared Desk', 1, 1, 50);
-INSERT INTO `Workstation` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`) VALUES (3, 'Dedicated Desk', 0, 2, 75);
+INSERT INTO `Workstation` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`, `image_url`, `rental_date`, `return_date`) VALUES (1, '工位1', 1, NULL, 100, 'https://cdn.uviewui.com/uview/album/1.jpg', NULL, NULL);
+INSERT INTO `Workstation` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`, `image_url`, `rental_date`, `return_date`) VALUES (2, '工位2', 1, NULL, 50, 'https://cdn.uviewui.com/uview/album/1.jpg', NULL, NULL);
+INSERT INTO `Workstation` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`, `image_url`, `rental_date`, `return_date`) VALUES (3, '工位3', 0, 2, 75, 'https://cdn.uviewui.com/uview/album/1.jpg', NULL, NULL);
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
