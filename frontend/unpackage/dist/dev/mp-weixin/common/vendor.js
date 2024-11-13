@@ -20559,9 +20559,12 @@ var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/inte
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.getRental = getRental;
 exports.getResources = getResources;
+exports.rent = rent;
+exports.returnDevice = returnDevice;
 var _request = _interopRequireDefault(__webpack_require__(/*! @/utils/request */ 169));
-// 登录方法
+// 获取资源列表
 function getResources(type) {
   return (0, _request.default)({
     url: '/consumer/list',
@@ -20569,6 +20572,32 @@ function getResources(type) {
     params: {
       type: type
     }
+  });
+}
+// 获取团队租用列表
+function getRental(teamId) {
+  return (0, _request.default)({
+    url: '/consumer/rentList',
+    method: 'get',
+    params: {
+      teamId: teamId
+    }
+  });
+}
+// 租用资源
+function rent(rentalrequest) {
+  return (0, _request.default)({
+    url: '/consumer/rent',
+    method: 'post',
+    data: rentalrequest
+  });
+}
+// 归还资源
+function returnDevice(returnRequest) {
+  return (0, _request.default)({
+    url: '/consumer/return',
+    method: 'post',
+    data: returnRequest
   });
 }
 
@@ -21740,6 +21769,140 @@ exports.default = _default;
 /* 318 */,
 /* 319 */,
 /* 320 */
+/*!***********************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-number-box/props.js ***!
+  \***********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  props: {
+    // 步进器标识符，在change回调返回
+    name: {
+      type: [String, Number],
+      default: uni.$u.props.numberBox.name
+    },
+    // 用于双向绑定的值，初始化时设置设为默认min值(最小值)
+    value: {
+      type: [String, Number],
+      default: uni.$u.props.numberBox.value
+    },
+    // 最小值
+    min: {
+      type: [String, Number],
+      default: uni.$u.props.numberBox.min
+    },
+    // 最大值
+    max: {
+      type: [String, Number],
+      default: uni.$u.props.numberBox.max
+    },
+    // 加减的步长，可为小数
+    step: {
+      type: [String, Number],
+      default: uni.$u.props.numberBox.step
+    },
+    // 是否只允许输入整数
+    integer: {
+      type: Boolean,
+      default: uni.$u.props.numberBox.integer
+    },
+    // 是否禁用，包括输入框，加减按钮
+    disabled: {
+      type: Boolean,
+      default: uni.$u.props.numberBox.disabled
+    },
+    // 是否禁用输入框
+    disabledInput: {
+      type: Boolean,
+      default: uni.$u.props.numberBox.disabledInput
+    },
+    // 是否开启异步变更，开启后需要手动控制输入值
+    asyncChange: {
+      type: Boolean,
+      default: uni.$u.props.numberBox.asyncChange
+    },
+    // 输入框宽度，单位为px
+    inputWidth: {
+      type: [String, Number],
+      default: uni.$u.props.numberBox.inputWidth
+    },
+    // 是否显示减少按钮
+    showMinus: {
+      type: Boolean,
+      default: uni.$u.props.numberBox.showMinus
+    },
+    // 是否显示增加按钮
+    showPlus: {
+      type: Boolean,
+      default: uni.$u.props.numberBox.showPlus
+    },
+    // 显示的小数位数
+    decimalLength: {
+      type: [String, Number, null],
+      default: uni.$u.props.numberBox.decimalLength
+    },
+    // 是否开启长按加减手势
+    longPress: {
+      type: Boolean,
+      default: uni.$u.props.numberBox.longPress
+    },
+    // 输入框文字和加减按钮图标的颜色
+    color: {
+      type: String,
+      default: uni.$u.props.numberBox.color
+    },
+    // 按钮大小，宽高等于此值，单位px，输入框高度和此值保持一致
+    buttonSize: {
+      type: [String, Number],
+      default: uni.$u.props.numberBox.buttonSize
+    },
+    // 输入框和按钮的背景颜色
+    bgColor: {
+      type: String,
+      default: uni.$u.props.numberBox.bgColor
+    },
+    // 指定光标于键盘的距离，避免键盘遮挡输入框，单位px
+    cursorSpacing: {
+      type: [String, Number],
+      default: uni.$u.props.numberBox.cursorSpacing
+    },
+    // 是否禁用增加按钮
+    disablePlus: {
+      type: Boolean,
+      default: uni.$u.props.numberBox.disablePlus
+    },
+    // 是否禁用减少按钮
+    disableMinus: {
+      type: Boolean,
+      default: uni.$u.props.numberBox.disableMinus
+    },
+    // 加减按钮图标的样式
+    iconStyle: {
+      type: [Object, String],
+      default: uni.$u.props.numberBox.iconStyle
+    }
+  }
+};
+exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+/* 321 */,
+/* 322 */,
+/* 323 */,
+/* 324 */,
+/* 325 */,
+/* 326 */,
+/* 327 */,
+/* 328 */
 /*!*****************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-form/props.js ***!
   \*****************************************************************************************************/
@@ -21802,7 +21965,7 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 321 */
+/* 329 */
 /*!*******************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/libs/util/async-validator.js ***!
   \*******************************************************************************************************/
@@ -22983,10 +23146,10 @@ Schema.warning = warning;
 Schema.messages = messages;
 var _default = Schema; // # sourceMappingURL=index.js.map
 exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../../../../../Applications/HBuilderX.app/Contents/HBuilderX/plugins/uniapp-cli/node_modules/node-libs-browser/mock/process.js */ 322)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../../../../../Applications/HBuilderX.app/Contents/HBuilderX/plugins/uniapp-cli/node_modules/node-libs-browser/mock/process.js */ 330)))
 
 /***/ }),
-/* 322 */
+/* 330 */
 /*!********************************************************!*\
   !*** ./node_modules/node-libs-browser/mock/process.js ***!
   \********************************************************/
@@ -23017,7 +23180,7 @@ exports.binding = function (name) {
     var path;
     exports.cwd = function () { return cwd };
     exports.chdir = function (dir) {
-        if (!path) path = __webpack_require__(/*! path */ 323);
+        if (!path) path = __webpack_require__(/*! path */ 331);
         cwd = path.resolve(dir, cwd);
     };
 })();
@@ -23030,7 +23193,7 @@ exports.features = {};
 
 
 /***/ }),
-/* 323 */
+/* 331 */
 /*!***********************************************!*\
   !*** ./node_modules/path-browserify/index.js ***!
   \***********************************************/
@@ -23340,15 +23503,15 @@ var substr = 'ab'.substr(-1) === 'b'
     }
 ;
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../node-libs-browser/mock/process.js */ 322)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../node-libs-browser/mock/process.js */ 330)))
 
 /***/ }),
-/* 324 */,
-/* 325 */,
-/* 326 */,
-/* 327 */,
-/* 328 */,
-/* 329 */
+/* 332 */,
+/* 333 */,
+/* 334 */,
+/* 335 */,
+/* 336 */,
+/* 337 */
 /*!**********************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-form-item/props.js ***!
   \**********************************************************************************************************/
@@ -23414,14 +23577,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 330 */,
-/* 331 */,
-/* 332 */,
-/* 333 */,
-/* 334 */,
-/* 335 */,
-/* 336 */,
-/* 337 */
+/* 338 */,
+/* 339 */,
+/* 340 */,
+/* 341 */,
+/* 342 */,
+/* 343 */,
+/* 344 */,
+/* 345 */
 /*!******************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-input/props.js ***!
   \******************************************************************************************************/
@@ -23626,14 +23789,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 338 */,
-/* 339 */,
-/* 340 */,
-/* 341 */,
-/* 342 */,
-/* 343 */,
-/* 344 */,
-/* 345 */
+/* 346 */,
+/* 347 */,
+/* 348 */,
+/* 349 */,
+/* 350 */,
+/* 351 */,
+/* 352 */,
+/* 353 */
 /*!***********************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/libs/mixin/button.js ***!
   \***********************************************************************************************/
@@ -23663,7 +23826,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 346 */
+/* 354 */
 /*!*************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/libs/mixin/openType.js ***!
   \*************************************************************************************************/
@@ -23705,7 +23868,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 347 */
+/* 355 */
 /*!*******************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-button/props.js ***!
   \*******************************************************************************************************/
@@ -23884,14 +24047,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 348 */,
-/* 349 */,
-/* 350 */,
-/* 351 */,
-/* 352 */,
-/* 353 */,
-/* 354 */,
-/* 355 */
+/* 356 */,
+/* 357 */,
+/* 358 */,
+/* 359 */,
+/* 360 */,
+/* 361 */,
+/* 362 */,
+/* 363 */
 /*!************************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-safe-bottom/props.js ***!
   \************************************************************************************************************/
@@ -23911,14 +24074,14 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 356 */,
-/* 357 */,
-/* 358 */,
-/* 359 */,
-/* 360 */,
-/* 361 */,
-/* 362 */,
-/* 363 */
+/* 364 */,
+/* 365 */,
+/* 366 */,
+/* 367 */,
+/* 368 */,
+/* 369 */,
+/* 370 */,
+/* 371 */
 /*!******************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-badge/props.js ***!
   \******************************************************************************************************/
@@ -24008,14 +24171,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 364 */,
-/* 365 */,
-/* 366 */,
-/* 367 */,
-/* 368 */,
-/* 369 */,
-/* 370 */,
-/* 371 */
+/* 372 */,
+/* 373 */,
+/* 374 */,
+/* 375 */,
+/* 376 */,
+/* 377 */,
+/* 378 */,
+/* 379 */
 /*!*****************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-line/props.js ***!
   \*****************************************************************************************************/
@@ -24066,14 +24229,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 372 */,
-/* 373 */,
-/* 374 */,
-/* 375 */,
-/* 376 */,
-/* 377 */,
-/* 378 */,
-/* 379 */
+/* 380 */,
+/* 381 */,
+/* 382 */,
+/* 383 */,
+/* 384 */,
+/* 385 */,
+/* 386 */,
+/* 387 */
 /*!**************************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-column-notice/props.js ***!
   \**************************************************************************************************************/
@@ -24146,14 +24309,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 380 */,
-/* 381 */,
-/* 382 */,
-/* 383 */,
-/* 384 */,
-/* 385 */,
-/* 386 */,
-/* 387 */
+/* 388 */,
+/* 389 */,
+/* 390 */,
+/* 391 */,
+/* 392 */,
+/* 393 */,
+/* 394 */,
+/* 395 */
 /*!***********************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-row-notice/props.js ***!
   \***********************************************************************************************************/
@@ -24210,14 +24373,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 388 */,
-/* 389 */,
-/* 390 */,
-/* 391 */,
-/* 392 */,
-/* 393 */,
-/* 394 */,
-/* 395 */
+/* 396 */,
+/* 397 */,
+/* 398 */,
+/* 399 */,
+/* 400 */,
+/* 401 */,
+/* 402 */,
+/* 403 */
 /*!***********************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-transition/props.js ***!
   \***********************************************************************************************************/
@@ -24259,7 +24422,7 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 396 */
+/* 404 */
 /*!****************************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-transition/transition.js ***!
   \****************************************************************************************************************/
@@ -24276,7 +24439,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 58));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 60));
-var _nvueAniMap = _interopRequireDefault(__webpack_require__(/*! ./nvue.ani-map.js */ 397));
+var _nvueAniMap = _interopRequireDefault(__webpack_require__(/*! ./nvue.ani-map.js */ 405));
 // 定义一个一定时间后自动成功的promise，让调用nextTick方法处，进入下一个then方法
 var nextTick = function nextTick() {
   return new Promise(function (resolve) {
@@ -24368,7 +24531,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 397 */
+/* 405 */
 /*!******************************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-transition/nvue.ani-map.js ***!
   \******************************************************************************************************************/
@@ -24561,14 +24724,14 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 398 */,
-/* 399 */,
-/* 400 */,
-/* 401 */,
-/* 402 */,
-/* 403 */,
-/* 404 */,
-/* 405 */
+/* 406 */,
+/* 407 */,
+/* 408 */,
+/* 409 */,
+/* 410 */,
+/* 411 */,
+/* 412 */,
+/* 413 */
 /*!*************************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-loading-icon/props.js ***!
   \*************************************************************************************************************/

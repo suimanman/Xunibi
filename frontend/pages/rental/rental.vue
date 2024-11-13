@@ -1,6 +1,6 @@
 <template>
 	<view class="container">
-		<u-tabs :list="list1" @click="click" ></u-tabs>
+		<u-tabs :list="list1" @click="click"></u-tabs>
 
 		<view v-if="nowData && nowData.length" class="device-list">
 			<view class="device-item" v-for="(device, index) in nowData" :key="index">
@@ -12,28 +12,58 @@
 
 				<!-- 右侧信息区域 -->
 				<view class="device-info">
-					<view class="device-detail">
-						<view class="label">消耗:</view>
-						<view class="value">{{ device.coinConsumption }} 虚拟币</view>
-					</view>
-					<view class="device-detail">
-						<view class="label">状态:</view>
-						<view class="value">
-							<text :class="device.isAvailable ? 'available' : 'unavailable'">
-								{{ device.isAvailable ? '可用' : '不可用' }}
-							</text>
+					<template v-if="device.rentalDate && device.returnDate">
+						<view class="device-detail">
+							<view class="label">租用:</view>
+							<view class="value">{{ device.rentalDate }}</view>
 						</view>
-					</view>
-					<view class="device-detail" v-if="!device.isAvailable">
-						<view class="label">占用:</view>
-						<view class="value">{{ device.rentTeamName }}</view>
-					</view>
+						<view class="device-detail">
+							<view class="label">归还:</view>
+							<view class="value">{{ device.returnDate }}</view>
+						</view>
+					</template>
+					<template v-else>
+						<view class="device-detail">
+							<view class="label">消耗:</view>
+							<view class="value">{{ device.coinConsumption }} 虚拟币</view>
+						</view>
+						<view class="device-detail">
+							<view class="label">状态:</view>
+							<view class="value">
+								<text :class="device.isAvailable ? 'available' : 'unavailable'">
+									{{ device.isAvailable ? '可用' : '不可用' }}
+								</text>
+							</view>
+						</view>
+						<view class="device-detail" v-if="!device.isAvailable">
+							<view class="label">占用:</view>
+							<view class="value">{{ device.rentTeamName }}</view>
+						</view>
+						<view class="device-detail" v-if="device.isAvailable">
+							<view class="label">租期:</view>
+							<u-number-box v-model="rentalDays[index]" button-size="27" :max="7">
+								<view slot="minus" class="minus">
+									<u-icon name="minus" size="12"></u-icon>
+								</view>
+								<text slot="input" style="width: 30px;text-align: center;" class="input">
+									{{ rentalDays[index] }} 天
+								</text>
+								<view slot="plus" class="plus">
+									<u-icon name="plus" color="#FFFFFF" size="12"></u-icon>
+								</view>
+							</u-number-box>
+						</view>
+					</template>
 				</view>
 
-				<!-- 租用按钮 -->
+				<!-- 租用/归还按钮 -->
 				<view class="device-rent">
-					<button class="rent-button" :class="{ 'disabled': !device.isAvailable }"
-						:disabled="!device.isAvailable">
+					<button v-if="device.rentalDate && device.returnDate" class="rent-button"
+						@click="returnDevice(device.type)">
+						归还
+					</button>
+					<button v-else class="rent-button" :class="{ 'disabled': !device.isAvailable }"
+						:disabled="!device.isAvailable" @click="rent(device.type, rentalDays[index])">
 						{{ device.isAvailable ? '租用' : '被租用' }}
 					</button>
 				</view>
@@ -44,10 +74,26 @@
 </template>
 
 <script>
-	import { getResources } from '../../api/rental';
+	import {
+		getResources,
+		getRental,
+		rent,
+		returnDevice,
+	} from '../../api/rental';
+	import {
+		isLogin
+	} from '@/api/me';
+
 	export default {
 		data() {
 			return {
+				currentItem: null,
+				rentalDays: [], // 新增用于记录每个设备的租期
+				rentalrequest: {
+					type1: '',
+					type2: '',
+					teamId: ''
+				},
 				list1: [{
 						name: '工位'
 					},
@@ -55,35 +101,108 @@
 						name: '固定设备'
 					},
 					{
-						name: '摄像'
+						name: '摄像设备'
 					},
 					{
 						name: '场地'
+					},
+					{
+						name: '已租用'
 					}
 				],
-				nowData:[]
+				nowData: []
 			};
 		},
 		created() {
-		        // 自动加载第一个选项
-		        this.click(this.list1[0]);
-		    },
+			this.loginHandle();
+			if (isLogin()) {
+				this.click(this.list1[0]);
+			} else {
+				console.log("未登录");
+			}
+		},
 		methods: {
+			async loginHandle() {
+				const loginResult = await isLogin();
+				if (!isLogin()) {
+					uni.navigateTo({
+						url: '/pages/login/login'
+					});
+				} else {
+					this.rentalrequest.teamId = loginResult.data.data.teamId;
+				}
+			},
 			async click(item) {
+				this.currentItem = item;
 				try {
-					// 示例请求方法，用于获取设备列表数据
-					const response = await getResources(item.name);
-					console.log("资源列表："+response.data.data);
+					this.rentalrequest.type1 = item.name;
+					const response = item.name === "已租用" ? await getRental(this.rentalrequest.teamId) :
+						await getResources(item.name);
 					this.nowData = response.data.data;
+
+					// 设置每个设备的默认租期
+					this.rentalDays = this.nowData.map(() => 1);
 				} catch (error) {
+					this.nowData = null;
 					console.error('获取数据失败', error);
+				}
+			},
+			async rent(type, days) {
+				try {
+					this.rentalrequest.type2 = type;
+					this.rentalrequest.rentalDays = days; // 使用各设备对应的租期
+					const result = await rent(this.rentalrequest);
+					if (result.data.code === 200) {
+						uni.showToast({
+							title: "租用成功！",
+							icon: "success",
+							duration: 2000
+						});
+						this.click(this.currentItem || this.list1[0]);
+					} else {
+						uni.showToast({
+							title: result.data.msg || "无法租用！",
+							icon: "none"
+						});
+					}
+				} catch (error) {
+					uni.showToast({
+						title: "请求异常，请检查网络连接",
+						icon: "none"
+					});
+					console.error('获取数据失败', error);
+				}
+			},
+			async returnDevice(type) {
+				try {
+					this.rentalrequest.type2 = type;
+					const result = await returnDevice(this.rentalrequest);
+					if (result.data.code === 200) {
+						uni.showToast({
+							title: "归还成功！",
+							icon: "success",
+							duration: 2000
+						});
+						this.click(this.currentItem || this.list1[4]);
+					} else {
+						uni.showToast({
+							title: result.data.msg || "无法归还！",
+							icon: "none"
+						});
+					}
+				} catch (error) {
+					uni.showToast({
+						title: "请求异常，请检查网络连接",
+						icon: "none"
+					});
+					console.error('归还失败', error);
 				}
 			}
 		}
 	};
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 	.container {
 		padding: 10px;
 	}
@@ -194,5 +313,36 @@
 		color: #888;
 		margin-top: 20px;
 		font-size: 16px;
+	}
+
+	.minus {
+		width: 22px;
+		height: 22px;
+		border-width: 1px;
+		border-color: #E6E6E6;
+		border-style: solid;
+		border-top-left-radius: 100px;
+		border-top-right-radius: 100px;
+		border-bottom-left-radius: 100px;
+		border-bottom-right-radius: 100px;
+		@include flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.input {
+		padding: 0 10px;
+	}
+
+	.plus {
+		width: 22px;
+		height: 22px;
+		background-color: #5677fc;
+		border-radius: 50%;
+		/* #ifndef APP-NVUE */
+		display: flex;
+		/* #endif */
+		justify-content: center;
+		align-items: center;
 	}
 </style>

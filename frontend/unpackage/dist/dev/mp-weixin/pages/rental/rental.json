@@ -3,6 +3,8 @@
   "enablePullDownRefresh": true,
   "usingComponents": {
     "u-tabs": "/uni_modules/uview-ui/components/u-tabs/u-tabs",
-    "u-image": "/uni_modules/uview-ui/components/u-image/u-image"
+    "u-image": "/uni_modules/uview-ui/components/u-image/u-image",
+    "u-number-box": "/uni_modules/uview-ui/components/u-number-box/u-number-box",
+    "u-icon": "/uni_modules/uview-ui/components/u-icon/u-icon"
   }
 }

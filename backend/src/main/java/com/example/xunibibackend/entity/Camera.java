@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Entity
 @Data
 public class Camera {
@@ -21,4 +23,8 @@ public class Camera {
     private Double coinConsumption;
 
     private String imageUrl;
+
+    private LocalDate rentalDate;
+
+    private LocalDate returnDate;
 }

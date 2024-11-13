@@ -15,23 +15,40 @@ public class ConsumerController {
     @Autowired
     private ConsumerService consumerService;
 
+    /*
+        获取资源列表
+     */
     @GetMapping("/list")
     public MyResult getList(@RequestParam String type){
         return consumerService.getList(type);
     }
 
-    @PostMapping("/rent/{}")
+    /*
+        获取团队所租用的资源
+     */
+    @GetMapping("/rentList")
+    public MyResult getRentList(@RequestParam Integer teamId){
+        return consumerService.getRentList(teamId);
+    }
+    /*
+        用户租用
+        RentalRequest:  entity/dto/RentalRequest
+     */
+
+    @PostMapping("/rent")
     public MyResult rentEquipment(@RequestBody RentalRequest rentalRequest) {
+        log.info("租用：{}",rentalRequest);
         boolean success = consumerService.rentEquipment(rentalRequest);
         if (success) {
             return MyResult.success("租用成功！");
         } else {
-            return MyResult.error("租用失败！");
+            return MyResult.error("虚拟币不足，租用失败！");
         }
     }
 
     @PostMapping("/return")
     public MyResult returnEquipment(@RequestBody ReturnRequest returnRequest) {
+        log.info("归还中。。。");
         boolean success = consumerService.returnEquipment(returnRequest);
         if (success) {
             return MyResult.success("归还成功！");

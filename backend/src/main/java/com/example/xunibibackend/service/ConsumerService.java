@@ -12,4 +12,6 @@ public interface ConsumerService {
     boolean returnEquipment(ReturnRequest returnRequest);
 
     MyResult getList(String type);
+
+    MyResult getRentList(Integer teamId);
 }

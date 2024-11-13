@@ -3,6 +3,7 @@ package com.example.xunibibackend.service.impl;
 import com.example.xunibibackend.entity.*;
 import com.example.xunibibackend.entity.dto.RentalRequest;
 import com.example.xunibibackend.entity.dto.ReturnRequest;
+import com.example.xunibibackend.entity.dto.TeamRent;
 import com.example.xunibibackend.mapper.*;
 import com.example.xunibibackend.response.MyResult;
 import com.example.xunibibackend.service.ConsumerService;
@@ -13,8 +14,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Component
 public class ConsumerServiceImpl implements ConsumerService {
@@ -49,7 +53,14 @@ public class ConsumerServiceImpl implements ConsumerService {
         coinTransaction.setTransactionType("支出");
 
         int rentalDays = rentalRequest.getRentalDays();
-        Integer type1 = rentalRequest.getType1();
+        String typeString = rentalRequest.getType1();
+        int type1=0;
+        switch (typeString) {
+            case "工位" -> type1 = 1;
+            case "固定设备" -> type1 = 2;
+            case "摄像设备" -> type1 = 3;
+            case "场地" -> type1 = 4;
+        }
         String type2 = rentalRequest.getType2();
         int teamId = rentalRequest.getTeamId();
 
@@ -82,7 +93,11 @@ public class ConsumerServiceImpl implements ConsumerService {
             if (team.getVirtualCoins() < totalCoinConsumption) {
                 return false; // 虚拟币不足
             }
-            workstationMapper.updateRental(0,teamId,type2);
+            //可以租用，则更新租用时间和归还时间
+            LocalDate rentDate = LocalDate.now();
+            LocalDate returnDate = rentDate.plusDays(rentalDays);
+
+            workstationMapper.updateRental(0,teamId,type2,rentDate,returnDate);
         }else if(type1 == 2){
             // 获取打印机等设备信息
             equipment = equipmentMapper.selectByType(type2);
@@ -100,7 +115,10 @@ public class ConsumerServiceImpl implements ConsumerService {
             if (team.getVirtualCoins() < totalCoinConsumption) {
                 return false; // 虚拟币不足
             }
-            equipmentMapper.updateRental(0,teamId,type2);
+            //可以租用，则更新租用时间和归还时间
+            LocalDate rentDate = LocalDate.now();
+            LocalDate returnDate = rentDate.plusDays(rentalDays);
+            equipmentMapper.updateRental(0,teamId,type2,rentDate,returnDate);
         }else if(type1 == 3){
             // 获取摄像设备信息
             camera = cameraMapper.selectByType(type2);
@@ -118,7 +136,10 @@ public class ConsumerServiceImpl implements ConsumerService {
             if (team.getVirtualCoins() < totalCoinConsumption) {
                 return false; // 虚拟币不足
             }
-            cameraMapper.updateRental(0,teamId,type2);
+            //可以租用，则更新租用时间和归还时间
+            LocalDate rentDate = LocalDate.now();
+            LocalDate returnDate = rentDate.plusDays(rentalDays);
+            cameraMapper.updateRental(0,teamId,type2,rentDate,returnDate);
         }else if(type1 == 4){
             // 获取场地信息
             area = areaMapper.selectByType(type2);
@@ -137,7 +158,10 @@ public class ConsumerServiceImpl implements ConsumerService {
             if (team.getVirtualCoins() < totalCoinConsumption) {
                 return false; // 虚拟币不足
             }
-            areaMapper.updateRental(0,teamId,type2);
+            //可以租用，则更新租用时间和归还时间
+            LocalDate rentDate = LocalDate.now();
+            LocalDate returnDate = rentDate.plusDays(rentalDays);
+            areaMapper.updateRental(0,teamId,type2,rentDate,returnDate);
         }
 
         // 扣除虚拟币
@@ -170,20 +194,29 @@ public class ConsumerServiceImpl implements ConsumerService {
      */
     @Override
     public boolean returnEquipment(ReturnRequest returnRequest) {
-        String redisKey = "rental:" + returnRequest.getType1() + "," + returnRequest.getType2() + "," + returnRequest.getTeamId();
-        int type1=returnRequest.getType1();
+        log.info("returnRequest:{}",returnRequest);
+        String typeString=returnRequest.getType1();
+        int type1=0;
+        switch (typeString) {
+            case "工位" -> type1 = 1;
+            case "固定设备" -> type1 = 2;
+            case "摄像设备" -> type1 = 3;
+            case "场地" -> type1 = 4;
+        }
+        String redisKey = "rental:" + type1 + "," + returnRequest.getType2() + "," + returnRequest.getTeamId();
         String type2=returnRequest.getType2();
         // 检查 Redis 中是否存在租用记录
         if (Boolean.TRUE.equals(redisTemplate.hasKey(redisKey))) {
+            log.info("查询成功，可以归还");
             //更新借用设备或工位当前状态为可用
             if(type1 == 1){
-                workstationMapper.updateRental(1,null,type2);
+                workstationMapper.updateRental(1,null,type2,null,null);
             }else if(type1 == 2){
-                equipmentMapper.updateRental(1,null,type2);
+                equipmentMapper.updateRental(1,null,type2,null,null);
             }else if(type1 == 3){
-                cameraMapper.updateRental(1,null,type2);
+                cameraMapper.updateRental(1,null,type2,null,null);
             }else if(type1 == 4){
-                areaMapper.updateRental(1,null,type2);
+                areaMapper.updateRental(1,null,type2,null,null);
             }
 
             // 归还设备，删除 Redis 记录
@@ -221,7 +254,7 @@ public class ConsumerServiceImpl implements ConsumerService {
                 log.info("资源列表2：{}",equipmentList);
                 return MyResult.success(equipmentList);
             }
-            case "摄像" -> {
+            case "摄像设备" -> {
                 List<Camera> cameraList = cameraMapper.selectList();
                 for(Camera camera: cameraList){
                     Integer teamId=camera.getRentedTeamId();
@@ -247,5 +280,55 @@ public class ConsumerServiceImpl implements ConsumerService {
                 return MyResult.error("无效的资源类型！");
             }
         }
+    }
+
+    /*
+        获取登录用户所在团队已租用的资源
+     */
+    @Override
+    public MyResult getRentList(Integer teamId) {
+        //分别从4
+        List<TeamRent> teamRents = new ArrayList<>();
+        List<Area> areas = new ArrayList<>();
+        List<Workstation> workstations = new ArrayList<>();
+        List<Equipment> equipments = new ArrayList<>();
+        List<Camera> cameras = new ArrayList<>();
+
+        areas = areaMapper.selectTeamRent(teamId);
+        workstations = workstationMapper.selectTeamRent(teamId);
+        equipments = equipmentMapper.selectTeamRent(teamId);
+        cameras = cameraMapper.selectTeamRent(teamId);
+
+        if (areas != null && !areas.isEmpty()) {
+            teamRents.addAll(
+                    areas.stream()
+                            .map(TeamRent::new)  // 假设有适合的构造函数
+                            .toList()
+            );
+        }
+        if (workstations != null && !workstations.isEmpty()) {
+            teamRents.addAll(
+                    workstations.stream()
+                            .map(TeamRent::new)
+                            .toList()
+            );
+        }
+        if (equipments != null && !equipments.isEmpty()) {
+            teamRents.addAll(
+                    equipments.stream()
+                            .map(TeamRent::new)
+                            .toList()
+            );
+        }
+        if (cameras != null && !cameras.isEmpty()) {
+            teamRents.addAll(
+                    cameras.stream()
+                            .map(TeamRent::new)
+                            .toList()
+            );
+        }
+        log.info("{}团队所租用的资源：{}",teamId,teamRents);
+        if(teamRents.isEmpty()) return MyResult.error("暂无租用");
+        return MyResult.success(teamRents);
     }
 }
