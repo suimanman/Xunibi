@@ -37,7 +37,7 @@ public class ConsumerController {
 
     @PostMapping("/rent")
     public MyResult rentEquipment(@RequestBody RentalRequest rentalRequest) {
-        log.info("租用：{}",rentalRequest);
+//        log.info("租用：{}",rentalRequest);
         boolean success = consumerService.rentEquipment(rentalRequest);
         if (success) {
             return MyResult.success("租用成功！");
@@ -48,7 +48,7 @@ public class ConsumerController {
 
     @PostMapping("/return")
     public MyResult returnEquipment(@RequestBody ReturnRequest returnRequest) {
-        log.info("归还中。。。");
+//        log.info("归还中。。。");
         boolean success = consumerService.returnEquipment(returnRequest);
         if (success) {
             return MyResult.success("归还成功！");
