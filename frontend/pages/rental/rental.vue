@@ -78,7 +78,6 @@
 			</view>
 			<slot></slot>
 		</view>
-		<image class="img-b" src="https://zhoukaiwen.com/img/loginImg/3.png"></image>
 	</view>
 </template>
 
