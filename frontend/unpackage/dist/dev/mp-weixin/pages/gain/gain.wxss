@@ -1,0 +1,48 @@
+
+.container.data-v-4c9d5c66 {
+	padding: 10px;
+}
+.search-bar.data-v-4c9d5c66 {
+	margin: 10px 0;
+}
+.section-title.data-v-4c9d5c66 {
+	font-size: 14px;
+	color: #666666;
+	padding-left: 5px;
+	margin-bottom: 10px;
+}
+.section.data-v-4c9d5c66 {
+	height: 90px;
+	/* 可以根据需要调整高度 */
+	margin: 10px;
+	background-color: white;
+	border-radius: 8px;
+	display: flex;
+	align-items: center;
+	/* 垂直居中 */
+	justify-content: center;
+	/* 水平居中 */
+}
+.grid.data-v-4c9d5c66 {
+	width: 100%;
+	/* 确保 grid 占满 section 宽度 */
+}
+.grid-item.data-v-4c9d5c66 {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background-color: white;
+	border-radius: 8px;
+	padding: 10px;
+}
+.icon.data-v-4c9d5c66 {
+	width: 33px;
+	height: 33px;
+	margin-bottom: 5px;
+}
+.icon-text.data-v-4c9d5c66 {
+	font-size: 14px;
+	color: #333333;
+}
+

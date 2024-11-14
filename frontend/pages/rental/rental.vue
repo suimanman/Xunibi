@@ -60,11 +60,11 @@
 				<view class="device-rent">
 					<button v-if="device.rentalDate && device.returnDate" class="rent-button"
 						@click="returnDevice(device.type)">
-						归还
+						归 还
 					</button>
 					<button v-else class="rent-button" :class="{ 'disabled': !device.isAvailable }"
 						:disabled="!device.isAvailable" @click="rent(device.type, rentalDays[index])">
-						{{ device.isAvailable ? '租用' : '被租用' }}
+						{{ device.isAvailable ? '租 用' : '被租用' }}
 					</button>
 				</view>
 			</view>
@@ -226,10 +226,9 @@
 		justify-content: space-between;
 		margin-bottom: 13px;
 		padding: 15px;
-		border: 1px solid #e0e0e0;
-		border-radius: 10px;
+		border-radius: 8px;
 		background-color: #f9f9f9;
-		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.1);
 	}
 
 	.device-image {
@@ -297,7 +296,7 @@
 		width: 100%;
 		height: 35px;
 		padding: 5px 10px;
-		border-radius: 12px;
+		border-radius: 8px;
 		background-color: #5677fc;
 		color: white;
 		border: none;
@@ -305,9 +304,9 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-weight: bold;
+		// font-weight: bold;
 		font-size: 14px;
-		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	}
 
 	.rent-button.disabled {
