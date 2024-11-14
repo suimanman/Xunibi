@@ -147,4 +147,32 @@
   justify-content: center;
   align-items: center;
 }
+.img-b.data-v-4aa55d46 {
+  position: fixed;
+  width: 50%;
+  bottom: 0;
+  left: -50rpx;
+  z-index: -1;
+}
+.su-empty.data-v-4aa55d46 {
+  padding: 60rpx;
+}
+.su-empty__image.data-v-4aa55d46 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.su-empty__image image.data-v-4aa55d46 {
+  width: 300rpx;
+  height: 230rpx;
+  display: block;
+}
+.su-empty__text.data-v-4aa55d46 {
+  font-size: 28rpx;
+  color: #999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20rpx;
+}
 

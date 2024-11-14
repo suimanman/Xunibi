@@ -287,7 +287,7 @@ var _default = {
       }))();
     },
     goEditUsername: function goEditUsername() {
-      uni.navigateTo({
+      uni.redirectTo({
         url: '/pages/me/editPassword'
       });
     }

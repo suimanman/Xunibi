@@ -69,7 +69,16 @@
 				</view>
 			</view>
 		</view>
-		<view v-else class="no-data">暂无数据</view>
+		<view v-else class="su-empty">
+			<view class="su-empty__image">
+				<image src="../../static/img/暂无数据.png" mode="aspectFit"></image>
+			</view>
+			<view class="su-empty__text">
+				暂无数据
+			</view>
+			<slot></slot>
+		</view>
+		<image class="img-b" src="https://zhoukaiwen.com/img/loginImg/3.png"></image>
 	</view>
 </template>
 
@@ -344,5 +353,38 @@
 		/* #endif */
 		justify-content: center;
 		align-items: center;
+	}
+
+	.img-b {
+		position: fixed;
+		width: 50%;
+		bottom: 0;
+		left: -50rpx;
+		z-index: -1;
+	}
+
+	.su-empty {
+		padding: 60upx;
+
+		&__image {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
+			image {
+				width: 300upx;
+				height: 230upx;
+				display: block;
+			}
+		}
+
+		&__text {
+			font-size: 28upx;
+			color: #999;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			margin-top: 20upx;
+		}
 	}
 </style>
