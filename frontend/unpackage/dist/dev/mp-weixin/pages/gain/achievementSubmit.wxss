@@ -1,0 +1,102 @@
+
+.header-banner.data-v-0cd595d0 {
+	height: 110px;
+	position: relative;
+	/* color: white; */
+}
+.banner-info.data-v-0cd595d0 {
+	position: absolute;
+	margin-top: 30px;
+	margin-left: 35px;
+	color: #F5F5F5;
+	font-weight: bold;
+}
+.banner-coin.data-v-0cd595d0 {
+	position: absolute;
+	margin-top: 19px;
+	margin-left: 255px;
+	font-size: 13px;
+	font-weight: bold;
+	color: #F5F5F5;
+}
+.background-image.data-v-0cd595d0 {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -1;
+}
+.info.data-v-0cd595d0 {
+	padding: 20px;
+	background-color: #F5F5F5;
+}
+.title.data-v-0cd595d0 {
+	font-size: 18px;
+	font-weight: bold;
+}
+.amount-badge.data-v-0cd595d0 {
+	background-color: #00C853;
+	padding: 5px 10px;
+	border-radius: 5px;
+	font-size: 16px;
+}
+.info-tip.data-v-0cd595d0 {
+	background-color: #FFA726;
+	padding: 10px;
+	border-radius: 5px;
+	margin: 10px 0;
+	color: white;
+}
+.section.data-v-0cd595d0 {
+	background-color: white;
+	padding: 15px;
+	border-radius: 10px;
+	margin-top: 10px;
+}
+.section-header.data-v-0cd595d0 {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.section-title.data-v-0cd595d0 {
+	font-size: 16px;
+	font-weight: bold;
+}
+.more-button.data-v-0cd595d0 {
+	color: #1E90FF;
+	font-size: 14px;
+}
+.section-content.data-v-0cd595d0 {
+	margin-top: 5px;
+	font-size: 15px;
+	color: #666;
+}
+.required.data-v-0cd595d0 {
+	color: red;
+}
+.bottom-buttons.data-v-0cd595d0 {
+	position: fixed;
+	bottom: 0;
+	height: 65px;
+	left: 0;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	padding: 10px 10px;
+	/* 可以调整间距 */
+	background-color: white;
+	/* 背景色，根据需要调整 */
+	box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.);
+}
+.back-button.data-v-0cd595d0 {
+	flex: 2;
+	padding-right: 10px;
+}
+.submit-button.data-v-0cd595d0 {
+	flex: 8;
+	padding-right: 20px;
+	font-size: 16px;
+	border-radius: 5px;
+}
+

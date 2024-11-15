@@ -252,7 +252,7 @@ var _default = {
     },
     navigateTo: function navigateTo(page) {
       uni.navigateTo({
-        url: "/pages/".concat(page, "/").concat(page)
+        url: "/pages/gain/".concat(page)
       });
     },
     onSearchInput: function onSearchInput(event) {

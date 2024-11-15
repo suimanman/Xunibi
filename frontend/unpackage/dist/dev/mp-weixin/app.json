@@ -5,7 +5,8 @@
     "pages/gain/gain",
     "pages/rental/rental",
     "pages/login/login",
-    "pages/me/editPassword"
+    "pages/me/editPassword",
+    "pages/gain/achievementSubmit"
   ],
   "subPackages": [],
   "window": {

@@ -1,10 +1,9 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path" : "pages/me/me",
-			"style" : 
-			{
-				"navigationBarTitleText" : "个人中心",
+			"path": "pages/me/me",
+			"style": {
+				"navigationBarTitleText": "个人中心",
 				"enablePullDownRefresh": true
 			}
 		},
@@ -23,66 +22,68 @@
 			}
 		},
 		{
-			"path" : "pages/rental/rental",
-			"style" : 
-			{
-				"navigationBarTitleText" : "资源租用",
+			"path": "pages/rental/rental",
+			"style": {
+				"navigationBarTitleText": "资源租用",
 				"enablePullDownRefresh": true
 			}
 		},
 		{
-			"path" : "pages/login/login",
-			"style" : 
-			{
-				"navigationBarTitleText" : "登录"
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "登录"
 			}
 		},
 		{
-			"path" : "pages/me/editPassword",
-			"style" : 
-			{
-				"navigationBarTitleText" : "修改密码"
+			"path": "pages/me/editPassword",
+			"style": {
+				"navigationBarTitleText": "修改密码"
+			}
+		},
+		{
+			"path": "pages/gain/achievementSubmit",
+			"style": {
+				"navigationBarTitleText": "论文"
 			}
 		}
 	],
 	"globalStyle": {
-			"navigationBarTextStyle": "black",
-			"navigationBarTitleText": "uni-app",
-			"navigationBarBackgroundColor": "#F8F8F8",
-			"backgroundColor": "#F8F8F8",
-			"navigationStyle": "default"
-		},
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8",
+		"navigationStyle": "default"
+	},
 	"tabBar": {
-	    "color": "#7A7E83",
-	    		"selectedColor": "#5677fc",
-	    		"borderStyle": "black",
-	    		"backgroundColor": "#ffffff",
-	    		"position": "bottom",
-	    "list": [
-	      {
-	        "pagePath": "pages/home/home",
-	        "text": "主页",
-	        "iconPath": "static/icon/home.png",
-	        "selectedIconPath": "static/icon/home_selected.png"
-	      },
-		  {
-		    "pagePath": "pages/gain/gain",
-		    "text": "奖励",
-		    "iconPath": "static/icon/gain.png",
-		    "selectedIconPath": "static/icon/gain_selected.png"
-		  },
-	      {
-	        "pagePath": "pages/rental/rental",
-	        "text": "资源",
-	        "iconPath": "static/icon/devices.png",
-	        "selectedIconPath": "static/icon/devices_selected.png"
-	      },
-	      {
-	        "pagePath": "pages/me/me",
-	        "text": "我",
-	        "iconPath": "static/icon/me.png",
-	        "selectedIconPath": "static/icon/me_selected.png"
-	      }
-	    ]
-	  }
+		"color": "#7A7E83",
+		"selectedColor": "#5677fc",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
+		"position": "bottom",
+		"list": [{
+				"pagePath": "pages/home/home",
+				"text": "主页",
+				"iconPath": "static/icon/home.png",
+				"selectedIconPath": "static/icon/home_selected.png"
+			},
+			{
+				"pagePath": "pages/gain/gain",
+				"text": "奖励",
+				"iconPath": "static/icon/gain.png",
+				"selectedIconPath": "static/icon/gain_selected.png"
+			},
+			{
+				"pagePath": "pages/rental/rental",
+				"text": "资源",
+				"iconPath": "static/icon/devices.png",
+				"selectedIconPath": "static/icon/devices_selected.png"
+			},
+			{
+				"pagePath": "pages/me/me",
+				"text": "我",
+				"iconPath": "static/icon/me.png",
+				"selectedIconPath": "static/icon/me_selected.png"
+			}
+		]
+	}
 }

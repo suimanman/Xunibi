@@ -26,15 +26,15 @@
 		<!-- Section: 成果 -->
 		<view class="section">
 			<u-grid col="4" :border="false" class="grid">
-				<u-grid-item @click="navigateTo('myPosition')" class="grid-item">
+				<u-grid-item @click="navigateTo('achievementSubmit')" class="grid-item">
 					<image src="@/static/icon/EC_个人文稿-学术论文.png" class="icon"></image>
 					<text class="icon-text">论文</text>
 				</u-grid-item>
-				<u-grid-item @click="navigateTo('studentNotice')" class="grid-item">
+				<u-grid-item @click="navigateTo('achievementSubmit')" class="grid-item">
 					<image src="/static/icon/专利申请.png" class="icon"></image>
 					<text class="icon-text">专利</text>
 				</u-grid-item>
-				<u-grid-item @click="navigateTo('positionMarket')" class="grid-item">
+				<u-grid-item @click="navigateTo('achievementSubmit')" class="grid-item">
 					<image src="/static/icon/知识竞赛.png" class="icon"></image>
 					<text class="icon-text">竞赛</text>
 				</u-grid-item>
@@ -81,7 +81,7 @@
 			},
 			navigateTo(page) {
 				uni.navigateTo({
-					url: `/pages/${page}/${page}`
+					url:`/pages/gain/${page}`
 				});
 			},
 			onSearchInput(event) {
