@@ -166,6 +166,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 //
 //
 //
@@ -230,34 +232,96 @@ var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/run
 //
 //
 //
-var _default = (0, _defineProperty2.default)({
+//
+//
+//
+//
+//
+//
+var _default = {
   data: function data() {
     return {
-      showStudentInfo: false // 控制学生基本信息部分的显示
+      studentInfo: {
+        name: '',
+        id: '',
+        department: '',
+        major: '',
+        class: '',
+        team: ''
+      },
+      achievementInfo: {
+        name: '',
+        dateValue: '',
+        awardUnit: ''
+      },
+      statementInfo: {
+        info: ''
+      }
     };
   },
-
   methods: {
     goBack: function goBack() {
       uni.navigateBack();
     },
-    navigateToEdit: function navigateToEdit(page) {
+    editStudentInfo: function editStudentInfo() {
+      var _this = this;
+      // console.log("当前传递的数据：", this.studentInfo);
       uni.navigateTo({
-        url: "/pages/".concat(page, "/").concat(page)
+        url: '/pages/edit/studentInfoEdit',
+        success: function success(res) {
+          // 通过 eventChannel 向被打开页面传送数据
+          res.eventChannel.emit('updateStudentInfo', {
+            data: _this.studentInfo
+          });
+
+          // 接收下级页面返回的数据
+          res.eventChannel.on('acceptStudentInfo', function (data) {
+            // console.log("接收到下级页面返回的数据：", data);
+            _this.studentInfo = _objectSpread({}, data.data);
+          });
+        }
+      });
+    },
+    editAchievement: function editAchievement() {
+      var _this2 = this;
+      uni.navigateTo({
+        url: '/pages/edit/achievementEdit',
+        success: function success(res) {
+          // 通过 eventChannel 向被打开页面传送数据
+          res.eventChannel.emit('updateAchievement', {
+            data: _this2.achievementInfo
+          });
+
+          // 接收下级页面返回的数据
+          res.eventChannel.on('acceptAchievement', function (data) {
+            // console.log("接收到下级页面返回的数据：", data);
+            _this2.achievementInfo = _objectSpread({}, data.data);
+            console.log("接收的数据:", _this2.achievementInfo);
+          });
+        }
+      });
+    },
+    editStatement: function editStatement() {
+      var _this3 = this;
+      uni.navigateTo({
+        url: '/pages/edit/statementEdit',
+        success: function success(res) {
+          // 通过 eventChannel 向被打开页面传送数据
+          res.eventChannel.emit('updateStatement', {
+            data: _this3.statementInfo
+          });
+
+          // 接收下级页面返回的数据
+          res.eventChannel.on('acceptStatement', function (data) {
+            // console.log("接收到下级页面返回的数据：", data);
+            _this3.statementInfo = _objectSpread({}, data.data);
+            console.log("接收的数据:", _this3.statementInfo);
+          });
+        }
       });
     }
-  },
-  mounted: function mounted() {
-    // 检查是否有学生基本信息，如果有则显示
-    this.showStudentInfo = this.checkStudentInfo();
   }
-}, "methods", {
-  checkStudentInfo: function checkStudentInfo() {
-    // 这里加入逻辑来检查学生信息是否填写
-    // 假设已经填写的信息为true，否则为false
-    return true; // 替换为实际检查逻辑
-  }
-});
+};
 exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 

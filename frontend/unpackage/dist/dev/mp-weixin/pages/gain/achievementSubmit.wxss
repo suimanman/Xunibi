@@ -72,6 +72,14 @@
 	font-size: 15px;
 	color: #666;
 }
+.section-content .line.data-v-0cd595d0 {
+	display: block;
+	/* 每个 <text> 元素独占一行 */
+	margin-bottom: 5px;
+	/* 可选：增加每行间距 */
+	font-size: 14px;
+	/* 可选：调整字体大小 */
+}
 .required.data-v-0cd595d0 {
 	color: red;
 }
@@ -87,7 +95,7 @@
 	/* 可以调整间距 */
 	background-color: white;
 	/* 背景色，根据需要调整 */
-	box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.);
+	box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
 }
 .back-button.data-v-0cd595d0 {
 	flex: 2;

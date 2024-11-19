@@ -6,7 +6,10 @@
     "pages/rental/rental",
     "pages/login/login",
     "pages/me/editPassword",
-    "pages/gain/achievementSubmit"
+    "pages/gain/achievementSubmit",
+    "pages/edit/studentInfoEdit",
+    "pages/edit/achievementEdit",
+    "pages/edit/statementEdit"
   ],
   "subPackages": [],
   "window": {

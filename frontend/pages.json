@@ -43,7 +43,28 @@
 		{
 			"path": "pages/gain/achievementSubmit",
 			"style": {
-				"navigationBarTitleText": "论文"
+				"navigationBarTitleText": "成果提交"
+			}
+		},
+		{
+			"path" : "pages/edit/studentInfoEdit",
+			"style" : 
+			{
+				"navigationBarTitleText" : "个人基本信息"
+			}
+		},
+		{
+			"path" : "pages/edit/achievementEdit",
+			"style" : 
+			{
+				"navigationBarTitleText" : "所获成果信息"
+			}
+		},
+		{
+			"path" : "pages/edit/statementEdit",
+			"style" : 
+			{
+				"navigationBarTitleText" : "申请陈述"
 			}
 		}
 	],

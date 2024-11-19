@@ -11,38 +11,44 @@
 
 		<view class="info">
 			<!-- 学生基本信息 -->
-			<view v-if="showStudentInfo" class="section">
+			<view class="section">
 				<view class="section-header">
 					<text class="section-title">学生基本信息</text>
-					<text class="more-button" @click="navigateToEdit('studentInfo')">更多</text>
+					<text class="more-button" @click="editStudentInfo">更多</text>
 				</view>
 				<view class="section-content">
-					<text>姓名：{name}</text>
-					<text>学号：190531</text>
-					<text>所在年级：2021级</text>
-					<text>院系班：人工智能与数据科学学院/软件工程/软件211</text>
+					<text class="line">姓名：{{studentInfo.name}}</text>
+					<text class="line">学号：{{studentInfo.id}}</text>
+					<text class="line">所属团队：{{studentInfo.team}}</text>
+					<text class="line">
+						院系班：{{ studentInfo.department }}{{ studentInfo.department && studentInfo.major ? '/' : '' }}{{ studentInfo.major }}{{ (studentInfo.department || studentInfo.major) && studentInfo.class ? '/' : '' }}{{ studentInfo.class }}
+					</text>
 				</view>
 			</view>
 
 			<!-- 学年期间主要获奖情况 -->
 			<view class="section">
 				<view class="section-header">
-					<text class="section-title">学年期间主要获奖情况</text>
-					<text class="more-button" @click="navigateToEdit('awardsInfo')">更多</text>
+					<text class="section-title">成果基本信息</text>
+					<text class="more-button" @click="editAchievement">更多</text>
 				</view>
 				<view class="section-content">
-					<text>包含奖项名称、获奖日期等信息</text>
+					<text>包含成果名称、获得日期等信息</text>
 				</view>
 			</view>
 
 			<!-- 申请材料 -->
 			<view class="section">
 				<view class="section-header">
-					<text class="section-title required">申请材料</text>
-					<text class="more-button" @click="navigateToEdit('applicationMaterials')">填写</text>
+					<view>
+						<text class="required">*</text>
+						<text class="section-title">申请陈述</text>
+					</view>
+					
+					<text class="more-button" @click="editStatement">填写</text>
 				</view>
 				<view class="section-content">
-					<text>包含申请陈述、佐证材料</text>
+					<text>包含申请陈述、佐证信息</text>
 				</view>
 			</view>
 
@@ -66,28 +72,87 @@
 	export default {
 		data() {
 			return {
-				showStudentInfo: false, // 控制学生基本信息部分的显示
+				studentInfo: {
+					name: '',
+					id: '',
+					department: '',
+					major: '',
+					class: '',
+					team: ''
+				},
+				achievementInfo: {
+					name: '',
+					dateValue: '',
+					awardUnit: ''
+				},
+				statementInfo: {
+					info: ''
+				}
 			}
 		},
 		methods: {
 			goBack() {
 				uni.navigateBack();
 			},
-			navigateToEdit(page) {
+			editStudentInfo() {
+				// console.log("当前传递的数据：", this.studentInfo);
 				uni.navigateTo({
-					url: `/pages/${page}/${page}`
+					url: '/pages/edit/studentInfoEdit',
+					success: (res) => {
+						// 通过 eventChannel 向被打开页面传送数据
+						res.eventChannel.emit('updateStudentInfo', {
+							data: this.studentInfo
+						});
+
+						// 接收下级页面返回的数据
+						res.eventChannel.on('acceptStudentInfo', (data) => {
+							// console.log("接收到下级页面返回的数据：", data);
+							this.studentInfo = {
+								...data.data // 注意解构 data.data
+							};
+						});
+					},
 				});
-			}
-		},
-		mounted() {
-			// 检查是否有学生基本信息，如果有则显示
-			this.showStudentInfo = this.checkStudentInfo();
-		},
-		methods: {
-			checkStudentInfo() {
-				// 这里加入逻辑来检查学生信息是否填写
-				// 假设已经填写的信息为true，否则为false
-				return true; // 替换为实际检查逻辑
+			},
+			editAchievement() {
+				uni.navigateTo({
+					url: '/pages/edit/achievementEdit',
+					success: (res) => {
+						// 通过 eventChannel 向被打开页面传送数据
+						res.eventChannel.emit('updateAchievement', {
+							data: this.achievementInfo
+						});
+				
+						// 接收下级页面返回的数据
+						res.eventChannel.on('acceptAchievement', (data) => {
+							// console.log("接收到下级页面返回的数据：", data);
+							this.achievementInfo = {
+								...data.data // 注意解构 data.data
+							};
+							console.log("接收的数据:",this.achievementInfo);
+						});
+					},
+				});
+			},
+			editStatement() {
+				uni.navigateTo({
+					url: '/pages/edit/statementEdit',
+					success: (res) => {
+						// 通过 eventChannel 向被打开页面传送数据
+						res.eventChannel.emit('updateStatement', {
+							data: this.statementInfo
+						});
+				
+						// 接收下级页面返回的数据
+						res.eventChannel.on('acceptStatement', (data) => {
+							// console.log("接收到下级页面返回的数据：", data);
+							this.statementInfo = {
+								...data.data // 注意解构 data.data
+							};
+							console.log("接收的数据:",this.statementInfo);
+						});
+					},
+				});
 			}
 		}
 	}
@@ -180,6 +245,15 @@
 		color: #666;
 	}
 
+	.section-content .line {
+		display: block;
+		/* 每个 <text> 元素独占一行 */
+		margin-bottom: 5px;
+		/* 可选：增加每行间距 */
+		font-size: 14px;
+		/* 可选：调整字体大小 */
+	}
+
 	.required {
 		color: red;
 	}
@@ -196,7 +270,7 @@
 		/* 可以调整间距 */
 		background-color: white;
 		/* 背景色，根据需要调整 */
-		box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.);
+		box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
 	}
 
 	.back-button {

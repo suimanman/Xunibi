@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "论文",
+  "navigationBarTitleText": "成果提交",
   "usingComponents": {
     "u-button": "/uni_modules/uview-ui/components/u-button/u-button"
   }
