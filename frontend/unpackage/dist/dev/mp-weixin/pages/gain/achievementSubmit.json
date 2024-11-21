@@ -1,6 +1,7 @@
 {
   "navigationBarTitleText": "成果提交",
   "usingComponents": {
+    "u-toast": "/uni_modules/uview-ui/components/u-toast/u-toast",
     "u-button": "/uni_modules/uview-ui/components/u-button/u-button"
   }
 }

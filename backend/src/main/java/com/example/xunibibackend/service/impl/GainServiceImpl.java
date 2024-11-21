@@ -1,7 +1,12 @@
 package com.example.xunibibackend.service.impl;
 
 import com.example.xunibibackend.entity.*;
+import com.example.xunibibackend.entity.dto.AchievementInfo;
+import com.example.xunibibackend.entity.dto.AchievementRequest;
+import com.example.xunibibackend.entity.dto.StatementInfo;
+import com.example.xunibibackend.entity.dto.StudentInfo;
 import com.example.xunibibackend.mapper.*;
+import com.example.xunibibackend.response.MyResult;
 import com.example.xunibibackend.service.GainService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +29,8 @@ public class GainServiceImpl implements GainService {
     @Autowired
     TeamMapper teamMapper;
     @Autowired
+    UserMapper userMapper;
+    @Autowired
     AchievementMapper achievementMapper;
     @Autowired
     DutyMapper dutyMapper;
@@ -36,31 +43,22 @@ public class GainServiceImpl implements GainService {
 
     @Override
     public boolean rewardAchievement(Achievement achievement) {
-        Map<String,Double> map=new HashMap<>();
-        map.put("paper",100.0);map.put("patent",200.0);map.put("competition",150.0);
         Integer teamId=achievement.getTeamId();
         Team team =teamMapper.selectByTeamId(teamId);
-        // 获取 achievement.getType() 对应的虚拟币数量
-        Double achievementCoin = map.get(achievement.getAchievementType());
         // 确保 achievementCoin 不为 null，避免空指针异常
-        if (achievementCoin != null) {
-            Double coinNew = team.getVirtualCoins() + achievementCoin;
+        if (achievement.getCoinAwarded() != null) {
+            Double coinNew = team.getVirtualCoins() + achievement.getCoinAwarded();
             // 更新团队虚拟币
             teamMapper.updateCoinById(teamId,coinNew);
-        } else {
-            // achievement.getType() 不在 map 中
-            System.out.println("Achievement type not found in map.");
         }
-        achievement.setAchievementDate(LocalDate.now());
-        achievement.setCoinAwarded(achievementCoin);
-        achievementMapper.insert(achievement);
+        achievementMapper.updateCoinAndStatus(achievement);
 
         //将记录添加到虚拟币交易记录表中
         VirtualCoinTransaction coinTransaction=new VirtualCoinTransaction();
-        coinTransaction.setCoinAmount(achievementCoin);
+        coinTransaction.setCoinAmount(achievement.getCoinAwarded());
         coinTransaction.setTransactionDate(LocalDate.now());
         coinTransaction.setTransactionType("收入");
-        coinTransaction.setDescription(achievement.getDescription());
+        coinTransaction.setDescription("提交"+achievement.getAchievementType());
         coinTransaction.setTeamId(teamId);
         coinTransactionMapper.insert(coinTransaction);
         return true;
@@ -124,5 +122,41 @@ public class GainServiceImpl implements GainService {
         coinTransaction.setTeamId(teamId);
         coinTransactionMapper.insert(coinTransaction);
         return true;
+    }
+
+    @Override
+    public MyResult submitAchievement(AchievementRequest achievementRequest) {
+        StudentInfo studentInfo = achievementRequest.getStudentInfo();
+        AchievementInfo achievementInfo = achievementRequest.getAchievementInfo();
+        StatementInfo statementInfo = achievementRequest.getStatementInfo();
+
+        String userName = studentInfo.getId();
+        Integer userId = userMapper.getUserIdByUsername(userName);
+        Integer teamId = userMapper.getTeamIdByUsername(userName);
+
+        Achievement achievement = new Achievement();
+        achievement.setTeamId(teamId);
+        achievement.setUserId(userId);
+        achievement.setAchievementType(achievementInfo.getType());
+        achievement.setAchievementName(achievementInfo.getName());
+        achievement.setAchievementDate(LocalDate.parse(achievementInfo.getDateValue()));
+        achievement.setCoinAwarded(0.0);
+        String description = "学生基本信息:\n" +
+                "姓名："+studentInfo.getName()+"，学号："+studentInfo.getId()+
+                "，学院："+studentInfo.getDepartment()+"，专业："+studentInfo.getMajor()+"，班级："+studentInfo.getClazz()
+                +"，所属团队："+studentInfo.getTeam()
+                + "\n成果基本信息：\n" + "成果名称："+achievementInfo.getName()+
+                "，获得日期"+achievementInfo.getDateValue()+"，奖励单位："+achievementInfo.getAwardUnit()
+                + "\n申请陈述：\n" + statementInfo.getInfo();
+        achievement.setDescription(description);
+        System.out.println(description);
+        achievement.setStatus("待审核");
+        achievementMapper.insert(achievement);
+        return MyResult.success();
+    }
+
+    @Override
+    public MyResult getAchievementList() {
+        return MyResult.success(achievementMapper.getList());
     }
 }

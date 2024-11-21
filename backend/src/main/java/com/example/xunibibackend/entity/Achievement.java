@@ -23,11 +23,15 @@ public class Achievement {
     @Column(name = "achievement_type", nullable = false)
     private String achievementType;
 
-    @Column(name = "coin_awarded", nullable = false)
+    @Column(name = "achievement_name", nullable = false)
+    private String achievementName;
+
     private Double coinAwarded;
 
     private String description;
 
     @Column(name = "achievement_date")
     private LocalDate achievementDate;
+    //待审核，通过，未通过
+    private String status;
 }

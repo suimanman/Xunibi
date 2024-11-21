@@ -19,10 +19,10 @@ export function getUserId() {
 	return uni.getStorageSync("userId")
 }
 
-export function isLogin() {
-	if (getToken() == "" || getToken() == "no_account") {
-		return false;
-	} else {
-		return true;
-	}
-}
+// export function isLogin() {
+// 	if (getToken() == "" || getToken() == "no_account") {
+// 		return false;
+// 	} else {
+// 		return true;
+// 	}
+// }

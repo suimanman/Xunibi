@@ -4,13 +4,11 @@ import com.example.xunibibackend.entity.Achievement;
 import com.example.xunibibackend.entity.DutyRecord;
 import com.example.xunibibackend.entity.SignInRecord;
 import com.example.xunibibackend.entity.TrainRecord;
+import com.example.xunibibackend.entity.dto.AchievementRequest;
 import com.example.xunibibackend.response.MyResult;
 import com.example.xunibibackend.service.GainService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/gain")
@@ -29,7 +27,18 @@ public class GainController {
         }
     }
 
-    // b) 通过论文专利、竞赛奖励等成果获得虚拟币
+    //成果提交待审核
+    @PostMapping("/achievementSubmit")
+    public MyResult submitAchievement(@RequestBody AchievementRequest achievementRequest){
+        return gainService.submitAchievement(achievementRequest);
+    }
+
+    //获得待审核列表
+    @GetMapping("/achievementList")
+    public MyResult getAchievementList(){
+        return gainService.getAchievementList();
+    }
+    // 管理员审核接口
     @PostMapping("/reward/achievement")
     public MyResult rewardAchievement(@RequestBody Achievement achievement) {
         boolean success = gainService.rewardAchievement(achievement);

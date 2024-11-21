@@ -11,7 +11,6 @@
     "minified": true,
     "newFeature": true,
     "bigPackageSizeSupport": true,
-    "ignoreUploadUnusedFiles": true,
     "babelSetting": {
       "ignore": [],
       "disablePlugins": [],
@@ -19,7 +18,8 @@
     }
   },
   "compileType": "miniprogram",
-  "libVersion": "3.6.3",
+  "libVersion": "3.6.5",
+  "appid": "touristappid",
   "projectname": "frontend",
   "condition": {},
   "editorSetting": {

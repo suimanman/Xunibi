@@ -26,15 +26,15 @@
 		<!-- Section: 成果 -->
 		<view class="section">
 			<u-grid col="4" :border="false" class="grid">
-				<u-grid-item @click="navigateTo('achievementSubmit')" class="grid-item">
+				<u-grid-item @click="navigateToPaper" class="grid-item">
 					<image src="@/static/icon/EC_个人文稿-学术论文.png" class="icon"></image>
 					<text class="icon-text">论文</text>
 				</u-grid-item>
-				<u-grid-item @click="navigateTo('achievementSubmit')" class="grid-item">
+				<u-grid-item @click="navigateToPatent" class="grid-item">
 					<image src="/static/icon/专利申请.png" class="icon"></image>
 					<text class="icon-text">专利</text>
 				</u-grid-item>
-				<u-grid-item @click="navigateTo('achievementSubmit')" class="grid-item">
+				<u-grid-item @click="navigateToCompetition" class="grid-item">
 					<image src="/static/icon/知识竞赛.png" class="icon"></image>
 					<text class="icon-text">竞赛</text>
 				</u-grid-item>
@@ -79,10 +79,41 @@
 			goBack() {
 				uni.navigateBack();
 			},
-			navigateTo(page) {
+			navigateToPaper() {
 				uni.navigateTo({
-					url:`/pages/gain/${page}`
+					url:'/pages/gain/achievementSubmit',
+					success: (res) => {
+						// 通过 eventChannel 向被打开页面传送数据
+						res.eventChannel.emit('submit', {
+							data: '论文'
+						});
+					},
 				});
+				
+			},
+			navigateToPatent() {
+				uni.navigateTo({
+					url:'/pages/gain/achievementSubmit',
+					success: (res) => {
+						// 通过 eventChannel 向被打开页面传送数据
+						res.eventChannel.emit('submit', {
+							data: '专利'
+						});
+					},
+				});
+				
+			},
+			navigateToCompetition() {
+				uni.navigateTo({
+					url:'/pages/gain/achievementSubmit',
+					success: (res) => {
+						// 通过 eventChannel 向被打开页面传送数据
+						res.eventChannel.emit('submit', {
+							data: '竞赛'
+						});
+					},
+				});
+				
 			},
 			onSearchInput(event) {
 				console.log(event.detail.value);

@@ -24,4 +24,7 @@ public interface UserMapper extends BaseMapper<User> {
 
     @Select("select team_id from user where username=#{username}")
     Integer getTeamIdByUsername(String username);
+
+    @Select("select user_id from user where username = #{username}")
+    Integer getUserIdByUsername(String userName);
 }

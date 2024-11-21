@@ -1,11 +1,11 @@
 <template>
 	<view class="container">
-
+		<u-toast ref="uToast"></u-toast>
 		<!-- 顶部 Banner 和金额信息 -->
 		<view class="header-banner">
 			<image src="/static/img/背景图片.png" class="background-image" mode="aspectFill"></image>
 			<!-- 其他内容 -->
-			<text class="banner-info">论文、专利、竞赛成果提交</text>
+			<text class="banner-info">{{achievementInfo.type}}成果提交</text>
 			<text class="banner-coin">20虚拟币</text>
 		</view>
 
@@ -21,7 +21,7 @@
 					<text class="line">学号：{{studentInfo.id}}</text>
 					<text class="line">所属团队：{{studentInfo.team}}</text>
 					<text class="line">
-						院系班：{{ studentInfo.department }}{{ studentInfo.department && studentInfo.major ? '/' : '' }}{{ studentInfo.major }}{{ (studentInfo.department || studentInfo.major) && studentInfo.class ? '/' : '' }}{{ studentInfo.class }}
+						院系班：{{ studentInfo.department }}{{ studentInfo.department && studentInfo.major ? '/' : '' }}{{ studentInfo.major }}{{ (studentInfo.department || studentInfo.major) && studentInfo.clazz ? '/' : '' }}{{ studentInfo.clazz }}
 					</text>
 				</view>
 			</view>
@@ -44,7 +44,7 @@
 						<text class="required">*</text>
 						<text class="section-title">申请陈述</text>
 					</view>
-					
+
 					<text class="more-button" @click="editStatement">填写</text>
 				</view>
 				<view class="section-content">
@@ -58,7 +58,7 @@
 					<u-button :plain="true" @click="goBack">返回</u-button>
 				</view>
 				<view class="submit-button">
-					<u-button type="primary" :plain="true">提交</u-button>
+					<u-button type="primary" :plain="true" @click="submitAll">提交</u-button>
 				</view>
 
 			</view>
@@ -69,18 +69,29 @@
 </template>
 
 <script>
+	import {
+		achievementAward
+	} from '../../api/gain';
+	import {
+		isLogin
+	} from '../../api/me';
 	export default {
 		data() {
 			return {
+				params: {
+					type: 'success',
+					message: "提交成功！请等待审核",
+				},
 				studentInfo: {
 					name: '',
 					id: '',
 					department: '',
 					major: '',
-					class: '',
+					clazz: '',
 					team: ''
 				},
 				achievementInfo: {
+					type: '',
 					name: '',
 					dateValue: '',
 					awardUnit: ''
@@ -90,9 +101,38 @@
 				}
 			}
 		},
+		onLoad: function(option) {
+			const eventChannel = this.getOpenerEventChannel();
+			// 接收上级页面传递的数据
+			eventChannel.on('submit', (data) => {
+				// console.log('接收到上级页面传递的数据：', data);
+				this.achievementInfo.type = data.data
+			});
+			console.log("类型：",this.achievementInfo.type)
+		},
 		methods: {
 			goBack() {
 				uni.navigateBack();
+			},
+			submitAll() {
+				const description = {
+					studentInfo: this.studentInfo,
+					achievementInfo: this.achievementInfo,
+					statementInfo: this.statementInfo
+				};
+				if (isLogin()) {
+					achievementAward(description);
+					this.showToast(this.params);
+				}
+
+			},
+			showToast(params) {
+				this.$refs.uToast.show({
+					...params,
+					complete() {
+						uni.navigateBack();
+					}
+				})
 			},
 			editStudentInfo() {
 				// console.log("当前传递的数据：", this.studentInfo);
@@ -122,14 +162,14 @@
 						res.eventChannel.emit('updateAchievement', {
 							data: this.achievementInfo
 						});
-				
+
 						// 接收下级页面返回的数据
 						res.eventChannel.on('acceptAchievement', (data) => {
 							// console.log("接收到下级页面返回的数据：", data);
 							this.achievementInfo = {
 								...data.data // 注意解构 data.data
 							};
-							console.log("接收的数据:",this.achievementInfo);
+							console.log("接收的数据:", this.achievementInfo);
 						});
 					},
 				});
@@ -142,14 +182,14 @@
 						res.eventChannel.emit('updateStatement', {
 							data: this.statementInfo
 						});
-				
+
 						// 接收下级页面返回的数据
 						res.eventChannel.on('acceptStatement', (data) => {
 							// console.log("接收到下级页面返回的数据：", data);
 							this.statementInfo = {
 								...data.data // 注意解构 data.data
 							};
-							console.log("接收的数据:",this.statementInfo);
+							console.log("接收的数据:", this.statementInfo);
 						});
 					},
 				});
