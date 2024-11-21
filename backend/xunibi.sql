@@ -11,7 +11,7 @@
  Target Server Version : 80300 (8.3.0)
  File Encoding         : 65001
 
- Date: 13/11/2024 16:50:20
+ Date: 21/11/2024 13:19:35
 */
 
 SET NAMES utf8mb4;
@@ -29,22 +29,32 @@ CREATE TABLE `Achievements` (
   `achievement_date` date NOT NULL,
   `coin_awarded` decimal(10,2) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  `achievement_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`achievement_id`),
   KEY `team_id` (`team_id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `achievements_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `Team` (`team_id`),
   CONSTRAINT `achievements_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of Achievements
 -- ----------------------------
 BEGIN;
-INSERT INTO `Achievements` (`achievement_id`, `team_id`, `user_id`, `achievement_type`, `achievement_date`, `coin_awarded`, `description`) VALUES (1, 1, 1, 'paper', '2023-09-20', 50.00, 'Published a paper on AI innovation');
-INSERT INTO `Achievements` (`achievement_id`, `team_id`, `user_id`, `achievement_type`, `achievement_date`, `coin_awarded`, `description`) VALUES (2, 2, 3, 'patent', '2023-08-15', 100.00, 'Filed a patent on new tech innovation');
-INSERT INTO `Achievements` (`achievement_id`, `team_id`, `user_id`, `achievement_type`, `achievement_date`, `coin_awarded`, `description`) VALUES (3, 3, 4, 'competition', '2023-07-05', 75.00, 'Won first prize in tech competition');
-INSERT INTO `Achievements` (`achievement_id`, `team_id`, `user_id`, `achievement_type`, `achievement_date`, `coin_awarded`, `description`) VALUES (4, 1, 1, 'paper', '2024-10-19', 100.00, 'test');
-INSERT INTO `Achievements` (`achievement_id`, `team_id`, `user_id`, `achievement_type`, `achievement_date`, `coin_awarded`, `description`) VALUES (5, 1, 1, 'paper', '2024-10-19', 100.00, 'test');
+INSERT INTO `Achievements` (`achievement_id`, `team_id`, `user_id`, `achievement_type`, `achievement_date`, `coin_awarded`, `description`, `status`, `achievement_name`) VALUES (1, 1, 1, 'paper', '2023-09-20', 50.00, 'Published a paper on AI innovation', NULL, NULL);
+INSERT INTO `Achievements` (`achievement_id`, `team_id`, `user_id`, `achievement_type`, `achievement_date`, `coin_awarded`, `description`, `status`, `achievement_name`) VALUES (2, 2, 3, 'patent', '2023-08-15', 100.00, 'Filed a patent on new tech innovation', NULL, NULL);
+INSERT INTO `Achievements` (`achievement_id`, `team_id`, `user_id`, `achievement_type`, `achievement_date`, `coin_awarded`, `description`, `status`, `achievement_name`) VALUES (3, 3, 4, 'competition', '2023-07-05', 75.00, 'Won first prize in tech competition', NULL, NULL);
+INSERT INTO `Achievements` (`achievement_id`, `team_id`, `user_id`, `achievement_type`, `achievement_date`, `coin_awarded`, `description`, `status`, `achievement_name`) VALUES (4, 1, 1, 'paper', '2024-10-19', 100.00, 'test', NULL, NULL);
+INSERT INTO `Achievements` (`achievement_id`, `team_id`, `user_id`, `achievement_type`, `achievement_date`, `coin_awarded`, `description`, `status`, `achievement_name`) VALUES (5, 1, 1, 'paper', '2024-10-19', 100.00, 'test', NULL, NULL);
+INSERT INTO `Achievements` (`achievement_id`, `team_id`, `user_id`, `achievement_type`, `achievement_date`, `coin_awarded`, `description`, `status`, `achievement_name`) VALUES (8, 1, 5, '1', '2024-11-21', 0.00, '学生基本信息:\nStudentInfo(name=1, id=11, department=111, major=1, clazz=null, team=1)\n成果基本信息：\nAchievementInfo(name=1, dateValue=2024-11-21, awardUnit=1)\n申请陈述：\nStatementInfo(info=1)', '待审核', NULL);
+INSERT INTO `Achievements` (`achievement_id`, `team_id`, `user_id`, `achievement_type`, `achievement_date`, `coin_awarded`, `description`, `status`, `achievement_name`) VALUES (9, 1, 5, '1', '2024-11-21', 0.00, '学生基本信息:\n姓名：1，学号：11，学院：1，专业：1，班级：null，所属团队：1\n成果基本信息：\n成果名称：1，获得日期2024-11-21，奖励单位：1\n申请陈述：\n1', '待审核', NULL);
+INSERT INTO `Achievements` (`achievement_id`, `team_id`, `user_id`, `achievement_type`, `achievement_date`, `coin_awarded`, `description`, `status`, `achievement_name`) VALUES (10, 1, 5, '1', '2024-11-21', 0.00, '学生基本信息:\n姓名：1，学号：11，学院：1，专业：1，班级：class com.example.xunibibackend.entity.dto.StudentInfo，所属团队：1\n成果基本信息：\n成果名称：1，获得日期2024-11-21，奖励单位：1\n申请陈述：\n1', '待审核', NULL);
+INSERT INTO `Achievements` (`achievement_id`, `team_id`, `user_id`, `achievement_type`, `achievement_date`, `coin_awarded`, `description`, `status`, `achievement_name`) VALUES (11, 1, 5, 'AI安全', '2024-09-21', 0.00, '学生基本信息:\n姓名：王梅策，学号：11，学院：人工智能与数据科学学院，专业：软件工程，班级：class com.example.xunibibackend.entity.dto.StudentInfo，所属团队：河工大\n成果基本信息：\n成果名称：AI安全，获得日期2024-09-21，奖励单位：河工大\n申请陈述：\n陈述内容', '待审核', NULL);
+INSERT INTO `Achievements` (`achievement_id`, `team_id`, `user_id`, `achievement_type`, `achievement_date`, `coin_awarded`, `description`, `status`, `achievement_name`) VALUES (12, 1, 5, '1', '2024-11-21', 0.00, '学生基本信息:\n姓名：1，学号：11，学院：1，专业：1，班级：，所属团队：1\n成果基本信息：\n成果名称：1，获得日期2024-11-21，奖励单位：1\n申请陈述：\n1', '待审核', NULL);
+INSERT INTO `Achievements` (`achievement_id`, `team_id`, `user_id`, `achievement_type`, `achievement_date`, `coin_awarded`, `description`, `status`, `achievement_name`) VALUES (13, 1, 5, '1', '2024-11-21', 0.00, '学生基本信息:\n姓名：1，学号：11，学院：1，专业：1，班级：，所属团队：1\n成果基本信息：\n成果名称：1，获得日期2024-11-21，奖励单位：1\n申请陈述：\n1', '待审核', NULL);
+INSERT INTO `Achievements` (`achievement_id`, `team_id`, `user_id`, `achievement_type`, `achievement_date`, `coin_awarded`, `description`, `status`, `achievement_name`) VALUES (14, 1, 5, '1', '2024-10-21', 0.00, '学生基本信息:\n姓名：1，学号：11，学院：1，专业：1，班级：，所属团队：1\n成果基本信息：\n成果名称：1，获得日期2024-10-21，奖励单位：1\n申请陈述：\n1', '待审核', NULL);
+INSERT INTO `Achievements` (`achievement_id`, `team_id`, `user_id`, `achievement_type`, `achievement_date`, `coin_awarded`, `description`, `status`, `achievement_name`) VALUES (15, 1, 5, '论文', '2024-11-21', 0.00, '学生基本信息:\n姓名：1，学号：11，学院：1，专业：1，班级：，所属团队：1\n成果基本信息：\n成果名称：1，获得日期2024-11-21，奖励单位：1\n申请陈述：\n1', '待审核', '1');
 COMMIT;
 
 -- ----------------------------
@@ -231,7 +241,7 @@ CREATE TABLE `RentalRecords` (
   PRIMARY KEY (`rental_id`),
   KEY `team_id` (`team_id`),
   CONSTRAINT `rentalrecords_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `Team` (`team_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of RentalRecords
@@ -252,6 +262,8 @@ INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`
 INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (13, 1, '2024-11-13', 200.00, 2, '工位1', 1);
 INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (14, 1, '2024-11-13', 600.00, 6, '工位1', 1);
 INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (15, 1, '2024-11-13', 100.00, 1, '工位1', 1);
+INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (16, 1, '2024-11-14', 200.00, 2, '工位1', 1);
+INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (17, 1, '2024-11-17', 100.00, 1, '工位1', 1);
 COMMIT;
 
 -- ----------------------------
@@ -297,7 +309,7 @@ CREATE TABLE `Team` (
 -- Records of Team
 -- ----------------------------
 BEGIN;
-INSERT INTO `Team` (`team_id`, `team_name`, `creation_date`, `virtual_coins`) VALUES (1, '河工大众创空间', '2023-01-10', 10000.00);
+INSERT INTO `Team` (`team_id`, `team_name`, `creation_date`, `virtual_coins`) VALUES (1, '河工大众创空间', '2023-01-10', 9700.00);
 INSERT INTO `Team` (`team_id`, `team_name`, `creation_date`, `virtual_coins`) VALUES (2, '先锋者', '2023-03-15', 400.00);
 INSERT INTO `Team` (`team_id`, `team_name`, `creation_date`, `virtual_coins`) VALUES (3, '暴乱头脑', '2023-05-20', 670.00);
 COMMIT;
@@ -376,7 +388,7 @@ CREATE TABLE `VirtualCoinTransactions` (
   PRIMARY KEY (`transaction_id`),
   KEY `team_id` (`team_id`),
   CONSTRAINT `virtualcointransactions_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `Team` (`team_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of VirtualCoinTransactions
@@ -402,6 +414,8 @@ INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction
 INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (18, 1, '2024-11-13', '支出', 200.00, '租用工位');
 INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (19, 1, '2024-11-13', '支出', 600.00, '租用工位');
 INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (20, 1, '2024-11-13', '支出', 100.00, '租用工位');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (21, 1, '2024-11-14', '支出', 200.00, '租用工位');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (22, 1, '2024-11-17', '支出', 100.00, '租用工位');
 COMMIT;
 
 -- ----------------------------
@@ -426,7 +440,7 @@ CREATE TABLE `Workstation` (
 -- Records of Workstation
 -- ----------------------------
 BEGIN;
-INSERT INTO `Workstation` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`, `image_url`, `rental_date`, `return_date`) VALUES (1, '工位1', 1, NULL, 100, 'https://cdn.uviewui.com/uview/album/1.jpg', NULL, NULL);
+INSERT INTO `Workstation` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`, `image_url`, `rental_date`, `return_date`) VALUES (1, '工位1', 0, 1, 100, 'https://cdn.uviewui.com/uview/album/1.jpg', '2024-11-17 00:00:00', '2024-11-18 00:00:00');
 INSERT INTO `Workstation` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`, `image_url`, `rental_date`, `return_date`) VALUES (2, '工位2', 1, NULL, 50, 'https://cdn.uviewui.com/uview/album/1.jpg', NULL, NULL);
 INSERT INTO `Workstation` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`, `image_url`, `rental_date`, `return_date`) VALUES (3, '工位3', 0, 2, 75, 'https://cdn.uviewui.com/uview/album/1.jpg', NULL, NULL);
 COMMIT;
