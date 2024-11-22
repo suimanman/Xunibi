@@ -11,7 +11,7 @@
  Target Server Version : 80300 (8.3.0)
  File Encoding         : 65001
 
- Date: 22/11/2024 16:20:25
+ Date: 22/11/2024 16:52:55
 */
 
 SET NAMES utf8mb4;
@@ -112,30 +112,6 @@ BEGIN;
 INSERT INTO `Camera` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`, `image_url`, `rental_date`, `return_date`) VALUES (1, 'DSLR 摄像机', 1, NULL, 80, 'https://cdn.uviewui.com/uview/album/1.jpg', NULL, NULL);
 INSERT INTO `Camera` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`, `image_url`, `rental_date`, `return_date`) VALUES (2, 'Video摄像机', 1, NULL, 100, 'https://cdn.uviewui.com/uview/album/1.jpg', NULL, NULL);
 INSERT INTO `Camera` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`, `image_url`, `rental_date`, `return_date`) VALUES (3, 'Action 摄像机', 1, NULL, 60, 'https://cdn.uviewui.com/uview/album/1.jpg', NULL, NULL);
-COMMIT;
-
--- ----------------------------
--- Table structure for DeviceUsageRecords
--- ----------------------------
-DROP TABLE IF EXISTS `DeviceUsageRecords`;
-CREATE TABLE `DeviceUsageRecords` (
-  `usage_id` int NOT NULL AUTO_INCREMENT,
-  `team_id` int DEFAULT NULL,
-  `device_name` varchar(100) NOT NULL,
-  `usage_date` date NOT NULL,
-  `virtual_coin_spent` decimal(10,2) NOT NULL,
-  PRIMARY KEY (`usage_id`),
-  KEY `team_id` (`team_id`),
-  CONSTRAINT `deviceusagerecords_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `Team` (`team_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- ----------------------------
--- Records of DeviceUsageRecords
--- ----------------------------
-BEGIN;
-INSERT INTO `DeviceUsageRecords` (`usage_id`, `team_id`, `device_name`, `usage_date`, `virtual_coin_spent`) VALUES (1, 1, '3D Printer', '2023-09-30', 30.00);
-INSERT INTO `DeviceUsageRecords` (`usage_id`, `team_id`, `device_name`, `usage_date`, `virtual_coin_spent`) VALUES (2, 2, 'Laser Cutter', '2023-09-30', 50.00);
-INSERT INTO `DeviceUsageRecords` (`usage_id`, `team_id`, `device_name`, `usage_date`, `virtual_coin_spent`) VALUES (3, 3, 'Camera', '2023-09-30', 20.00);
 COMMIT;
 
 -- ----------------------------

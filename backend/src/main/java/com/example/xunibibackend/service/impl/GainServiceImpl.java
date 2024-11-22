@@ -34,8 +34,6 @@ public class GainServiceImpl implements GainService {
     AchievementMapper achievementMapper;
     @Autowired
     DutyMapper dutyMapper;
-    @Autowired
-    TrainMapper trainMapper;
     @Override
     public boolean checkIn(Integer id) {
         return false;
