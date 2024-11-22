@@ -45,11 +45,11 @@
 		<!-- Section: 培训 -->
 		<view class="section">
 			<u-grid col="4" :border="false" class="grid">
-				<u-grid-item @click="navigateTo('scholarshipApplication')" class="grid-item">
+				<u-grid-item @click="navigateToTrain" class="grid-item">
 					<image src="/static/icon/培训活动、动员大会.png" class="icon"></image>
 					<text class="icon-text">校内外培训</text>
 				</u-grid-item>
-				<u-grid-item @click="navigateTo('ethnicMinorities')" class="grid-item">
+				<u-grid-item @click="navigateToMeeting" class="grid-item">
 					<image src="/static/icon/会议管理.png" class="icon"></image>
 					<text class="icon-text">会议参加</text>
 				</u-grid-item>
@@ -110,6 +110,30 @@
 						// 通过 eventChannel 向被打开页面传送数据
 						res.eventChannel.emit('submit', {
 							data: '竞赛'
+						});
+					},
+				});
+				
+			},
+			navigateToTrain() {
+				uni.navigateTo({
+					url:'/pages/gain/train',
+					success: (res) => {
+						// 通过 eventChannel 向被打开页面传送数据
+						res.eventChannel.emit('submit', {
+							data: '培训'
+						});
+					},
+				});
+				
+			},
+			navigateToMeeting() {
+				uni.navigateTo({
+					url:'/pages/gain/train',
+					success: (res) => {
+						// 通过 eventChannel 向被打开页面传送数据
+						res.eventChannel.emit('submit', {
+							data: '会议'
 						});
 					},
 				});

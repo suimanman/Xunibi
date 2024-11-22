@@ -11,7 +11,7 @@
  Target Server Version : 80300 (8.3.0)
  File Encoding         : 65001
 
- Date: 21/11/2024 13:19:35
+ Date: 22/11/2024 16:20:25
 */
 
 SET NAMES utf8mb4;
@@ -315,37 +315,6 @@ INSERT INTO `Team` (`team_id`, `team_name`, `creation_date`, `virtual_coins`) VA
 COMMIT;
 
 -- ----------------------------
--- Table structure for trainRecords
--- ----------------------------
-DROP TABLE IF EXISTS `trainRecords`;
-CREATE TABLE `trainRecords` (
-  `train_id` int NOT NULL AUTO_INCREMENT,
-  `team_id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `event_name` varchar(255) NOT NULL,
-  `event_date` date NOT NULL,
-  `event_type` varchar(50) NOT NULL,
-  `coins` decimal(10,2) NOT NULL,
-  `description` text,
-  PRIMARY KEY (`train_id`) USING BTREE,
-  KEY `team_id` (`team_id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `trainrecords_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `team` (`team_id`),
-  CONSTRAINT `trainrecords_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- ----------------------------
--- Records of trainRecords
--- ----------------------------
-BEGIN;
-INSERT INTO `trainRecords` (`train_id`, `team_id`, `user_id`, `event_name`, `event_date`, `event_type`, `coins`, `description`) VALUES (5, 1, 1, '技术培训会', '2024-10-10', '培训', 50.00, '团队成员参加了技术培训，获得虚拟币');
-INSERT INTO `trainRecords` (`train_id`, `team_id`, `user_id`, `event_name`, `event_date`, `event_type`, `coins`, `description`) VALUES (6, 2, 3, '项目启动会议', '2024-10-12', '会议', 30.00, '团队成员参与了项目启动会议');
-INSERT INTO `trainRecords` (`train_id`, `team_id`, `user_id`, `event_name`, `event_date`, `event_type`, `coins`, `description`) VALUES (7, 1, 2, '管理技能培训', '2024-10-15', '培训', 40.00, '管理技能提升课程，获得虚拟币');
-INSERT INTO `trainRecords` (`train_id`, `team_id`, `user_id`, `event_name`, `event_date`, `event_type`, `coins`, `description`) VALUES (8, 3, 4, '年度总结会议', '2024-10-20', '会议', 60.00, '年度总结会议后获得奖励');
-INSERT INTO `trainRecords` (`train_id`, `team_id`, `user_id`, `event_name`, `event_date`, `event_type`, `coins`, `description`) VALUES (9, 1, 1, '技术培训会', '2024-10-19', '校内培训', 50.00, 'traintest');
-COMMIT;
-
--- ----------------------------
 -- Table structure for User
 -- ----------------------------
 DROP TABLE IF EXISTS `User`;
@@ -388,7 +357,7 @@ CREATE TABLE `VirtualCoinTransactions` (
   PRIMARY KEY (`transaction_id`),
   KEY `team_id` (`team_id`),
   CONSTRAINT `virtualcointransactions_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `Team` (`team_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of VirtualCoinTransactions
@@ -416,6 +385,8 @@ INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction
 INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (20, 1, '2024-11-13', '支出', 100.00, '租用工位');
 INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (21, 1, '2024-11-14', '支出', 200.00, '租用工位');
 INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (22, 1, '2024-11-17', '支出', 100.00, '租用工位');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (23, 1, '2024-11-22', '支出', 800.00, '租用工位1超时4天');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (24, 1, '2024-11-22', '支出', 800.00, '租用工位1超时4天');
 COMMIT;
 
 -- ----------------------------
@@ -440,7 +411,7 @@ CREATE TABLE `Workstation` (
 -- Records of Workstation
 -- ----------------------------
 BEGIN;
-INSERT INTO `Workstation` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`, `image_url`, `rental_date`, `return_date`) VALUES (1, '工位1', 0, 1, 100, 'https://cdn.uviewui.com/uview/album/1.jpg', '2024-11-17 00:00:00', '2024-11-18 00:00:00');
+INSERT INTO `Workstation` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`, `image_url`, `rental_date`, `return_date`) VALUES (1, '工位1', 1, NULL, 100, 'https://cdn.uviewui.com/uview/album/1.jpg', NULL, NULL);
 INSERT INTO `Workstation` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`, `image_url`, `rental_date`, `return_date`) VALUES (2, '工位2', 1, NULL, 50, 'https://cdn.uviewui.com/uview/album/1.jpg', NULL, NULL);
 INSERT INTO `Workstation` (`id`, `type`, `is_available`, `rented_team_id`, `coin_consumption`, `image_url`, `rental_date`, `return_date`) VALUES (3, '工位3', 0, 2, 75, 'https://cdn.uviewui.com/uview/album/1.jpg', NULL, NULL);
 COMMIT;

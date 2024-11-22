@@ -6,7 +6,7 @@
 			<image src="/static/img/背景图片.png" class="background-image" mode="aspectFill"></image>
 			<!-- 其他内容 -->
 			<text class="banner-info">{{achievementInfo.type}}成果提交</text>
-			<text class="banner-coin">20虚拟币</text>
+			<text class="banner-coin">获取虚拟币</text>
 		</view>
 
 		<view class="info">
@@ -216,7 +216,7 @@
 	.banner-coin {
 		position: absolute;
 		margin-top: 19px;
-		margin-left: 255px;
+		margin-left: 250px;
 		font-size: 13px;
 		font-weight: bold;
 		color: #F5F5F5;

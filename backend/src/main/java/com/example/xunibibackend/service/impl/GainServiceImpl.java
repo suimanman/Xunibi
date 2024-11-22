@@ -86,45 +86,6 @@ public class GainServiceImpl implements GainService {
     }
 
     @Override
-    public boolean rewardTraining(TrainRecord trainRecord) {
-        // 创建一个map，存储不同eventType对应的虚拟币奖励值
-        Map<String, Double> map = new HashMap<>();
-        map.put("校内培训", 50.0);
-        map.put("会议", 30.0);
-        map.put("校外培训", 70.0);
-
-        Integer teamId = trainRecord.getTeamId();
-        Team team = teamMapper.selectByTeamId(teamId);
-
-        // 获取 trainRecord.getEventType() 对应的虚拟币数量
-        Double trainingCoin = map.get(trainRecord.getEventType());
-
-        // 确保 trainingCoin 不为 null，避免空指针异常
-        if (trainingCoin != null) {
-            Double coinNew = team.getVirtualCoins() + trainingCoin;
-            // 更新团队虚拟币
-            teamMapper.updateCoinById(teamId, coinNew);
-            trainRecord.setCoins(trainingCoin);  // 设置虚拟币值
-        } else {
-            // trainRecord.getEventType() 不在 map 中
-            System.out.println("Event type not found in map.");
-            return false;
-        }
-        // 将trainRecord插入数据库
-        trainMapper.insert(trainRecord);
-
-        //将记录添加到虚拟币交易记录表中
-        VirtualCoinTransaction coinTransaction=new VirtualCoinTransaction();
-        coinTransaction.setCoinAmount(trainingCoin);
-        coinTransaction.setTransactionDate(LocalDate.now());
-        coinTransaction.setTransactionType("收入");
-        coinTransaction.setDescription(trainRecord.getDescription());
-        coinTransaction.setTeamId(teamId);
-        coinTransactionMapper.insert(coinTransaction);
-        return true;
-    }
-
-    @Override
     public MyResult submitAchievement(AchievementRequest achievementRequest) {
         StudentInfo studentInfo = achievementRequest.getStudentInfo();
         AchievementInfo achievementInfo = achievementRequest.getAchievementInfo();

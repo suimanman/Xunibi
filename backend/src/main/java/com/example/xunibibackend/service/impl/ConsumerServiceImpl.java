@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -202,6 +203,17 @@ public class ConsumerServiceImpl implements ConsumerService {
             case "固定设备" -> type1 = 2;
             case "摄像设备" -> type1 = 3;
             case "场地" -> type1 = 4;
+            case "已租用"-> type1=5;
+        }
+        Workstation workstation=workstationMapper.selectByType(returnRequest.getType2());
+        Equipment equipment=equipmentMapper.selectByType(returnRequest.getType2());
+        Camera camera=cameraMapper.selectByType(returnRequest.getType2());
+        Area area=areaMapper.selectByType(returnRequest.getType2());
+        if(type1==5){
+            if(workstation!=null) type1=1;
+            else if(equipment!=null) type1=2;
+            else if(camera!=null) type1=3;
+            else if(area!=null) type1=4;
         }
         String redisKey = "rental:" + type1 + "," + returnRequest.getType2() + "," + returnRequest.getTeamId();
         String type2=returnRequest.getType2();
@@ -223,7 +235,41 @@ public class ConsumerServiceImpl implements ConsumerService {
             redisTemplate.delete(redisKey);
             return true; // 按时归还，无罚款
         } else {
-            // 超时，罚款已触发
+            // 超时，罚款触发
+            //虚拟币交易记录
+            VirtualCoinTransaction coinTransaction=new VirtualCoinTransaction();
+            coinTransaction.setTransactionDate(LocalDate.now());
+            coinTransaction.setTransactionType("支出");
+            // 获取团队信息
+            Team team = teamMapper.selectByTeamId(returnRequest.getTeamId());
+            LocalDate returnDate=LocalDate.now();
+            double coins=0.0;
+            long days=0;
+            if(type1==1){
+                days= ChronoUnit.DAYS.between(workstation.getReturnDate(),returnDate);
+                coins=days*workstation.getCoinConsumption()*2;
+                workstationMapper.updateRental(1,null,type2,null,null);
+            } else if (type1==2) {
+                days= ChronoUnit.DAYS.between(returnDate,equipment.getReturnDate());
+                coins=days*equipment.getCoinConsumption()*2;
+                equipmentMapper.updateRental(1,null,type2,null,null);
+            }else if (type1==3) {
+                days= ChronoUnit.DAYS.between(returnDate,camera.getReturnDate());
+                coins=days*camera.getCoinConsumption()*2;
+                cameraMapper.updateRental(1,null,type2,null,null);
+            }else if (type1==4) {
+                days= ChronoUnit.DAYS.between(returnDate,area.getReturnDate());
+                coins=days*area.getCoinConsumption()*2;
+                areaMapper.updateRental(1,null,type2,null,null);
+            }
+            coinTransaction.setTeamId(returnRequest.getTeamId());
+            coinTransaction.setDescription("租用"+returnRequest.getType2()+"超时"+days+"天");
+            coinTransaction.setCoinAmount(coins);
+            //更新虚拟币交易记录表
+            coinTransactionMapper.insert(coinTransaction);
+            // 扣除虚拟币
+            team.setVirtualCoins(team.getVirtualCoins() - coins);
+            teamMapper.updateCoinById(returnRequest.getTeamId(), team.getVirtualCoins());
             return false; // 超时归还，罚款已扣除
         }
     }

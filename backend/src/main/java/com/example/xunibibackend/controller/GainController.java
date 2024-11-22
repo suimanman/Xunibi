@@ -60,14 +60,4 @@ public class GainController {
         }
     }
 
-    // d) 通过参加培训、会议获得虚拟币
-    @PostMapping("/reward/training")
-    public MyResult rewardTraining(@RequestBody TrainRecord trainRecord) {
-        boolean success = gainService.rewardTraining(trainRecord);
-        if (success) {
-            return MyResult.success("培训或会议虚拟币发放成功");
-        } else {
-            return MyResult.error("发放失败");
-        }
-    }
 }

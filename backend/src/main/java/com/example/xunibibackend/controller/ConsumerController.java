@@ -53,7 +53,7 @@ public class ConsumerController {
         if (success) {
             return MyResult.success("归还成功！");
         } else {
-            return MyResult.error("归还失败！");
+            return MyResult.success("超时归还！双倍扣除虚拟币");
         }
     }
 }
