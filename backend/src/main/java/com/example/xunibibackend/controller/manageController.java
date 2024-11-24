@@ -17,6 +17,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/manage")
 @Slf4j
+@CrossOrigin
 public class manageController {
     @Autowired
     ManageService manageService;

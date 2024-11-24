@@ -3,6 +3,8 @@ package com.example.xunibibackend.service.impl;
 import com.example.xunibibackend.controller.UserController;
 import com.example.xunibibackend.entity.Team;
 import com.example.xunibibackend.entity.User;
+import com.example.xunibibackend.entity.dto.TeamAchievementSummary;
+import com.example.xunibibackend.entity.dto.TeamWithMembers;
 import com.example.xunibibackend.mapper.TeamMapper;
 import com.example.xunibibackend.mapper.UserMapper;
 import com.example.xunibibackend.response.MyResult;
@@ -24,14 +26,13 @@ public class TeamsServiceImpl implements TeamsService {
     TeamMapper teamMapper;
     @Autowired
     UserMapper userMapper;
+
     @Override
     public Integer createTeam(Team team) {
         String name=team.getTeamName();
         Integer exist=teamMapper.selectName(name);
         if(exist.equals(0)) {
-            team.setCreationDate(LocalDate.now());
-            team.setVirtualCoins(500.0);
-            return teamMapper.insert(team);
+            return teamMapper.createTeamByAdmin(team);
         }
         else return 0;
     }
@@ -52,8 +53,14 @@ public class TeamsServiceImpl implements TeamsService {
     }
 
     @Override
-    public void deleteTeamById(Integer id) {
-        teamMapper.deleteTeamById(id);
+    public MyResult deleteTeamById(Integer id) {
+        if (userMapper.getUsersByTeamId(id) == null || userMapper.getUsersByTeamId(id).isEmpty()) {
+            teamMapper.deleteTeamById(id);
+            return MyResult.success("删除成功");
+        }else {
+            return MyResult.error("id为"+id +"的团队还有队员");
+        }
+
     }
 
     @Override
@@ -66,4 +73,18 @@ public class TeamsServiceImpl implements TeamsService {
         Double coin=teamMapper.getCoin(team);
         return coin;
     }
+
+
+     public List<TeamWithMembers> getTeamsWithMemberCount() {
+        return teamMapper.getTeamsWithMemberCount();
+    }
+     public List<TeamAchievementSummary> getTeamAchievementSummaries() {
+        return teamMapper.getTeamAchievementSummaries();
+    }
+
+//    @Override
+//    public int createTeamByAdmin(Team team) {
+//        teamMapper.createTeamByAdmin(team);
+//        return 0;
+//    }
 }
