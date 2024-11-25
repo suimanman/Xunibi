@@ -53,6 +53,15 @@
 		methods: {
 			async registerUser() {
 				try {
+					// 检查用户名和密码是否为空
+					if (!this.user.username.trim() || !this.user.password.trim()) {
+						uni.showToast({
+							title: "学号和密码不能为空",
+							icon: "none",
+							duration: 2000
+						});
+						return; // 中断方法执行
+					}
 					const result = await register(this.user); // 调用 register 方法发送注册请求
 					if (result.data.code === 200) {
 						uni.showToast({
@@ -131,7 +140,7 @@
 					}
 				} catch (error) {
 					uni.showToast({
-						title: result.data.msg ||"登录请求异常，请检查网络连接",
+						title: result.data.msg || "登录请求异常，请检查网络连接",
 						icon: "none"
 					});
 					return {

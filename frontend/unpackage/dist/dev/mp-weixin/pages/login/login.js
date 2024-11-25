@@ -198,12 +198,23 @@ var _default = {
             switch (_context.prev = _context.next) {
               case 0:
                 _context.prev = 0;
-                _context.next = 3;
+                if (!(!_this.user.username.trim() || !_this.user.password.trim())) {
+                  _context.next = 4;
+                  break;
+                }
+                uni.showToast({
+                  title: "学号和密码不能为空",
+                  icon: "none",
+                  duration: 2000
+                });
+                return _context.abrupt("return");
+              case 4:
+                _context.next = 6;
                 return (0, _me.register)(_this.user);
-              case 3:
+              case 6:
                 _result = _context.sent;
                 if (!(_result.data.code === 200)) {
-                  _context.next = 10;
+                  _context.next = 13;
                   break;
                 }
                 uni.showToast({
@@ -212,32 +223,32 @@ var _default = {
                   duration: 2000
                 });
                 // 调用登录方法实现自动登录
-                _context.next = 8;
-                return _this.loginUser();
-              case 8:
                 _context.next = 11;
+                return _this.loginUser();
+              case 11:
+                _context.next = 14;
                 break;
-              case 10:
+              case 13:
                 uni.showToast({
                   title: _result.data.msg || "注册失败",
                   icon: "none"
                 });
-              case 11:
-                _context.next = 16;
+              case 14:
+                _context.next = 19;
                 break;
-              case 13:
-                _context.prev = 13;
+              case 16:
+                _context.prev = 16;
                 _context.t0 = _context["catch"](0);
                 uni.showToast({
                   title: "注册请求异常，请检查网络连接",
                   icon: "none"
                 });
-              case 16:
+              case 19:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[0, 13]]);
+        }, _callee, null, [[0, 16]]);
       }))();
     },
     loginUser: function loginUser() {
