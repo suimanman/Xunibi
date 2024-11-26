@@ -27,7 +27,7 @@ public interface WorkstationMapper extends BaseMapper<Workstation> {
     FROM 
         Workstation """) List<Workstation> getAllWorkstations();
 
-    @Insert("INSERT INTO Workstation (type, coin_consumption, is_available) VALUES (#{type}, #{coinConsumption}, 1)")
+    @Insert("INSERT INTO Workstation (type, coin_consumption, is_available , rented_team_id) VALUES (#{type}, #{coinConsumption}, #{isAvailable},#{rentedTeamId})")
     int insert(Workstation item);
 
     @Delete("DELETE FROM Workstation WHERE id = #{id}")

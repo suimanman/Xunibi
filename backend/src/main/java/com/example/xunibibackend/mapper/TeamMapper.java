@@ -50,12 +50,12 @@ public interface TeamMapper extends BaseMapper<Team> {
      @Select("SELECT " +
             "t.team_id, " +
             "t.team_name, " +
-            "SUM(CASE WHEN a.achievement_type = '论文' AND a.status = '已审核' THEN 1 ELSE 0 END) AS paper_count, " +
-            "SUM(CASE WHEN a.achievement_type = '竞赛' AND a.status = '已审核' THEN 1 ELSE 0 END) AS competition_count, " +
-            "SUM(CASE WHEN a.achievement_type NOT IN ('论文', '竞赛') AND a.status = '已审核' THEN 1 ELSE 0 END) AS other_count " +
+            "SUM(CASE WHEN a.achievement_type = 'paper' AND a.status = '已通过' THEN 1 ELSE 0 END) AS paper_count, " +
+            "SUM(CASE WHEN a.achievement_type = 'competition' AND a.status = '已通过' THEN 1 ELSE 0 END) AS competition_count, " +
+            "SUM(CASE WHEN a.achievement_type NOT IN ('paper', 'competition') AND a.status = '已通过' THEN 1 ELSE 0 END) AS other_count " +
             "FROM Team t " +
             "LEFT JOIN Achievements a ON t.team_id = a.team_id " +
-            "WHERE a.status = '已审核' " +
+            "WHERE a.status = '已通过' " +
             "GROUP BY t.team_id, t.team_name")
     List<TeamAchievementSummary> getTeamAchievementSummaries();
 

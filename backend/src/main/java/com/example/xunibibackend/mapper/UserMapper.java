@@ -50,4 +50,9 @@ public interface UserMapper extends BaseMapper<User> {
            "    team_id = #{user.teamId}\n" +
            "WHERE user_id = #{user.userId};")
     Integer updateById(@Param("id") Integer Id,  @Param("user")User user);
+
+
+
+    @Select("select user_id from user where username = #{username}")
+    Integer getUserIdByUsername(String userName);
 }

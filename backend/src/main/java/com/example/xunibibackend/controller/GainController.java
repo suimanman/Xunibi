@@ -3,7 +3,7 @@ package com.example.xunibibackend.controller;
 import com.example.xunibibackend.entity.Achievement;
 import com.example.xunibibackend.entity.DutyRecord;
 import com.example.xunibibackend.entity.SignInRecord;
-import com.example.xunibibackend.entity.TrainRecord;
+import com.example.xunibibackend.entity.dto.AchievementRequest;
 import com.example.xunibibackend.response.MyResult;
 import com.example.xunibibackend.service.GainService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,23 @@ public class GainController {
         }
     }
 
-    // b) 通过论文专利、竞赛奖励等成果获得虚拟币
+    //成果提交待审核
+    @PostMapping("/achievementSubmit")
+    public MyResult submitAchievement(@RequestBody AchievementRequest achievementRequest){
+        return gainService.submitAchievement(achievementRequest);
+    }
+
+    //获得待审核列表
+    @GetMapping("/achievementList")
+    public MyResult getAchievementList(){
+        return gainService.getAchievementList();
+    }
+        //获得待审核列表
+    @GetMapping("/achievementListById/{id}")
+    public MyResult getAchievementList(@PathVariable Integer id){
+        return gainService.getAchievementListById(id);
+    }
+    // 管理员审核接口
     @PostMapping("/reward/achievement")
     public MyResult rewardAchievement(@RequestBody Achievement achievement) {
         boolean success = gainService.rewardAchievement(achievement);
@@ -49,14 +65,4 @@ public class GainController {
         }
     }
 
-    // d) 通过参加培训、会议获得虚拟币
-    @PostMapping("/reward/training")
-    public MyResult rewardTraining(@RequestBody TrainRecord trainRecord) {
-        boolean success = gainService.rewardTraining(trainRecord);
-        if (success) {
-            return MyResult.success("培训或会议虚拟币发放成功");
-        } else {
-            return MyResult.error("发放失败");
-        }
-    }
 }
