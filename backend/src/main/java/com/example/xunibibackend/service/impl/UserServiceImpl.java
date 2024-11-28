@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import com.example.xunibibackend.util.ClassExamine;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -99,5 +100,40 @@ public class UserServiceImpl implements UserService {
         Integer id=userMapper.getByUsername(sessionUser.getUsername()).getUserId();
         userMapper.editPassword(id,DigestUtil.md5Hex(newPassword));
         return MyResult.success("修改密码成功！");
+    }
+
+
+
+    // Admin 操作
+    @Override
+    public Integer createUser(User user) {
+      //  log.info(String.valueOf(user));
+        if (user != null) {
+             user.setDate(LocalDate.now());
+            return userMapper.createUser(user);
+        }else {
+            return 0;
+        }
+    }
+
+    @Override
+    public List<User> getAllUser() {
+        return userMapper.getAllUser();
+    }
+
+    @Override
+    public User getUserByName(String name) {
+        return userMapper.getByUsername(name);
+    }
+
+    @Override
+    public Integer updateUser(Integer Id,User user) {
+        return userMapper.updateById(Id,user);
+    }
+
+    @Override
+    public void deleteUserById(Integer userId) {
+        userMapper.deleteUserById(userId);
+
     }
 }

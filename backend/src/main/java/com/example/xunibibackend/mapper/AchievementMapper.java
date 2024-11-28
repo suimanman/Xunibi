@@ -10,8 +10,23 @@ import java.util.List;
 @Mapper
 public interface AchievementMapper extends BaseMapper<Achievement> {
 
-    @Select("select * from achievements where status='待审核'")
-    List<Achievement> getList();
+@Select("""
+    SELECT a.*, t.team_name  AS teamName 
+    FROM achievements a
+    JOIN team t ON a.team_id = t.team_id
+    WHERE a.status = '待审核'
+""")
+List<Achievement> getList();
+
+@Select("""
+    SELECT a.*
+    FROM achievements a
+  
+    WHERE a.status = '待审核' and team_id = #{teamId}
+""")
+List<Achievement> getListById(@Param("teamId") int teamId);
+
+
 
     @Update("update achievements set coin_awarded = #{achievement.coinAwarded},status = " +
             "#{achievement.status} where achievement_id = #{achievement.achievementId}")

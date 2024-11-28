@@ -2,9 +2,10 @@ package com.example.xunibibackend.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.xunibibackend.entity.Camera;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import com.example.xunibibackend.entity.Camera;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,4 +23,40 @@ public interface CameraMapper extends BaseMapper<Camera> {
 
     @Select("select * from camera where rented_team_id = #{teamId}")
     List<Camera> selectTeamRent(Integer teamId);
+
+    //admin
+@Select("""
+    SELECT 
+        id,
+        type,
+        coin_consumption,
+        rented_team_id,  -- 如果租用，则返回队伍名称
+        is_available    
+    FROM Camera""")
+    List<Camera> getAllCameras();
+
+    @Insert("INSERT INTO Camera (type, coin_consumption, is_available, rented_team_id) VALUES (#{item.type}, #{item.coinConsumption}, #{item.isAvailable},#{item.rentedTeamId})")
+    int insert(@Param("item") Camera item);
+
+    @Delete("DELETE FROM Camera WHERE id = #{id}")
+    int deleteById(int id);
+
+    @Select("SELECT * FROM Camera WHERE id = #{id}")
+    Camera findById(int id);
+
+    @Select("SELECT * FROM Camera WHERE type = #{name}")
+    List<Camera> findByName( String name);
+
+   @Update("""
+    UPDATE Camera
+    SET 
+        type = #{item.type}, 
+        coin_consumption = #{item.coinConsumption}, 
+        is_available = #{item.isAvailable},
+        rented_team_id = #{item.rentedTeamId}
+    WHERE id = #{id}
+""")
+    int updateByadmin(int id,@Param("item")Camera item);
+
+
 }

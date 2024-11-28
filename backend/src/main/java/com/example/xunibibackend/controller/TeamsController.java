@@ -5,6 +5,8 @@ import com.example.xunibibackend.response.MyResult;
 import com.example.xunibibackend.service.TeamsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,6 +14,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/team")
 @Slf4j
+@CrossOrigin(
+          origins = "http://localhost:8081", // 允许的前端地址
+        allowCredentials = "true" // 允许携带凭证
+)
 public class TeamsController {
 
     @Autowired
@@ -19,39 +25,44 @@ public class TeamsController {
 
     // 创建新团队
     @PostMapping("/create")
-    public MyResult createTeam(@RequestBody Team team) {
+    public ResponseEntity<String> createTeam(@RequestBody Team team) {
         int exist=teamsService.createTeam(team);
         if(exist==1)
-            return MyResult.success();
+            return ResponseEntity.noContent().build();
         else
-            return MyResult.error("团队名称已经被注册！");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("团队名称已经被注册！");
     }
 
     // 获取所有团队列表
     @GetMapping("/list")
-    public MyResult getAllTeams() {
+    public ResponseEntity<List<Team>> getAllTeams() {
         List<Team> teams = teamsService.getAllTeams();
-        return MyResult.success(teams);
+        return ResponseEntity.ok(teams);
     }
 
     // 根据 ID 获取单个团队
     @GetMapping("/{id}")
-    public MyResult getTeamById(@PathVariable Integer id) {
+    public ResponseEntity<Team> getTeamById(@PathVariable Integer id) {
         Team team = teamsService.getTeamById(id);
-        return MyResult.success(team);
+        return ResponseEntity.ok(team);
     }
 
     // 更新团队信息
     @PutMapping("/update/{id}")
-    public MyResult updateTeam(@PathVariable Integer id, @RequestBody Team team) {
+    public ResponseEntity<String> updateTeam(@PathVariable Integer id, @RequestBody Team team) {
         Integer updatedTeam = teamsService.updateTeam(id, team);
-        return MyResult.success("更新成功！");
+        return ResponseEntity.ok("更新成功！");
     }
 
     // 删除团队
+//    @DeleteMapping("/delete/{id}")
+//    public ResponseEntity<Void> deleteTeam(@PathVariable Integer id) {
+//        teamsService.deleteTeamById(id);
+//        return ResponseEntity.noContent().build();
+//    }
     @DeleteMapping("/delete/{id}")
     public MyResult deleteTeam(@PathVariable Integer id) {
-        teamsService.deleteTeamById(id);
-        return MyResult.success();
+       return  teamsService.deleteTeamById(id);
+
     }
 }

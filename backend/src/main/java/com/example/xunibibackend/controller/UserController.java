@@ -9,11 +9,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
 @RestController
 @RequestMapping("/user")
+@CrossOrigin(
+        origins = "http://localhost:8081", // 允许的前端地址
+        allowCredentials = "true" // 允许携带凭证
+)
 public class UserController {
     /**
      * session的字段名
@@ -111,4 +116,53 @@ public class UserController {
         return MyResult.success("用户退出登录成功！");
     }
 
+    // 管理员
+
+    // 创建用户
+    @PostMapping("/admincreate")
+    public MyResult createUser(@RequestBody User user) {
+//        log.info(String.valueOf(user));
+        Integer result = userService.createUser(user);
+        if (result > 0) {
+            return MyResult.success("用户添加成功");
+        } else {
+            return MyResult.error("用户添加失败");
+        }
+    }
+
+    // 获取所有用户
+    @GetMapping("/all")
+    public MyResult getAllUsers() {
+        List <User> users = userService.getAllUser();
+        return MyResult.success(users);
+    }
+
+    // 根据用户名获取用户
+    @GetMapping("/{name}")
+    public MyResult getUserByName(@PathVariable("name") String name) {
+        User user = userService.getUserByName(name);
+        if (user != null) {
+            return MyResult.success(user);
+        } else {
+            return MyResult.error("不存在此用户");
+        }
+    }
+
+    // 更新用户信息
+    @PutMapping("/adminupdate/{Id}")
+    public MyResult updateUser(@PathVariable Integer Id,@RequestBody User user) {
+        Integer result = userService.updateUser(Id,user);
+        if (result > 0) {
+            return MyResult.success("更新成功");
+        } else {
+            return MyResult.error("更新失败");
+        }
+    }
+
+    // 根据用户 ID 删除用户
+    @DeleteMapping("/admindelete/{id}")
+    public MyResult deleteUserById(@PathVariable("id") Integer userId) {
+        userService.deleteUserById(userId);
+        return MyResult.success("用户删除成功");
+    }
 }

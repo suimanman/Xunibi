@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/gain")
+@CrossOrigin(
+        origins = "http://localhost:8081", // 允许的前端地址
+        allowCredentials = "true" // 允许携带凭证
+)
 public class GainController {
     @Autowired
     private GainService gainService;
@@ -36,6 +40,11 @@ public class GainController {
     @GetMapping("/achievementList")
     public MyResult getAchievementList(){
         return gainService.getAchievementList();
+    }
+        //获得待审核列表
+    @GetMapping("/achievementListById/{id}")
+    public MyResult getAchievementList(@PathVariable Integer id){
+        return gainService.getAchievementListById(id);
     }
     // 管理员审核接口
     @PostMapping("/reward/achievement")

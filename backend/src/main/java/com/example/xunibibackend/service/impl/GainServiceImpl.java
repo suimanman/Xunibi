@@ -118,4 +118,14 @@ public class GainServiceImpl implements GainService {
     public MyResult getAchievementList() {
         return MyResult.success(achievementMapper.getList());
     }
+
+    @Override
+    public MyResult getAchievementList() {
+        return MyResult.success(achievementMapper.getList());
+    }
+
+    @Override
+    public MyResult getAchievementListById(int teamId) {
+        return MyResult.success(achievementMapper.getListById(teamId));
+    }
 }
