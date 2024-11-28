@@ -9,6 +9,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admins")
+@CrossOrigin(
+        origins = "http://localhost:8081", // 允许的前端地址
+        allowCredentials = "true" // 允许携带凭证
+)
 public class AdminController {
 
     @Autowired
@@ -26,9 +30,8 @@ public class AdminController {
 
     @PutMapping("/update/{id}")
     public Admin updateAdmin(@PathVariable("id") int adminId,
-                             @RequestParam String username,
-                             @RequestParam String password) {
-        return adminService.updateAdmin(adminId, username, password);
+                        @RequestBody Admin admin) {
+        return adminService.updateAdmin(adminId, admin.getUsername(), admin.getPassword());
     }
 
     @DeleteMapping("/delete/{id}")
@@ -41,4 +44,10 @@ public class AdminController {
     public List<Admin> listAdmins() {
         return adminService.getAllAdmins();
     }
+
+    @GetMapping("/findbyname")
+    public Admin getAdminByName(@RequestParam String username) {
+        return adminService.getAdminByName(username);
+    }
+
 }

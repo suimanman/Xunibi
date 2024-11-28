@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/gain")
-@CrossOrigin
+@CrossOrigin(
+        origins = "http://localhost:8081", // 允许的前端地址
+        allowCredentials = "true" // 允许携带凭证
+)
 public class GainController {
     @Autowired
     private GainService gainService;

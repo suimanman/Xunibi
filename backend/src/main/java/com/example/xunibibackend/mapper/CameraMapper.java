@@ -28,8 +28,8 @@ public interface CameraMapper extends BaseMapper<Camera> {
     FROM Camera""")
     List<Camera> getAllCameras();
 
-    @Insert("INSERT INTO Camera (type, coin_consumption, is_available) VALUES (#{type}, #{coinConsumption}, 1)")
-    int insert(Camera item);
+    @Insert("INSERT INTO Camera (type, coin_consumption, is_available, rented_team_id) VALUES (#{item.type}, #{item.coinConsumption}, #{item.isAvailable},#{item.rentedTeamId})")
+    int insert(@Param("item") Camera item);
 
     @Delete("DELETE FROM Camera WHERE id = #{id}")
     int deleteById(int id);

@@ -25,5 +25,8 @@ public interface AdminMapper {
 
     @Select("SELECT * FROM Admin")
     List<Admin> findAllAdmins();
+
+
+
 }
 

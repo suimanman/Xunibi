@@ -15,7 +15,10 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/user")
-@CrossOrigin
+@CrossOrigin(
+        origins = "http://localhost:8081", // 允许的前端地址
+        allowCredentials = "true" // 允许携带凭证
+)
 public class UserController {
     /**
      * session的字段名

@@ -52,5 +52,10 @@ public class AdminServiceImpl implements AdminService {
     public List<Admin> getAllAdmins() {
         return adminMapper.findAllAdmins();
     }
+
+    @Override
+    public Admin getAdminByName(String username) {
+        return adminMapper.findByUsername(username);
+    }
 }
 

@@ -14,7 +14,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/team")
 @Slf4j
-@CrossOrigin
+@CrossOrigin(
+          origins = "http://localhost:8081", // 允许的前端地址
+        allowCredentials = "true" // 允许携带凭证
+)
 public class TeamsController {
 
     @Autowired

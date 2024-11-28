@@ -28,8 +28,8 @@ public interface EquipmentMapper extends BaseMapper<Equipment> {
         Equipment""")
    List<Equipment> getAllEquipments();
 
-    @Insert("INSERT INTO Equipment (type, coin_consumption, is_available) VALUES (#{type}, #{coinConsumption}, 1)")
-    int insert(Equipment item);
+    @Insert("INSERT INTO Equipment (type, coin_consumption, is_available, rented_team_id) VALUES (#{item.type}, #{item.coinConsumption}, #{item.isAvailable}, #{item.rentedTeamId})")
+    int insert(@Param("item") Equipment item);
 
     @Delete("DELETE FROM Equipment WHERE id = #{id}")
     int deleteById(int id);

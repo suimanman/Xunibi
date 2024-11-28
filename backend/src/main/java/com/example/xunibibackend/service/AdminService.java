@@ -14,4 +14,6 @@ public interface AdminService {
     boolean deleteAdmin(int adminId);
 
     List<Admin> getAllAdmins();
+
+    Admin getAdminByName(String username);
 }
