@@ -212,11 +212,11 @@ var _default = {
     return {
       studentInfo: {
         name: '',
-        id: '',
+        username: '',
         department: '',
         major: '',
-        class: '',
-        team: ''
+        clazz: '',
+        teamName: ''
       }
     };
   },

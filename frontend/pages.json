@@ -101,6 +101,13 @@
 			{
 				"navigationBarTitleText" : "值日人信息"
 			}
+		},
+		{
+			"path" : "pages/me/editElseInfo",
+			"style" : 
+			{
+				"navigationBarTitleText" : "其他"
+			}
 		}
 	],
 	"globalStyle": {

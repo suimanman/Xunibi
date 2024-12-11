@@ -19304,6 +19304,7 @@ var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/inte
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.editElseInfo = editElseInfo;
 exports.editPassword = editPassword;
 exports.getUserInfo = getUserInfo;
 exports.isLogin = isLogin;
@@ -19370,6 +19371,14 @@ function editPassword(data) {
       oldPassword: data.oldPassword,
       newPassword: data.newPassword
     }
+  });
+}
+//保存其他信息
+function editElseInfo(data) {
+  return (0, _request.default)({
+    url: '/user/editInfo',
+    method: 'post',
+    data: data
   });
 }
 

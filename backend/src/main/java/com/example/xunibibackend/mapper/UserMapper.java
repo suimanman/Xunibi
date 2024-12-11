@@ -30,7 +30,7 @@ public interface UserMapper extends BaseMapper<User> {
     Integer addUser(@Param("user") User user);
 
     @Update("update user set password = #{user.password} where user_id=#{user.userId}")
-    User update(@Param("user") User user);
+    User updatePassword(@Param("user") User user);
 
     @Update("update user set password = #{password} where user_id=#{userId}")
     void editPassword(Integer userId, String password);
@@ -55,4 +55,10 @@ public interface UserMapper extends BaseMapper<User> {
 
     @Select("select user_id from user where username = #{username}")
     Integer getUserIdByUsername(String userName);
+
+    @Update("update user set " +
+            "name = #{user.name} ,team_id = #{user.teamId}," +
+            "department = #{user.department},major = #{user.major}," +
+            "clazz = #{user.clazz} where username=#{user.username}")
+    void updateElseInfo(@Param("user") User user);
 }

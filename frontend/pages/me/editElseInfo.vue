@@ -6,7 +6,10 @@
 					<u--input v-model="studentInfo.name" border="none" placeholder="请输入姓名"></u--input>
 				</u-form-item>
 				<u-form-item label="学号" prop="studentInfo.username" borderBottom ref="item1">
-					<u--input v-model="studentInfo.username" border="none" placeholder="请输入学号"></u--input>
+					<text>{{studentInfo.username}}</text>
+				</u-form-item>
+				<u-form-item label="团队" prop="studentInfo.teamName" borderBottom ref="item1">
+					<u--input v-model="studentInfo.teamName" border="none" placeholder="请输入所属团队"></u--input>
 				</u-form-item>
 			</u--form>
 		</view>
@@ -21,17 +24,18 @@
 				<u-form-item label="班级" prop="studentInfo.clazz" borderBottom ref="item1">
 					<u--input v-model="studentInfo.clazz" border="none" placeholder="请输入所属班级"></u--input>
 				</u-form-item>
-				<u-form-item label="所属团队" prop="studentInfo.teamName" borderBottom ref="item1" label-width="100px">
-					<u--input v-model="studentInfo.teamName" border="none" placeholder="请输入所属团队"></u--input>
-				</u-form-item>
 			</u--form>
 		</view>
 
-		<button class="submit-button" @click="submitInfo">确定</button>
+		<button class="submit-button" @click="submitInfo">保存</button>
 	</view>
 </template>
 
 <script>
+	import {
+		editElseInfo,
+		isLogin
+	} from '../../api/me';
 	export default {
 		data() {
 			return {
@@ -45,27 +49,58 @@
 				},
 			};
 		},
-		onLoad: function(option) {
-			const eventChannel = this.getOpenerEventChannel();
-			// 接收上级页面传递的数据
-			eventChannel.on('updateStudentInfo', (data) => {
-				// console.log('接收到上级页面传递的数据：', data);
-				this.studentInfo = {
-					...data.data // 注意解构 data.data
-				};
-			});
+		created() {
+			this.loginHandle();
 		},
-
 		methods: {
+			async loginHandle() {
+				// 调用 isLogin 并等待其返回结果
+				const loginResult = await isLogin();
+				// 获取用户数据
+				// 定义允许的字段
+				const allowedFields = Object.keys(this.studentInfo);
+				
+				// 筛选后端返回的数据
+				this.studentInfo = Object.keys(loginResult.data.data)
+				    .filter(key => allowedFields.includes(key)) // 筛选只保留前端需要的字段
+				    .reduce((obj, key) => {
+				        obj[key] = loginResult.data.data[key]; // 构建新对象
+				        return obj;
+				    }, {});
+				console.log(this.studentInfo);
+			},
 			submitInfo() {
-				// 返回主页面并传递数据
-				const eventChannel = this.getOpenerEventChannel();
-				eventChannel.emit('acceptStudentInfo', {
-					data: this.studentInfo
-				});
+				const hasEmptyField = Object.values(this.studentInfo).some(
+					(value) => value === null || value === undefined || !String(value).trim()
+				);
+				console.log(this.studentInfo);
+				if (hasEmptyField) {
+					uni.showToast({
+						title: '请填写所有必填字段',
+						icon: 'none',
+						duration: 2000,
+					});
+					return;
+				}
 
-				// 返回主页面
-				uni.navigateBack();
+				// 如果所有字段都填写，提交信息
+				editElseInfo(this.studentInfo)
+					.then(() => {
+						uni.showToast({
+							title: '保存成功',
+							icon: 'success',
+							duration: 2000,
+						});
+						uni.navigateBack(); // 返回主页面
+					})
+					.catch((error) => {
+						uni.showToast({
+							title: '该团队未注册，请重新填写！',
+							icon: 'none',
+							duration: 2000,
+						});
+						console.error('提交失败:', error);
+					});
 			},
 		},
 	};

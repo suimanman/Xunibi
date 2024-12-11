@@ -43,7 +43,7 @@ public class UserController {
      */
     @PostMapping("/login")
     public MyResult login(@RequestBody User user, HttpServletRequest request){
-        log.info("-------{}",user);
+//        log.info("-------{}",user);
         MyResult result;
         result=userService.login(user);
         // 如果登录成功，则设定session
@@ -51,8 +51,8 @@ public class UserController {
             request.getSession().setAttribute(SESSION_NAME, user);
         }
 //        result.put(MyResult.CODE_TAG,200);
-        log.info("-----{}",request.getSession().getId());
-        log.info("{}",result);
+//        log.info("-----{}",request.getSession().getId());
+//        log.info("{}",result);
         return result;
     }
     /**
@@ -63,7 +63,6 @@ public class UserController {
      */
     @GetMapping("/isLogin")
     public MyResult isLogin(HttpServletRequest request) {
-//        log.info("你好哈哈");
         // 传入session到用户服务层
         return userService.isLogin(request.getSession());
     }
@@ -164,5 +163,11 @@ public class UserController {
     public MyResult deleteUserById(@PathVariable("id") Integer userId) {
         userService.deleteUserById(userId);
         return MyResult.success("用户删除成功");
+    }
+
+    //用户保存其他个人信息
+    @PostMapping("/editInfo")
+    public MyResult editInfo(@RequestBody User user){
+        return userService.editInfo(user);
     }
 }

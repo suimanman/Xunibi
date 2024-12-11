@@ -6,7 +6,8 @@
 		<u-cell-group class="cell-group">
 			<u-cell title="学号" v-model="user.username" />
 			<u-cell title="所属团队" v-model="user.teamName" />
-			<u-cell title="修改密码" is-link @click="goEditUsername" />
+			<u-cell title="修改密码" is-link @click="goEditPassword" />
+			<u-cell title="其他信息" is-link @click="editElseInfo" />
 		</u-cell-group>
 		<button class="logout-button" @click="logout()">退 出 登 录</button>
 	</view>
@@ -90,11 +91,16 @@
 					}
 				});
 			},
-			goEditUsername() {
+			goEditPassword() {
 				uni.redirectTo({
 					url: '/pages/me/editPassword'
 				});
 			},
+			editElseInfo(){
+				uni.redirectTo({
+					url: '/pages/me/editElseInfo'
+				});
+			}
 		},
 	};
 </script>

@@ -186,6 +186,7 @@ var _me = __webpack_require__(/*! @/api/me */ 168);
 //
 //
 //
+//
 var _default = {
   data: function data() {
     return {
@@ -285,9 +286,14 @@ var _default = {
         }, _callee2);
       }))();
     },
-    goEditUsername: function goEditUsername() {
+    goEditPassword: function goEditPassword() {
       uni.redirectTo({
         url: '/pages/me/editPassword'
+      });
+    },
+    editElseInfo: function editElseInfo() {
+      uni.redirectTo({
+        url: '/pages/me/editElseInfo'
       });
     }
   }

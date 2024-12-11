@@ -60,5 +60,12 @@ export function editPassword(data) {
 			newPassword: data.newPassword
 		}
 	})
-
+}
+//保存其他信息
+export function editElseInfo(data) {
+	return request({
+		url: '/user/editInfo',
+		method: 'post',
+		data: data
+	})
 }

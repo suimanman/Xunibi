@@ -9,5 +9,5 @@ public class StudentInfo {
     private String department;
     private String major;
     private String clazz;
-    private String team;
+    private String teamName;
 }

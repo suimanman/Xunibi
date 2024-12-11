@@ -96,7 +96,7 @@ public class GainServiceImpl implements GainService {
         String description = "学生基本信息:\n" +
                 "姓名："+studentInfo.getName()+"，学号："+studentInfo.getId()+
                 "，学院："+studentInfo.getDepartment()+"，专业："+studentInfo.getMajor()+"，班级："+studentInfo.getClazz()
-                +"，所属团队："+studentInfo.getTeam()
+                +"，所属团队："+studentInfo.getTeamName()
                 + "\n成果基本信息：\n" + "成果名称："+achievementInfo.getName()+
                 "，获得日期"+achievementInfo.getDateValue()+"，奖励单位："+achievementInfo.getAwardUnit()
                 + "\n申请陈述：\n" + statementInfo.getInfo();

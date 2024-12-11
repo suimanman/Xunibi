@@ -199,8 +199,8 @@ var _default = {
     return {
       dutyInfo: {
         name: '',
-        id: '',
-        team: '',
+        username: '',
+        teamName: '',
         image: ''
       }
     };

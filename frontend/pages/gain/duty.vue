@@ -18,8 +18,8 @@
 				</view>
 				<view class="section-content">
 					<text class="line">姓名：{{dutyInfo.name}}</text>
-					<text class="line">学号：{{dutyInfo.id}}</text>
-					<text class="line">所属团队：{{dutyInfo.team}}</text>
+					<text class="line">学号：{{dutyInfo.username}}</text>
+					<text class="line">所属团队：{{dutyInfo.teamName}}</text>
 				</view>
 			</view>
 			<view class="section">
@@ -82,8 +82,8 @@
 				},
 				dutyInfo: {
 					name: '',
-					id: '',
-					team: '',
+					username: '',
+					teamName: '',
 					description: '',
 					image: '',
 				},
@@ -92,8 +92,27 @@
 				}
 			}
 		},
+		created() {
+			this.loginHandle();
+		},
 		onLoad: function(option) {},
 		methods: {
+			async loginHandle() {
+				// 调用 isLogin 并等待其返回结果
+				const loginResult = await isLogin();
+				// 获取用户数据
+				// 定义允许的字段
+				const allowedFields = Object.keys(this.dutyInfo);
+			
+				// 筛选后端返回的数据
+				this.dutyInfo = Object.keys(loginResult.data.data)
+					.filter(key => allowedFields.includes(key)) // 筛选只保留前端需要的字段
+					.reduce((obj, key) => {
+						obj[key] = loginResult.data.data[key]; // 构建新对象
+						return obj;
+					}, {});
+				console.log(this.dutyInfo);
+			},
 			goBack() {
 				uni.navigateBack();
 			},

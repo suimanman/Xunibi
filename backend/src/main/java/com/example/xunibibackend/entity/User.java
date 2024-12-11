@@ -28,4 +28,12 @@ public class User {
 
     @Column(name = "registration_date", nullable = false)
     private LocalDate date;
+
+    private String name;
+
+    private String department;
+
+    private String major;
+
+    private String clazz;
 }

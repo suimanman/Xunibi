@@ -67,7 +67,7 @@ public class TeamsServiceImpl implements TeamsService {
     public Double getCoin(HttpSession session) {
         // 从session中取出用户信息
         User sessionUser=(User) session.getAttribute(UserController.SESSION_NAME);
-        log.info("虚拟币user{}",sessionUser);
+//        log.info("虚拟币user{}",sessionUser);
         Integer teamId=userMapper.getTeamIdByUsername(sessionUser.getUsername());
         Team team=teamMapper.selectByTeamId(teamId);
         Double coin=teamMapper.getCoin(team);

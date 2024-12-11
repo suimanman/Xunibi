@@ -32,7 +32,7 @@ public class manageController {
      */
     @GetMapping("/getRecord")
     public MyResult getRecord(HttpServletRequest request){
-        log.info("-------虚拟币");
+//        log.info("-------虚拟币");
         //根据登录情况前端传来的cookie获取用户
         HttpSession session= request.getSession();
         List<VirtualCoinTransaction> records;
@@ -47,7 +47,7 @@ public class manageController {
         List<String> notice = manageService.getNotice();
 
         if (notice != null && !notice.isEmpty()) {
-            log.info("通知公告：{}",notice);
+//            log.info("通知公告：{}",notice);
             return MyResult.success(notice);
         } else {
             return MyResult.success("欢迎使用虚拟币交易系统！");

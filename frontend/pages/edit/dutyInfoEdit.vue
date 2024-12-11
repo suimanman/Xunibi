@@ -5,11 +5,11 @@
 				<u-form-item label="姓名" prop="dutyInfo.name" borderBottom ref="item1">
 					<u--input v-model="dutyInfo.name" border="none" placeholder="请输入姓名"></u--input>
 				</u-form-item>
-				<u-form-item label="学号" prop="dutyInfo.id" borderBottom ref="item1">
-					<u--input v-model="dutyInfo.id" border="none" placeholder="请输入学号"></u--input>
+				<u-form-item label="学号" prop="dutyInfo.username" borderBottom ref="item1">
+					<u--input v-model="dutyInfo.username" border="none" placeholder="请输入学号"></u--input>
 				</u-form-item>
-				<u-form-item label="所属团队" prop="dutyInfo.team" borderBottom ref="item1" label-width="100px">
-					<u--input v-model="dutyInfo.team" border="none" placeholder="请输入所属团队"></u--input>
+				<u-form-item label="所属团队" prop="dutyInfo.teamName" borderBottom ref="item1" label-width="100px">
+					<u--input v-model="dutyInfo.teamName" border="none" placeholder="请输入所属团队"></u--input>
 				</u-form-item>
 			</u--form>
 		</view>
@@ -24,8 +24,8 @@
 			return {
 				dutyInfo: {
 					name: '',
-					id: '',
-					team: '',
+					username: '',
+					teamName: '',
 					image: '',
 				},
 			};

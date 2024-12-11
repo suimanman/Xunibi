@@ -18,8 +18,8 @@
 				</view>
 				<view class="section-content">
 					<text class="line">姓名：{{studentInfo.name}}</text>
-					<text class="line">学号：{{studentInfo.id}}</text>
-					<text class="line">所属团队：{{studentInfo.team}}</text>
+					<text class="line">学号：{{studentInfo.username}}</text>
+					<text class="line">所属团队：{{studentInfo.teamName}}</text>
 					<text class="line">
 						院系班：{{ studentInfo.department }}{{ studentInfo.department && studentInfo.major ? '/' : '' }}{{ studentInfo.major }}{{ (studentInfo.department || studentInfo.major) && studentInfo.clazz ? '/' : '' }}{{ studentInfo.clazz }}
 					</text>
@@ -84,11 +84,11 @@
 				},
 				studentInfo: {
 					name: '',
-					id: '',
+					username: '',
 					department: '',
 					major: '',
 					clazz: '',
-					team: ''
+					teamName: ''
 				},
 				achievementInfo: {
 					type: '',
@@ -101,6 +101,9 @@
 				}
 			}
 		},
+		created() {
+			this.loginHandle();
+		},
 		onLoad: function(option) {
 			const eventChannel = this.getOpenerEventChannel();
 			// 接收上级页面传递的数据
@@ -108,9 +111,25 @@
 				// console.log('接收到上级页面传递的数据：', data);
 				this.achievementInfo.type = data.data
 			});
-			console.log("类型：",this.achievementInfo.type)
+			console.log("类型：", this.achievementInfo.type)
 		},
 		methods: {
+			async loginHandle() {
+				// 调用 isLogin 并等待其返回结果
+				const loginResult = await isLogin();
+				// 获取用户数据
+				// 定义允许的字段
+				const allowedFields = Object.keys(this.studentInfo);
+
+				// 筛选后端返回的数据
+				this.studentInfo = Object.keys(loginResult.data.data)
+					.filter(key => allowedFields.includes(key)) // 筛选只保留前端需要的字段
+					.reduce((obj, key) => {
+						obj[key] = loginResult.data.data[key]; // 构建新对象
+						return obj;
+					}, {});
+				console.log(this.studentInfo);
+			},
 			goBack() {
 				uni.navigateBack();
 			},

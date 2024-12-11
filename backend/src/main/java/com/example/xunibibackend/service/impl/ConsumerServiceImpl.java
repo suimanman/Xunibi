@@ -168,7 +168,7 @@ public class ConsumerServiceImpl implements ConsumerService {
         // 扣除虚拟币
         team.setVirtualCoins(team.getVirtualCoins() - totalCoinConsumption);
         teamMapper.updateCoinById(teamId, team.getVirtualCoins());
-        log.info("----------------");
+//        log.info("----------------");
         //将租用记录添加到租用记录表中
         RentalRecord rentalRecord=new RentalRecord();
         rentalRecord.setRentalDate(LocalDate.now());
@@ -178,7 +178,7 @@ public class ConsumerServiceImpl implements ConsumerService {
         rentalRecord.setCoinSpent(totalCoinConsumption);
         rentalRecord.setRentalOrReturn(true);
         rentalRecordMapper.insert(rentalRecord);
-        log.info("----------------");
+//        log.info("----------------");
         //将虚拟币交易记录添加到表中
         coinTransactionMapper.insert(coinTransaction);
 
@@ -373,7 +373,7 @@ public class ConsumerServiceImpl implements ConsumerService {
                             .toList()
             );
         }
-        log.info("{}团队所租用的资源：{}",teamId,teamRents);
+//        log.info("{}团队所租用的资源：{}",teamId,teamRents);
         if(teamRents.isEmpty()) return MyResult.error("暂无租用");
         return MyResult.success(teamRents);
     }

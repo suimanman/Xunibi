@@ -32,5 +32,5 @@ public interface UserService {
 
     void deleteUserById(Integer userId);
 
-
+    MyResult editInfo(User user);
 }

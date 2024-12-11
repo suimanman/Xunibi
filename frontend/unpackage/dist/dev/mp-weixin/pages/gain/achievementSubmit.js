@@ -168,7 +168,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 58));
 var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 60));
 var _gain = __webpack_require__(/*! ../../api/gain */ 234);
 var _me = __webpack_require__(/*! ../../api/me */ 168);
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
@@ -182,11 +184,11 @@ var _default = {
       },
       studentInfo: {
         name: '',
-        id: '',
+        username: '',
         department: '',
         major: '',
         clazz: '',
-        team: ''
+        teamName: ''
       },
       achievementInfo: {
         type: '',
@@ -199,6 +201,9 @@ var _default = {
       }
     };
   },
+  created: function created() {
+    this.loginHandle();
+  },
   onLoad: function onLoad(option) {
     var _this = this;
     var eventChannel = this.getOpenerEventChannel();
@@ -210,6 +215,37 @@ var _default = {
     console.log("类型：", this.achievementInfo.type);
   },
   methods: {
+    loginHandle: function loginHandle() {
+      var _this2 = this;
+      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+        var loginResult, allowedFields;
+        return _regenerator.default.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return (0, _me.isLogin)();
+              case 2:
+                loginResult = _context.sent;
+                // 获取用户数据
+                // 定义允许的字段
+                allowedFields = Object.keys(_this2.studentInfo); // 筛选后端返回的数据
+                _this2.studentInfo = Object.keys(loginResult.data.data).filter(function (key) {
+                  return allowedFields.includes(key);
+                }) // 筛选只保留前端需要的字段
+                .reduce(function (obj, key) {
+                  obj[key] = loginResult.data.data[key]; // 构建新对象
+                  return obj;
+                }, {});
+                console.log(_this2.studentInfo);
+              case 6:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
     goBack: function goBack() {
       uni.navigateBack();
     },
@@ -232,58 +268,58 @@ var _default = {
       }));
     },
     editStudentInfo: function editStudentInfo() {
-      var _this2 = this;
+      var _this3 = this;
       // console.log("当前传递的数据：", this.studentInfo);
       uni.navigateTo({
         url: '/pages/edit/studentInfoEdit',
         success: function success(res) {
           // 通过 eventChannel 向被打开页面传送数据
           res.eventChannel.emit('updateStudentInfo', {
-            data: _this2.studentInfo
+            data: _this3.studentInfo
           });
 
           // 接收下级页面返回的数据
           res.eventChannel.on('acceptStudentInfo', function (data) {
             // console.log("接收到下级页面返回的数据：", data);
-            _this2.studentInfo = _objectSpread({}, data.data);
+            _this3.studentInfo = _objectSpread({}, data.data);
           });
         }
       });
     },
     editAchievement: function editAchievement() {
-      var _this3 = this;
+      var _this4 = this;
       uni.navigateTo({
         url: '/pages/edit/achievementEdit',
         success: function success(res) {
           // 通过 eventChannel 向被打开页面传送数据
           res.eventChannel.emit('updateAchievement', {
-            data: _this3.achievementInfo
+            data: _this4.achievementInfo
           });
 
           // 接收下级页面返回的数据
           res.eventChannel.on('acceptAchievement', function (data) {
             // console.log("接收到下级页面返回的数据：", data);
-            _this3.achievementInfo = _objectSpread({}, data.data);
-            console.log("接收的数据:", _this3.achievementInfo);
+            _this4.achievementInfo = _objectSpread({}, data.data);
+            console.log("接收的数据:", _this4.achievementInfo);
           });
         }
       });
     },
     editStatement: function editStatement() {
-      var _this4 = this;
+      var _this5 = this;
       uni.navigateTo({
         url: '/pages/edit/statementEdit',
         success: function success(res) {
           // 通过 eventChannel 向被打开页面传送数据
           res.eventChannel.emit('updateStatement', {
-            data: _this4.statementInfo
+            data: _this5.statementInfo
           });
 
           // 接收下级页面返回的数据
           res.eventChannel.on('acceptStatement', function (data) {
             // console.log("接收到下级页面返回的数据：", data);
-            _this4.statementInfo = _objectSpread({}, data.data);
-            console.log("接收的数据:", _this4.statementInfo);
+            _this5.statementInfo = _objectSpread({}, data.data);
+            console.log("接收的数据:", _this5.statementInfo);
           });
         }
       });

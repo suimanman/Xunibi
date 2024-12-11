@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
         // 对象互补
         ClassExamine.objectOverlap(user, getUser);
         user.setTeamId(getTeamId);
-        userMapper.update(user);
+        userMapper.updatePassword(user);
         return MyResult.success("修改成功！",user);
     }
 
@@ -136,4 +136,19 @@ public class UserServiceImpl implements UserService {
         userMapper.deleteUserById(userId);
 
     }
+
+    @Override
+    public MyResult editInfo(User user) {
+        String teamName= user.getTeamName();
+        Integer teamId=teamMapper.getByTeamName(teamName);
+        if(teamId==0){
+            return MyResult.error(HttpStatus.WRONG_PARAM,"团队名称填写错误！");
+        }else{
+            user.setTeamId(teamId);
+            userMapper.updateElseInfo(user);
+            return MyResult.success("保存成功！");
+        }
+
+    }
+
 }
