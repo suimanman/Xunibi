@@ -34,10 +34,6 @@ public class GainServiceImpl implements GainService {
     AchievementMapper achievementMapper;
     @Autowired
     DutyMapper dutyMapper;
-    @Override
-    public boolean checkIn(Integer id) {
-        return false;
-    }
 
     @Override
     public boolean rewardAchievement(Achievement achievement) {
@@ -119,13 +115,9 @@ public class GainServiceImpl implements GainService {
         return MyResult.success(achievementMapper.getList());
     }
 
-    @Override
-    public MyResult getAchievementList() {
-        return MyResult.success(achievementMapper.getList());
-    }
 
     @Override
-    public MyResult getAchievementListById(int teamId) {
+    public MyResult getAchievementListById(Integer teamId) {
         return MyResult.success(achievementMapper.getListById(teamId));
     }
 }

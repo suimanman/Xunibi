@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 @Service
 public interface GainService {
 
-    boolean checkIn(Integer id);
-
     boolean rewardAchievement(Achievement achievement);
 
     boolean rewardDuty(DutyRecord dutyRecord);
@@ -18,4 +16,6 @@ public interface GainService {
     MyResult submitAchievement(AchievementRequest achievementRequest);
 
     MyResult getAchievementList();
+
+    MyResult getAchievementListById(Integer id);
 }

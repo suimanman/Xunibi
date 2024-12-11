@@ -6,8 +6,12 @@ import com.example.xunibibackend.entity.SignInRecord;
 import com.example.xunibibackend.entity.dto.AchievementRequest;
 import com.example.xunibibackend.response.MyResult;
 import com.example.xunibibackend.service.GainService;
+import com.example.xunibibackend.service.impl.CheckInSchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/gain")
@@ -18,17 +22,8 @@ import org.springframework.web.bind.annotation.*;
 public class GainController {
     @Autowired
     private GainService gainService;
-
-    // a) 团队成员每日通过系统进行人脸识别打卡签到，获得定额虚拟币
-    @PostMapping("/check-in")
-    public MyResult checkIn(@RequestBody SignInRecord signInRecord) {
-        boolean success = gainService.checkIn(signInRecord.getId());
-        if (success) {
-            return MyResult.success("签到成功，虚拟币已发放");
-        } else {
-            return MyResult.error("签到失败");
-        }
-    }
+    @Autowired
+    private CheckInSchedulerService checkInSchedulerService;
 
     //成果提交待审核
     @PostMapping("/achievementSubmit")
@@ -67,5 +62,9 @@ public class GainController {
             return MyResult.error("发放失败");
         }
     }
-
+    @PostMapping("/init")
+    public ResponseEntity<String> initializeCheckIn() {
+        checkInSchedulerService.initializeCheckInData();
+        return ResponseEntity.ok("考勤数据初始化完成");
+    }
 }

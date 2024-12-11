@@ -2,6 +2,7 @@ package com.example.xunibibackend.controller;
 
 import com.example.xunibibackend.entity.dto.RentalRequest;
 import com.example.xunibibackend.entity.dto.ReturnRequest;
+import com.example.xunibibackend.response.MyResult;
 import com.example.xunibibackend.service.ConsumerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class ConsumerController {
 //        log.info("租用：{}",rentalRequest);
         boolean success = consumerService.rentEquipment(rentalRequest);
         if (success) {
-            return ResponseEntity.ok("Equipment rented successfully.");
+            return MyResult.success("租用成功！");
         } else {
             return MyResult.error("虚拟币不足，租用失败！");
         }
@@ -51,7 +52,7 @@ public class ConsumerController {
 //        log.info("归还中。。。");
         boolean success = consumerService.returnEquipment(returnRequest);
         if (success) {
-            return ResponseEntity.ok("Equipment returned successfully.");
+            return MyResult.success("归还成功！");
         } else {
             return MyResult.success("超时归还！双倍扣除虚拟币");
         }

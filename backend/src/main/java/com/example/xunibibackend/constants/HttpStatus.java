@@ -40,5 +40,6 @@ public interface HttpStatus {
     public static final int WARN=601;
 
 
+    int INTERNAL_SERVER_ERROR = 602;
 }
 

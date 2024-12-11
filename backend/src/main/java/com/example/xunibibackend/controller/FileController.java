@@ -2,10 +2,16 @@ package com.example.xunibibackend.controller;
 
 import com.example.xunibibackend.response.MyResult;
 import com.example.xunibibackend.constants.HttpStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +24,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/files")
+@Slf4j
 public class FileController {
 
     @Value("${file.upload-dir}")
@@ -42,10 +49,10 @@ public class FileController {
 
             // 生成文件下载链接
             String downloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path("/api/files/download/")
+                    .path("/files/download/")
                     .path(fileName)
                     .toUriString();
-
+            log.info("上传成功！文件链接：{}",downloadUri);
             return MyResult.success("文件上传成功！", downloadUri);
         } catch (IOException e) {
             return MyResult.error("文件上传失败： " + e.getMessage());
@@ -70,7 +77,7 @@ public class FileController {
 
                 // 生成文件下载链接
                 String downloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                        .path("/api/files/download/")
+                        .path("/files/download/")
                         .path(fileName)
                         .toUriString();
 
@@ -85,16 +92,32 @@ public class FileController {
 
     // 文件下载接口
     @GetMapping("/download/{fileName:.+}")
-    public MyResult downloadFile(@PathVariable String fileName) {
+    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {
         try {
-            // 从存储路径加载文件
+            // 构造文件路径
             Path filePath = Paths.get(uploadDir).resolve(fileName).normalize();
-            byte[] fileBytes = Files.readAllBytes(filePath);
 
-            // 将文件字节数组包装在 MyResult 中
-            return MyResult.success("文件下载成功！", fileBytes);
+            // 加载文件为资源
+            Resource resource = new UrlResource(filePath.toUri());
+            if (!resource.exists() || !resource.isReadable()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(null); // 文件不存在返回 404
+            }
+
+            // 推断文件类型
+            String contentType = Files.probeContentType(filePath);
+            if (contentType == null) {
+                contentType = "application/octet-stream"; // 默认类型
+            }
+
+            // 返回文件资源
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                    .body(resource);
         } catch (IOException e) {
-            return MyResult.error(HttpStatus.NOT_FOUND, "文件未找到: " + fileName);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null); // 异常返回 500
         }
     }
 }
