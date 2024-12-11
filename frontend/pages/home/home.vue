@@ -1,17 +1,17 @@
 <template>
 	<view class="home-page">
 		<!-- 公告栏/通知 -->
-		<u-notice-bar :text="notice" />
+		<u-notice-bar :text="formattedNotice" />
 
 		<!-- 欢迎消息与用户状态 -->
 		<view class="welcome-section">
 			<view class="info">
 				<text>团队虚拟币余额: {{ virtualCoins }}</text>
 			</view>
-			<view class="button-container">
+			<!-- <view class="button-container">
 				<u-icon name="checkmark-circle" size="30" color="#5677fc" @click="signIn"></u-icon>
-				<text class="sign-text">签到</text>
-			</view>
+				<text class="sign-text">全部交易记录</text>
+			</view> -->
 		</view>
 
 		<!-- 活动记录 -->
@@ -19,11 +19,12 @@
 		<view class="transaction-section">
 			<view class="transaction-header">
 				<u-icon name="level" size="20" color="#5677fc"></u-icon>
-				<text class="transaction-text">虚拟币交易记录</text>
+				<text class="transaction-text">本月虚拟币交易记录</text>
+				<text class="all" @click="getAll">全部</text>
 			</view>
 			<scroll-view class="transaction-list" scroll-y @scrolltolower="scrolltolower">
 				<u-list>
-					<u-list-item v-for="(item, index) in indexList" :key="index">
+					<u-list-item v-for="(item, index) in filteredList" :key="index">
 						<u-cell>
 							<view slot="title" class="transaction-content">
 								<view class="left-section">
@@ -58,10 +59,13 @@
 	export default {
 		data() {
 			return {
-				notice: '',
+				notice: [],
+				formattedNotice: "",
 				virtualCoins: '',
 				signInStatus: "未签到",
-				indexList: [],
+				indexList: [], // 原始记录数据
+				filteredList: [], // 筛选后的数据
+				filterDate: '' // 筛选日期
 			};
 		},
 		created() {
@@ -71,26 +75,30 @@
 				this.getRecords();
 			}
 		},
-		//下拉刷新
+		// 下拉刷新
 		onPullDownRefresh() {
-		    // 处理刷新逻辑，比如重新请求数据
 			this.getNotice();
-		    this.getCoin();
-		    this.getRecords();
-		
-		    // 模拟数据请求完成，调用 stopPullDownRefresh 停止刷新动画
-		    setTimeout(() => {
-		      uni.stopPullDownRefresh();
-		    }, 1000); // 1秒后停止刷新动画，可以根据实际情况调整时间
-		  },
+			this.getCoin();
+			this.getRecords();
+
+			setTimeout(() => {
+				uni.stopPullDownRefresh();
+			}, 1000);
+		},
 		methods: {
 			scrolltolower() {
 				this.loadmore();
 			},
+			getAll() {
+				uni.navigateTo({
+					url: '/pages/home/record',
+				});
+			},
 			async getNotice() {
 				try {
 					const result = await getNotice();
-					this.notice = result.data.msg;
+					this.notice = result.data.data;
+					this.formatNotices();
 				} catch (error) {
 					console.error('方法异常！', error);
 				}
@@ -106,22 +114,42 @@
 			async getRecords() {
 				try {
 					const result = await getRecords();
-					// 将数据映射到 indexList 格式
-					this.indexList = result.data.data.map(item => ({
-						description: item.description,
-						type: item.transactionType === '收入' ? '收入' : '支出', // 根据逻辑设置类型
-						amount: item.coinAmount,
-						date: item.transactionDate
-					}));
+					// 获取当前月份
+					const now = new Date();
+					const currentYear = now.getFullYear();
+					const currentMonth = now.getMonth(); // 注意：getMonth() 返回的是 0~11
+
+					// 将数据映射到 indexList 格式，并筛选出当前月份的数据
+					this.indexList = result.data.data
+						.map(item => ({
+							description: item.description,
+							type: item.transactionType === '收入' ? '收入' : '支出',
+							amount: item.coinAmount,
+							date: item.transactionDate
+						}))
+						.filter(item => {
+							const itemDate = new Date(item.date);
+							return (
+								itemDate.getFullYear() === currentYear &&
+								itemDate.getMonth() === currentMonth
+							);
+						})
+						.sort((a, b) => new Date(b.date) - new Date(a.date)); // 按日期倒序排序
+
+					this.filteredList = [...this.indexList]; // 默认展示当前月份的数据
 				} catch (error) {
 					console.error('方法异常！', error);
 				}
 			},
+			// 格式化通知数组
+			formatNotices() {
+				this.formattedNotice = this.notice.join("     "); // 使用多个空格分隔通知
+			}
 		}
 	};
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 	.home-page {
 		padding: 10px;
 	}
@@ -148,6 +176,10 @@
 		padding: 10px;
 	}
 
+	.filter-section {
+		margin: 10px 0;
+	}
+
 	.transaction-section {
 		margin-top: 20px;
 	}
@@ -167,9 +199,15 @@
 		margin-left: 8px;
 	}
 
+	.all {
+		font-size: 14px;
+		color: #333;
+		font-weight: bold;
+		margin-left: 140px;
+	}
+
 	.transaction-list {
 		max-height: 660px;
-		/* 根据需要调整高度 */
 		overflow: auto;
 	}
 
@@ -191,18 +229,14 @@
 		display: flex;
 		align-items: center;
 		margin-left: auto;
-		/* 将 right-section 推到右边 */
 	}
 
 	.amount {
 		font-size: 14px;
 		font-weight: bold;
 		display: flex;
-		/* 使用 flexbox 布局 */
 		width: 60px;
-		/* 固定宽度，可以根据需要调整 */
 		margin-left: 20px;
-		/* 控制 amount 和 date 之间的间距 */
 	}
 
 	.type {

@@ -23,5 +23,9 @@ public class DutyRecord {
 
     private Double coinAwarded;
 
+    private String image;
+
+    private String status;
+
     private String description;
 }

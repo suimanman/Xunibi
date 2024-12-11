@@ -1,5 +1,6 @@
 package com.example.xunibibackend.controller;
 
+import com.example.xunibibackend.entity.Notice;
 import com.example.xunibibackend.entity.VirtualCoinTransaction;
 import com.example.xunibibackend.response.MyResult;
 import com.example.xunibibackend.service.ManageService;
@@ -43,13 +44,12 @@ public class manageController {
      */
     @GetMapping("/notice")
     public MyResult getNotice() {
-        String notice = manageService.getNotice();
+        List<String> notice = manageService.getNotice();
 
         if (notice != null && !notice.isEmpty()) {
             log.info("通知公告：{}",notice);
             return MyResult.success(notice);
         } else {
-            log.info("通知公告：欢迎使用虚拟币交易系统");
             return MyResult.success("欢迎使用虚拟币交易系统！");
         }
     }

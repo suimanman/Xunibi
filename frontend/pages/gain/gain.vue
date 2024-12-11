@@ -1,21 +1,22 @@
 <template>
 	<view class="container">
 
+		<!-- <image class="img-b" src="https://zhoukaiwen.com/img/loginImg/3.png"></image> -->
 		<!-- <view class="search-bar">
 			<u-search placeholder="找应用" @input="onSearchInput" />
 		</view> -->
 
 		<u-swiper :list="list2" keyName="image" showTitle :autoplay="false" circular></u-swiper>
-
-		<text class="section-title">打卡</text>
+		
+		<text class="section-title">值日</text>
 		<!-- Section: 打卡 -->
 		<view class="section">
 			<u-grid col="4" :border="false" class="grid">
-				<u-grid-item @click="navigateTo('assistantHelper')" class="grid-item">
+				<!-- <u-grid-item @click="navigateTo('assistantHelper')" class="grid-item">
 					<image src="@/static/icon/签到.png" class="icon"></image>
 					<text class="icon-text">签到</text>
-				</u-grid-item>
-				<u-grid-item @click="navigateTo('scholarshipHelper')" class="grid-item">
+				</u-grid-item> -->
+				<u-grid-item @click="navigateToDuty" class="grid-item">
 					<image src="@/static/icon/值班.png" class="icon"></image>
 					<text class="icon-text">值班</text>
 				</u-grid-item>
@@ -64,14 +65,8 @@
 		data() {
 			return {
 				list2: [{
-					image: 'https://cdn.uviewui.com/uview/swiper/swiper2.png',
-					title: '昨夜星辰昨夜风，画楼西畔桂堂东',
-				}, {
-					image: 'https://cdn.uviewui.com/uview/swiper/swiper1.png',
-					title: '身无彩凤双飞翼，心有灵犀一点通'
-				}, {
-					image: 'https://cdn.uviewui.com/uview/swiper/swiper3.png',
-					title: '谁念西风独自凉，萧萧黄叶闭疏窗，沉思往事立残阳'
+					image: '/static/img/1.png',
+					title: '河北工业大学——众创空间',
 				}],
 			}
 		},
@@ -79,9 +74,14 @@
 			goBack() {
 				uni.navigateBack();
 			},
+			navigateToDuty() {
+				uni.navigateTo({
+					url: '/pages/gain/duty',
+				});
+			},
 			navigateToPaper() {
 				uni.navigateTo({
-					url:'/pages/gain/achievementSubmit',
+					url: '/pages/gain/achievementSubmit',
 					success: (res) => {
 						// 通过 eventChannel 向被打开页面传送数据
 						res.eventChannel.emit('submit', {
@@ -89,11 +89,11 @@
 						});
 					},
 				});
-				
+
 			},
 			navigateToPatent() {
 				uni.navigateTo({
-					url:'/pages/gain/achievementSubmit',
+					url: '/pages/gain/achievementSubmit',
 					success: (res) => {
 						// 通过 eventChannel 向被打开页面传送数据
 						res.eventChannel.emit('submit', {
@@ -101,11 +101,11 @@
 						});
 					},
 				});
-				
+
 			},
 			navigateToCompetition() {
 				uni.navigateTo({
-					url:'/pages/gain/achievementSubmit',
+					url: '/pages/gain/achievementSubmit',
 					success: (res) => {
 						// 通过 eventChannel 向被打开页面传送数据
 						res.eventChannel.emit('submit', {
@@ -113,11 +113,11 @@
 						});
 					},
 				});
-				
+
 			},
 			navigateToTrain() {
 				uni.navigateTo({
-					url:'/pages/gain/train',
+					url: '/pages/gain/train',
 					success: (res) => {
 						// 通过 eventChannel 向被打开页面传送数据
 						res.eventChannel.emit('submit', {
@@ -125,11 +125,11 @@
 						});
 					},
 				});
-				
+
 			},
 			navigateToMeeting() {
 				uni.navigateTo({
-					url:'/pages/gain/train',
+					url: '/pages/gain/train',
 					success: (res) => {
 						// 通过 eventChannel 向被打开页面传送数据
 						res.eventChannel.emit('submit', {
@@ -137,7 +137,7 @@
 						});
 					},
 				});
-				
+
 			},
 			onSearchInput(event) {
 				console.log(event.detail.value);
@@ -199,5 +199,13 @@
 	.icon-text {
 		font-size: 14px;
 		color: #333333;
+	}
+
+	.img-b {
+		position: absolute;
+		width: 50%;
+		bottom: 0;
+		left: -50rpx;
+		/* margin-bottom: -200rpx; */
 	}
 </style>

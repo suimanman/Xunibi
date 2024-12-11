@@ -2,11 +2,12 @@ package com.example.xunibibackend.controller;
 
 import com.example.xunibibackend.entity.Achievement;
 import com.example.xunibibackend.entity.DutyRecord;
-import com.example.xunibibackend.entity.SignInRecord;
 import com.example.xunibibackend.entity.dto.AchievementRequest;
+import com.example.xunibibackend.entity.dto.DutyRequest;
 import com.example.xunibibackend.response.MyResult;
 import com.example.xunibibackend.service.GainService;
 import com.example.xunibibackend.service.impl.CheckInSchedulerService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,12 +20,19 @@ import java.util.Map;
         origins = "http://localhost:8081", // 允许的前端地址
         allowCredentials = "true" // 允许携带凭证
 )
+@Slf4j
 public class GainController {
     @Autowired
     private GainService gainService;
     @Autowired
     private CheckInSchedulerService checkInSchedulerService;
 
+    //值日情况提交
+    @PostMapping("/dutySubmit")
+    public MyResult submitDuty(@RequestBody DutyRequest dutyRequest){
+        log.info("值班情况提交：{}",dutyRequest);
+        return gainService.submitDuty(dutyRequest);
+    }
     //成果提交待审核
     @PostMapping("/achievementSubmit")
     public MyResult submitAchievement(@RequestBody AchievementRequest achievementRequest){

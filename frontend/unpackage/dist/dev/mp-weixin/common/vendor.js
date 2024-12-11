@@ -351,6 +351,10 @@ var promiseInterceptor = {
     }
     return new Promise(function (resolve, reject) {
       res.then(function (res) {
+        if (!res) {
+          resolve(res);
+          return;
+        }
         if (res[0]) {
           reject(res[0]);
         } else {
@@ -780,8 +784,9 @@ function populateParameters(result) {
     appVersion: "1.0.0",
     appVersionCode: "100",
     appLanguage: getAppLanguage(hostLanguage),
-    uniCompileVersion: "4.29",
-    uniRuntimeVersion: "4.29",
+    uniCompileVersion: "4.36",
+    uniCompilerVersion: "4.36",
+    uniRuntimeVersion: "4.36",
     uniPlatform: undefined || "mp-weixin",
     deviceBrand: deviceBrand,
     deviceModel: model,
@@ -804,7 +809,8 @@ function populateParameters(result) {
     ua: undefined,
     hostPackageName: undefined,
     browserName: undefined,
-    browserVersion: undefined
+    browserVersion: undefined,
+    isUniAppX: false
   };
   Object.assign(result, parameters, extraParam);
 }
@@ -883,7 +889,11 @@ var getAppBaseInfo = {
       hostLanguage: hostLanguage,
       hostName: _hostName,
       hostSDKVersion: SDKVersion,
-      hostTheme: theme
+      hostTheme: theme,
+      isUniAppX: false,
+      uniPlatform: undefined || "mp-weixin",
+      uniCompileVersion: "4.36",
+      uniCompilerVersion: "4.36"
     }));
   }
 };
@@ -3395,7 +3405,7 @@ module.exports = _createClass, module.exports.__esModule = true, module.exports[
 __webpack_require__.r(__webpack_exports__);
 /* WEBPACK VAR INJECTION */(function(global) {/*!
  * Vue.js v2.6.11
- * (c) 2014-2023 Evan You
+ * (c) 2014-2024 Evan You
  * Released under the MIT License.
  */
 /*  */
@@ -3908,7 +3918,7 @@ var hasProto = '__proto__' in {};
 var inBrowser = typeof window !== 'undefined';
 var inWeex = typeof WXEnvironment !== 'undefined' && !!WXEnvironment.platform;
 var weexPlatform = inWeex && WXEnvironment.platform.toLowerCase();
-var UA = inBrowser && window.navigator.userAgent.toLowerCase();
+var UA = inBrowser && window.navigator && window.navigator.userAgent.toLowerCase();
 var isIE = UA && /msie|trident/.test(UA);
 var isIE9 = UA && UA.indexOf('msie 9.0') > 0;
 var isEdge = UA && UA.indexOf('edge/') > 0;
@@ -19236,9 +19246,54 @@ exports.default = _default;
 /* 165 */,
 /* 166 */,
 /* 167 */
-/*!*****************************************************************!*\
-  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/api/gain.js ***!
-  \*****************************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/utils/auth.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getToken = getToken;
+exports.getUserId = getUserId;
+exports.removeToken = removeToken;
+exports.setToken = setToken;
+exports.setUserId = setUserId;
+var TokenKey = 'cookie';
+function getToken() {
+  return uni.getStorageSync(TokenKey);
+}
+function setToken(token) {
+  return uni.setStorageSync(TokenKey, token);
+}
+function removeToken() {
+  return uni.removeStorageSync(TokenKey);
+}
+function setUserId(userId) {
+  return uni.setStorageSync("userId", userId);
+}
+function getUserId() {
+  return uni.getStorageSync("userId");
+}
+
+// export function isLogin() {
+// 	if (getToken() == "" || getToken() == "no_account") {
+// 		return false;
+// 	} else {
+// 		return true;
+// 	}
+// }
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+/* 168 */
+/*!***************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/api/me.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19249,21 +19304,77 @@ var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/inte
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.achievementAward = achievementAward;
-var _request = _interopRequireDefault(__webpack_require__(/*! @/utils/request */ 168));
-function achievementAward(description) {
+exports.editPassword = editPassword;
+exports.getUserInfo = getUserInfo;
+exports.isLogin = isLogin;
+exports.login = login;
+exports.logout = logout;
+exports.register = register;
+var _request = _interopRequireDefault(__webpack_require__(/*! @/utils/request */ 169));
+// 登录方法
+function login(userInfo) {
   return (0, _request.default)({
-    url: '/gain/achievementSubmit',
+    url: '/user/login',
+    header: {
+      isToken: false
+    },
+    method: 'post',
+    data: userInfo
+  });
+}
+
+// 注册方法
+function register(data) {
+  return (0, _request.default)({
+    url: '/user/register',
+    header: {
+      isToken: false
+    },
+    method: 'post',
+    data: data
+  });
+}
+//获取用户信息
+function getUserInfo() {
+  return (0, _request.default)({
+    url: '/user/getUserInfo',
     header: {
       isToken: true
     },
-    method: 'post',
-    data: description
+    method: 'get'
+  });
+}
+//验证是否登录
+function isLogin() {
+  return (0, _request.default)({
+    url: '/user/isLogin',
+    header: {
+      isToken: true
+    },
+    method: 'get'
+  });
+}
+// 退出方法
+function logout() {
+  return (0, _request.default)({
+    url: '/user/logout',
+    method: 'get'
+  });
+}
+//修改密码
+function editPassword(data) {
+  return (0, _request.default)({
+    url: '/user/editPassword',
+    method: 'put',
+    data: {
+      oldPassword: data.oldPassword,
+      newPassword: data.newPassword
+    }
   });
 }
 
 /***/ }),
-/* 168 */
+/* 169 */
 /*!**********************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/utils/request.js ***!
   \**********************************************************************/
@@ -19278,8 +19389,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _uAjax = _interopRequireDefault(__webpack_require__(/*! @/uni_modules/u-ajax */ 169));
-var _auth = __webpack_require__(/*! @/utils/auth */ 181);
+var _uAjax = _interopRequireDefault(__webpack_require__(/*! @/uni_modules/u-ajax */ 170));
+var _auth = __webpack_require__(/*! @/utils/auth */ 167);
 var _common = __webpack_require__(/*! @/utils/common */ 182);
 var _config = _interopRequireDefault(__webpack_require__(/*! @/config */ 183));
 var baseUrl = _config.default.baseURL;
@@ -19364,7 +19475,7 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 169 */
+/* 170 */
 /*!****************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/u-ajax/js_sdk/index.js ***!
   \****************************************************************************************/
@@ -19385,8 +19496,8 @@ Object.defineProperty(exports, "Fetcher", {
   }
 });
 exports.default = void 0;
-var _Ajax = _interopRequireDefault(__webpack_require__(/*! ./lib/core/Ajax */ 170));
-var _Fetcher = _interopRequireDefault(__webpack_require__(/*! ./lib/adapters/Fetcher */ 180));
+var _Ajax = _interopRequireDefault(__webpack_require__(/*! ./lib/core/Ajax */ 171));
+var _Fetcher = _interopRequireDefault(__webpack_require__(/*! ./lib/adapters/Fetcher */ 181));
 var ajax = (0, _Ajax.default)();
 ajax.create = function create(instanceConfig) {
   return (0, _Ajax.default)(instanceConfig);
@@ -19396,7 +19507,7 @@ var _default = ajax;
 exports.default = _default;
 
 /***/ }),
-/* 170 */
+/* 171 */
 /*!************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/u-ajax/js_sdk/lib/core/Ajax.js ***!
   \************************************************************************************************/
@@ -19416,13 +19527,13 @@ var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime
 var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 60));
 var _typeof2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/typeof */ 13));
-var _InterceptorManager = _interopRequireDefault(__webpack_require__(/*! ./InterceptorManager */ 171));
-var _buildURL = _interopRequireDefault(__webpack_require__(/*! ../helpers/buildURL */ 172));
-var _mergeConfig = _interopRequireDefault(__webpack_require__(/*! ../helpers/mergeConfig */ 174));
-var _dispatchRequest = _interopRequireDefault(__webpack_require__(/*! ./dispatchRequest */ 175));
-var _handleCancel = __webpack_require__(/*! ./handleCancel */ 179);
-var _defaults = _interopRequireWildcard(__webpack_require__(/*! ../defaults */ 177));
-var _utils = __webpack_require__(/*! ../utils */ 173);
+var _InterceptorManager = _interopRequireDefault(__webpack_require__(/*! ./InterceptorManager */ 172));
+var _buildURL = _interopRequireDefault(__webpack_require__(/*! ../helpers/buildURL */ 173));
+var _mergeConfig = _interopRequireDefault(__webpack_require__(/*! ../helpers/mergeConfig */ 175));
+var _dispatchRequest = _interopRequireDefault(__webpack_require__(/*! ./dispatchRequest */ 176));
+var _handleCancel = __webpack_require__(/*! ./handleCancel */ 180);
+var _defaults = _interopRequireWildcard(__webpack_require__(/*! ../defaults */ 178));
+var _utils = __webpack_require__(/*! ../utils */ 174);
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof3(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
@@ -19519,7 +19630,7 @@ function Ajax(defaultConfig) {
 }
 
 /***/ }),
-/* 171 */
+/* 172 */
 /*!**************************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/u-ajax/js_sdk/lib/core/InterceptorManager.js ***!
   \**************************************************************************************************************/
@@ -19581,7 +19692,7 @@ var InterceptorManager = /*#__PURE__*/function () {
 exports.default = InterceptorManager;
 
 /***/ }),
-/* 172 */
+/* 173 */
 /*!*******************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/u-ajax/js_sdk/lib/helpers/buildURL.js ***!
   \*******************************************************************************************************/
@@ -19597,7 +19708,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = buildURL;
 var _typeof2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/typeof */ 13));
-var _utils = __webpack_require__(/*! ../utils */ 173);
+var _utils = __webpack_require__(/*! ../utils */ 174);
 /**
  * 根据 baseURL 和 url 拼接
  * @param {string} baseURL 请求根地址
@@ -19671,7 +19782,7 @@ function buildURL() {
 }
 
 /***/ }),
-/* 173 */
+/* 174 */
 /*!********************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/u-ajax/js_sdk/lib/utils.js ***!
   \********************************************************************************************/
@@ -19773,7 +19884,7 @@ function assign(target, source) {
 }
 
 /***/ }),
-/* 174 */
+/* 175 */
 /*!**********************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/u-ajax/js_sdk/lib/helpers/mergeConfig.js ***!
   \**********************************************************************************************************/
@@ -19791,7 +19902,7 @@ exports.default = mergeConfig;
 var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 58));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 60));
 var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
-var _utils = __webpack_require__(/*! ../utils */ 173);
+var _utils = __webpack_require__(/*! ../utils */ 174);
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 /**
@@ -19880,7 +19991,7 @@ function _mergeConfig() {
 }
 
 /***/ }),
-/* 175 */
+/* 176 */
 /*!***********************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/u-ajax/js_sdk/lib/core/dispatchRequest.js ***!
   \***********************************************************************************************************/
@@ -19895,10 +20006,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = dispatchRequest;
-var _buildURL = _interopRequireDefault(__webpack_require__(/*! ../helpers/buildURL */ 172));
-var _isCallback = _interopRequireDefault(__webpack_require__(/*! ../helpers/isCallback */ 176));
-var _utils = __webpack_require__(/*! ../utils */ 173);
-var _defaults = __webpack_require__(/*! ../defaults */ 177);
+var _buildURL = _interopRequireDefault(__webpack_require__(/*! ../helpers/buildURL */ 173));
+var _isCallback = _interopRequireDefault(__webpack_require__(/*! ../helpers/isCallback */ 177));
+var _utils = __webpack_require__(/*! ../utils */ 174);
+var _defaults = __webpack_require__(/*! ../defaults */ 178);
 /** 派发请求方法 */
 function dispatchRequest(config) {
   // 拼接 url
@@ -19925,7 +20036,7 @@ function dispatchRequest(config) {
 }
 
 /***/ }),
-/* 176 */
+/* 177 */
 /*!*********************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/u-ajax/js_sdk/lib/helpers/isCallback.js ***!
   \*********************************************************************************************************/
@@ -19949,7 +20060,7 @@ function isCallback(field) {
 }
 
 /***/ }),
-/* 177 */
+/* 178 */
 /*!***********************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/u-ajax/js_sdk/lib/defaults.js ***!
   \***********************************************************************************************/
@@ -19964,8 +20075,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = exports.METHOD = exports.HEADER = void 0;
-var _http = _interopRequireDefault(__webpack_require__(/*! ./adapters/http */ 178));
-var _utils = __webpack_require__(/*! ./utils */ 173);
+var _http = _interopRequireDefault(__webpack_require__(/*! ./adapters/http */ 179));
+var _utils = __webpack_require__(/*! ./utils */ 174);
 var METHOD = ['get', 'post', 'put', 'delete', 'connect', 'head', 'options', 'trace'];
 exports.METHOD = METHOD;
 var HEADER = ['common'].concat(METHOD);
@@ -19985,7 +20096,7 @@ var _default = defaults;
 exports.default = _default;
 
 /***/ }),
-/* 178 */
+/* 179 */
 /*!****************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/u-ajax/js_sdk/lib/adapters/http.js ***!
   \****************************************************************************************************/
@@ -20021,7 +20132,7 @@ function adapter(config) {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 179 */
+/* 180 */
 /*!********************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/u-ajax/js_sdk/lib/core/handleCancel.js ***!
   \********************************************************************************************************/
@@ -20073,7 +20184,7 @@ function detachCancel(error) {
 }
 
 /***/ }),
-/* 180 */
+/* 181 */
 /*!*******************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/u-ajax/js_sdk/lib/adapters/Fetcher.js ***!
   \*******************************************************************************************************/
@@ -20174,51 +20285,6 @@ var Fetcher = /*#__PURE__*/function (_Symbol$toStringTag) {
   return Fetcher;
 }(Symbol.toStringTag);
 exports.default = Fetcher;
-
-/***/ }),
-/* 181 */
-/*!*******************************************************************!*\
-  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/utils/auth.js ***!
-  \*******************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.getToken = getToken;
-exports.getUserId = getUserId;
-exports.removeToken = removeToken;
-exports.setToken = setToken;
-exports.setUserId = setUserId;
-var TokenKey = 'cookie';
-function getToken() {
-  return uni.getStorageSync(TokenKey);
-}
-function setToken(token) {
-  return uni.setStorageSync(TokenKey, token);
-}
-function removeToken() {
-  return uni.removeStorageSync(TokenKey);
-}
-function setUserId(userId) {
-  return uni.setStorageSync("userId", userId);
-}
-function getUserId() {
-  return uni.getStorageSync("userId");
-}
-
-// export function isLogin() {
-// 	if (getToken() == "" || getToken() == "no_account") {
-// 		return false;
-// 	} else {
-// 		return true;
-// 	}
-// }
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
 /* 182 */
@@ -20420,90 +20486,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 184 */
-/*!***************************************************************!*\
-  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/api/me.js ***!
-  \***************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.editPassword = editPassword;
-exports.getUserInfo = getUserInfo;
-exports.isLogin = isLogin;
-exports.login = login;
-exports.logout = logout;
-exports.register = register;
-var _request = _interopRequireDefault(__webpack_require__(/*! @/utils/request */ 168));
-// 登录方法
-function login(userInfo) {
-  return (0, _request.default)({
-    url: '/user/login',
-    header: {
-      isToken: false
-    },
-    method: 'post',
-    data: userInfo
-  });
-}
-
-// 注册方法
-function register(data) {
-  return (0, _request.default)({
-    url: '/user/register',
-    header: {
-      isToken: false
-    },
-    method: 'post',
-    data: data
-  });
-}
-//获取用户信息
-function getUserInfo() {
-  return (0, _request.default)({
-    url: '/user/getUserInfo',
-    header: {
-      isToken: true
-    },
-    method: 'get'
-  });
-}
-//验证是否登录
-function isLogin() {
-  return (0, _request.default)({
-    url: '/user/isLogin',
-    header: {
-      isToken: true
-    },
-    method: 'get'
-  });
-}
-// 退出方法
-function logout() {
-  return (0, _request.default)({
-    url: '/user/logout',
-    method: 'get'
-  });
-}
-//修改密码
-function editPassword(data) {
-  return (0, _request.default)({
-    url: '/user/editPassword',
-    method: 'put',
-    data: {
-      oldPassword: data.oldPassword,
-      newPassword: data.newPassword
-    }
-  });
-}
-
-/***/ }),
+/* 184 */,
 /* 185 */,
 /* 186 */,
 /* 187 */,
@@ -20511,16 +20494,7 @@ function editPassword(data) {
 /* 189 */,
 /* 190 */,
 /* 191 */,
-/* 192 */,
-/* 193 */,
-/* 194 */,
-/* 195 */,
-/* 196 */,
-/* 197 */,
-/* 198 */,
-/* 199 */,
-/* 200 */,
-/* 201 */
+/* 192 */
 /*!*****************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/api/home.js ***!
   \*****************************************************************/
@@ -20537,7 +20511,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.getCoin = getCoin;
 exports.getNotice = getNotice;
 exports.getRecords = getRecords;
-var _request = _interopRequireDefault(__webpack_require__(/*! @/utils/request */ 168));
+var _request = _interopRequireDefault(__webpack_require__(/*! @/utils/request */ 169));
 //获取公告
 function getNotice() {
   return (0, _request.default)({
@@ -20567,6 +20541,15 @@ function getRecords() {
 }
 
 /***/ }),
+/* 193 */,
+/* 194 */,
+/* 195 */,
+/* 196 */,
+/* 197 */,
+/* 198 */,
+/* 199 */,
+/* 200 */,
+/* 201 */,
 /* 202 */,
 /* 203 */,
 /* 204 */,
@@ -20574,16 +20557,7 @@ function getRecords() {
 /* 206 */,
 /* 207 */,
 /* 208 */,
-/* 209 */,
-/* 210 */,
-/* 211 */,
-/* 212 */,
-/* 213 */,
-/* 214 */,
-/* 215 */,
-/* 216 */,
-/* 217 */,
-/* 218 */
+/* 209 */
 /*!*******************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/api/rental.js ***!
   \*******************************************************************/
@@ -20601,7 +20575,7 @@ exports.getRental = getRental;
 exports.getResources = getResources;
 exports.rent = rent;
 exports.returnDevice = returnDevice;
-var _request = _interopRequireDefault(__webpack_require__(/*! @/utils/request */ 168));
+var _request = _interopRequireDefault(__webpack_require__(/*! @/utils/request */ 169));
 // 获取资源列表
 function getResources(type) {
   return (0, _request.default)({
@@ -20640,6 +20614,15 @@ function returnDevice(returnRequest) {
 }
 
 /***/ }),
+/* 210 */,
+/* 211 */,
+/* 212 */,
+/* 213 */,
+/* 214 */,
+/* 215 */,
+/* 216 */,
+/* 217 */,
+/* 218 */,
 /* 219 */,
 /* 220 */,
 /* 221 */,
@@ -20655,7 +20638,45 @@ function returnDevice(returnRequest) {
 /* 231 */,
 /* 232 */,
 /* 233 */,
-/* 234 */,
+/* 234 */
+/*!*****************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/api/gain.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.achievementAward = achievementAward;
+exports.dutyAward = dutyAward;
+var _request = _interopRequireDefault(__webpack_require__(/*! @/utils/request */ 169));
+function achievementAward(description) {
+  return (0, _request.default)({
+    url: '/gain/achievementSubmit',
+    header: {
+      isToken: true
+    },
+    method: 'post',
+    data: description
+  });
+}
+function dutyAward(dutyInfo) {
+  return (0, _request.default)({
+    url: '/gain/dutySubmit',
+    header: {
+      isToken: true
+    },
+    method: 'post',
+    data: dutyInfo
+  });
+}
+
+/***/ }),
 /* 235 */,
 /* 236 */,
 /* 237 */,
@@ -20703,7 +20724,31 @@ function returnDevice(returnRequest) {
 /* 279 */,
 /* 280 */,
 /* 281 */,
-/* 282 */
+/* 282 */,
+/* 283 */,
+/* 284 */,
+/* 285 */,
+/* 286 */,
+/* 287 */,
+/* 288 */,
+/* 289 */,
+/* 290 */,
+/* 291 */,
+/* 292 */,
+/* 293 */,
+/* 294 */,
+/* 295 */,
+/* 296 */,
+/* 297 */,
+/* 298 */,
+/* 299 */,
+/* 300 */,
+/* 301 */,
+/* 302 */,
+/* 303 */,
+/* 304 */,
+/* 305 */,
+/* 306 */
 /*!*******************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-tabbar/props.js ***!
   \*******************************************************************************************************/
@@ -20765,14 +20810,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 283 */,
-/* 284 */,
-/* 285 */,
-/* 286 */,
-/* 287 */,
-/* 288 */,
-/* 289 */,
-/* 290 */
+/* 307 */,
+/* 308 */,
+/* 309 */,
+/* 310 */,
+/* 311 */,
+/* 312 */,
+/* 313 */,
+/* 314 */
 /*!************************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-tabbar-item/props.js ***!
   \************************************************************************************************************/
@@ -20824,279 +20869,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 291 */,
-/* 292 */,
-/* 293 */,
-/* 294 */,
-/* 295 */,
-/* 296 */,
-/* 297 */,
-/* 298 */,
-/* 299 */,
-/* 300 */,
-/* 301 */,
-/* 302 */,
-/* 303 */,
-/* 304 */,
-/* 305 */
-/*!***********************************************************************************************!*\
-  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/libs/mixin/button.js ***!
-  \***********************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _default = {
-  props: {
-    lang: String,
-    sessionFrom: String,
-    sendMessageTitle: String,
-    sendMessagePath: String,
-    sendMessageImg: String,
-    showMessageCard: Boolean,
-    appParameter: String,
-    formType: String,
-    openType: String
-  }
-};
-exports.default = _default;
-
-/***/ }),
-/* 306 */
-/*!*************************************************************************************************!*\
-  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/libs/mixin/openType.js ***!
-  \*************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _default = {
-  props: {
-    openType: String
-  },
-  methods: {
-    onGetUserInfo: function onGetUserInfo(event) {
-      this.$emit('getuserinfo', event.detail);
-    },
-    onContact: function onContact(event) {
-      this.$emit('contact', event.detail);
-    },
-    onGetPhoneNumber: function onGetPhoneNumber(event) {
-      this.$emit('getphonenumber', event.detail);
-    },
-    onError: function onError(event) {
-      this.$emit('error', event.detail);
-    },
-    onLaunchApp: function onLaunchApp(event) {
-      this.$emit('launchapp', event.detail);
-    },
-    onOpenSetting: function onOpenSetting(event) {
-      this.$emit('opensetting', event.detail);
-    }
-  }
-};
-exports.default = _default;
-
-/***/ }),
-/* 307 */
-/*!*******************************************************************************************************!*\
-  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-button/props.js ***!
-  \*******************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-/*
- * @Author       : LQ
- * @Description  :
- * @version      : 1.0
- * @Date         : 2021-08-16 10:04:04
- * @LastAuthor   : LQ
- * @lastTime     : 2021-08-16 10:04:24
- * @FilePath     : /u-view2.0/uview-ui/components/u-button/props.js
- */
-var _default = {
-  props: {
-    // 是否细边框
-    hairline: {
-      type: Boolean,
-      default: uni.$u.props.button.hairline
-    },
-    // 按钮的预置样式，info，primary，error，warning，success
-    type: {
-      type: String,
-      default: uni.$u.props.button.type
-    },
-    // 按钮尺寸，large，normal，small，mini
-    size: {
-      type: String,
-      default: uni.$u.props.button.size
-    },
-    // 按钮形状，circle（两边为半圆），square（带圆角）
-    shape: {
-      type: String,
-      default: uni.$u.props.button.shape
-    },
-    // 按钮是否镂空
-    plain: {
-      type: Boolean,
-      default: uni.$u.props.button.plain
-    },
-    // 是否禁止状态
-    disabled: {
-      type: Boolean,
-      default: uni.$u.props.button.disabled
-    },
-    // 是否加载中
-    loading: {
-      type: Boolean,
-      default: uni.$u.props.button.loading
-    },
-    // 加载中提示文字
-    loadingText: {
-      type: [String, Number],
-      default: uni.$u.props.button.loadingText
-    },
-    // 加载状态图标类型
-    loadingMode: {
-      type: String,
-      default: uni.$u.props.button.loadingMode
-    },
-    // 加载图标大小
-    loadingSize: {
-      type: [String, Number],
-      default: uni.$u.props.button.loadingSize
-    },
-    // 开放能力，具体请看uniapp稳定关于button组件部分说明
-    // https://uniapp.dcloud.io/component/button
-    openType: {
-      type: String,
-      default: uni.$u.props.button.openType
-    },
-    // 用于 <form> 组件，点击分别会触发 <form> 组件的 submit/reset 事件
-    // 取值为submit（提交表单），reset（重置表单）
-    formType: {
-      type: String,
-      default: uni.$u.props.button.formType
-    },
-    // 打开 APP 时，向 APP 传递的参数，open-type=launchApp时有效
-    // 只微信小程序、QQ小程序有效
-    appParameter: {
-      type: String,
-      default: uni.$u.props.button.appParameter
-    },
-    // 指定是否阻止本节点的祖先节点出现点击态，微信小程序有效
-    hoverStopPropagation: {
-      type: Boolean,
-      default: uni.$u.props.button.hoverStopPropagation
-    },
-    // 指定返回用户信息的语言，zh_CN 简体中文，zh_TW 繁体中文，en 英文。只微信小程序有效
-    lang: {
-      type: String,
-      default: uni.$u.props.button.lang
-    },
-    // 会话来源，open-type="contact"时有效。只微信小程序有效
-    sessionFrom: {
-      type: String,
-      default: uni.$u.props.button.sessionFrom
-    },
-    // 会话内消息卡片标题，open-type="contact"时有效
-    // 默认当前标题，只微信小程序有效
-    sendMessageTitle: {
-      type: String,
-      default: uni.$u.props.button.sendMessageTitle
-    },
-    // 会话内消息卡片点击跳转小程序路径，open-type="contact"时有效
-    // 默认当前分享路径，只微信小程序有效
-    sendMessagePath: {
-      type: String,
-      default: uni.$u.props.button.sendMessagePath
-    },
-    // 会话内消息卡片图片，open-type="contact"时有效
-    // 默认当前页面截图，只微信小程序有效
-    sendMessageImg: {
-      type: String,
-      default: uni.$u.props.button.sendMessageImg
-    },
-    // 是否显示会话内消息卡片，设置此参数为 true，用户进入客服会话会在右下角显示"可能要发送的小程序"提示，
-    // 用户点击后可以快速发送小程序消息，open-type="contact"时有效
-    showMessageCard: {
-      type: Boolean,
-      default: uni.$u.props.button.showMessageCard
-    },
-    // 额外传参参数，用于小程序的data-xxx属性，通过target.dataset.name获取
-    dataName: {
-      type: String,
-      default: uni.$u.props.button.dataName
-    },
-    // 节流，一定时间内只能触发一次
-    throttleTime: {
-      type: [String, Number],
-      default: uni.$u.props.button.throttleTime
-    },
-    // 按住后多久出现点击态，单位毫秒
-    hoverStartTime: {
-      type: [String, Number],
-      default: uni.$u.props.button.hoverStartTime
-    },
-    // 手指松开后点击态保留时间，单位毫秒
-    hoverStayTime: {
-      type: [String, Number],
-      default: uni.$u.props.button.hoverStayTime
-    },
-    // 按钮文字，之所以通过props传入，是因为slot传入的话
-    // nvue中无法控制文字的样式
-    text: {
-      type: [String, Number],
-      default: uni.$u.props.button.text
-    },
-    // 按钮图标
-    icon: {
-      type: String,
-      default: uni.$u.props.button.icon
-    },
-    // 按钮图标
-    iconColor: {
-      type: String,
-      default: uni.$u.props.button.icon
-    },
-    // 按钮颜色，支持传入linear-gradient渐变色
-    color: {
-      type: String,
-      default: uni.$u.props.button.color
-    }
-  }
-};
-exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
-
-/***/ }),
-/* 308 */,
-/* 309 */,
-/* 310 */,
-/* 311 */,
-/* 312 */,
-/* 313 */,
-/* 314 */,
-/* 315 */
+/* 315 */,
+/* 316 */,
+/* 317 */,
+/* 318 */,
+/* 319 */,
+/* 320 */,
+/* 321 */,
+/* 322 */
 /*!***********************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-cell-group/props.js ***!
   \***********************************************************************************************************/
@@ -21128,14 +20908,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 316 */,
-/* 317 */,
-/* 318 */,
-/* 319 */,
-/* 320 */,
-/* 321 */,
-/* 322 */,
-/* 323 */
+/* 323 */,
+/* 324 */,
+/* 325 */,
+/* 326 */,
+/* 327 */,
+/* 328 */,
+/* 329 */,
+/* 330 */
 /*!*****************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-cell/props.js ***!
   \*****************************************************************************************************/
@@ -21263,14 +21043,14 @@ exports.default = _default2;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 324 */,
-/* 325 */,
-/* 326 */,
-/* 327 */,
-/* 328 */,
-/* 329 */,
-/* 330 */,
-/* 331 */
+/* 331 */,
+/* 332 */,
+/* 333 */,
+/* 334 */,
+/* 335 */,
+/* 336 */,
+/* 337 */,
+/* 338 */
 /*!***********************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-notice-bar/props.js ***!
   \***********************************************************************************************************/
@@ -21358,14 +21138,83 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 332 */,
-/* 333 */,
-/* 334 */,
-/* 335 */,
-/* 336 */,
-/* 337 */,
-/* 338 */,
-/* 339 */
+/* 339 */,
+/* 340 */,
+/* 341 */,
+/* 342 */,
+/* 343 */,
+/* 344 */,
+/* 345 */,
+/* 346 */
+/*!********************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-divider/props.js ***!
+  \********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  props: {
+    // 是否虚线
+    dashed: {
+      type: Boolean,
+      default: uni.$u.props.divider.dashed
+    },
+    // 是否细线
+    hairline: {
+      type: Boolean,
+      default: uni.$u.props.divider.hairline
+    },
+    // 是否以点替代文字，优先于text字段起作用
+    dot: {
+      type: Boolean,
+      default: uni.$u.props.divider.dot
+    },
+    // 内容文本的位置，left-左边，center-中间，right-右边
+    textPosition: {
+      type: String,
+      default: uni.$u.props.divider.textPosition
+    },
+    // 文本内容
+    text: {
+      type: [String, Number],
+      default: uni.$u.props.divider.text
+    },
+    // 文本大小
+    textSize: {
+      type: [String, Number],
+      default: uni.$u.props.divider.textSize
+    },
+    // 文本颜色
+    textColor: {
+      type: String,
+      default: uni.$u.props.divider.textColor
+    },
+    // 线条颜色
+    lineColor: {
+      type: String,
+      default: uni.$u.props.divider.lineColor
+    }
+  }
+};
+exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+/* 347 */,
+/* 348 */,
+/* 349 */,
+/* 350 */,
+/* 351 */,
+/* 352 */,
+/* 353 */,
+/* 354 */
 /*!*****************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-icon/icons.js ***!
   \*****************************************************************************************************/
@@ -21596,7 +21445,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 340 */
+/* 355 */
 /*!*****************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-icon/props.js ***!
   \*****************************************************************************************************/
@@ -21703,83 +21552,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 341 */,
-/* 342 */,
-/* 343 */,
-/* 344 */,
-/* 345 */,
-/* 346 */,
-/* 347 */,
-/* 348 */
-/*!********************************************************************************************************!*\
-  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-divider/props.js ***!
-  \********************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _default = {
-  props: {
-    // 是否虚线
-    dashed: {
-      type: Boolean,
-      default: uni.$u.props.divider.dashed
-    },
-    // 是否细线
-    hairline: {
-      type: Boolean,
-      default: uni.$u.props.divider.hairline
-    },
-    // 是否以点替代文字，优先于text字段起作用
-    dot: {
-      type: Boolean,
-      default: uni.$u.props.divider.dot
-    },
-    // 内容文本的位置，left-左边，center-中间，right-右边
-    textPosition: {
-      type: String,
-      default: uni.$u.props.divider.textPosition
-    },
-    // 文本内容
-    text: {
-      type: [String, Number],
-      default: uni.$u.props.divider.text
-    },
-    // 文本大小
-    textSize: {
-      type: [String, Number],
-      default: uni.$u.props.divider.textSize
-    },
-    // 文本颜色
-    textColor: {
-      type: String,
-      default: uni.$u.props.divider.textColor
-    },
-    // 线条颜色
-    lineColor: {
-      type: String,
-      default: uni.$u.props.divider.lineColor
-    }
-  }
-};
-exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
-
-/***/ }),
-/* 349 */,
-/* 350 */,
-/* 351 */,
-/* 352 */,
-/* 353 */,
-/* 354 */,
-/* 355 */,
-/* 356 */
+/* 356 */,
+/* 357 */,
+/* 358 */,
+/* 359 */,
+/* 360 */,
+/* 361 */,
+/* 362 */,
+/* 363 */
 /*!*****************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-list/props.js ***!
   \*****************************************************************************************************/
@@ -21872,14 +21652,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 357 */,
-/* 358 */,
-/* 359 */,
-/* 360 */,
-/* 361 */,
-/* 362 */,
-/* 363 */,
-/* 364 */
+/* 364 */,
+/* 365 */,
+/* 366 */,
+/* 367 */,
+/* 368 */,
+/* 369 */,
+/* 370 */,
+/* 371 */
 /*!**********************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-list-item/props.js ***!
   \**********************************************************************************************************/
@@ -21906,14 +21686,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 365 */,
-/* 366 */,
-/* 367 */,
-/* 368 */,
-/* 369 */,
-/* 370 */,
-/* 371 */,
-/* 372 */
+/* 372 */,
+/* 373 */,
+/* 374 */,
+/* 375 */,
+/* 376 */,
+/* 377 */,
+/* 378 */,
+/* 379 */
 /*!*******************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-swiper/props.js ***!
   \*******************************************************************************************************/
@@ -22056,14 +21836,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 373 */,
-/* 374 */,
-/* 375 */,
-/* 376 */,
-/* 377 */,
-/* 378 */,
-/* 379 */,
-/* 380 */
+/* 380 */,
+/* 381 */,
+/* 382 */,
+/* 383 */,
+/* 384 */,
+/* 385 */,
+/* 386 */,
+/* 387 */
 /*!*****************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-grid/props.js ***!
   \*****************************************************************************************************/
@@ -22100,14 +21880,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 381 */,
-/* 382 */,
-/* 383 */,
-/* 384 */,
-/* 385 */,
-/* 386 */,
-/* 387 */,
-/* 388 */
+/* 388 */,
+/* 389 */,
+/* 390 */,
+/* 391 */,
+/* 392 */,
+/* 393 */,
+/* 394 */,
+/* 395 */
 /*!**********************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-grid-item/props.js ***!
   \**********************************************************************************************************/
@@ -22139,14 +21919,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 389 */,
-/* 390 */,
-/* 391 */,
-/* 392 */,
-/* 393 */,
-/* 394 */,
-/* 395 */,
-/* 396 */
+/* 396 */,
+/* 397 */,
+/* 398 */,
+/* 399 */,
+/* 400 */,
+/* 401 */,
+/* 402 */,
+/* 403 */
 /*!*****************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-tabs/props.js ***!
   \*****************************************************************************************************/
@@ -22228,14 +22008,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 397 */,
-/* 398 */,
-/* 399 */,
-/* 400 */,
-/* 401 */,
-/* 402 */,
-/* 403 */,
-/* 404 */
+/* 404 */,
+/* 405 */,
+/* 406 */,
+/* 407 */,
+/* 408 */,
+/* 409 */,
+/* 410 */,
+/* 411 */
 /*!******************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-image/props.js ***!
   \******************************************************************************************************/
@@ -22337,14 +22117,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 405 */,
-/* 406 */,
-/* 407 */,
-/* 408 */,
-/* 409 */,
-/* 410 */,
-/* 411 */,
-/* 412 */
+/* 412 */,
+/* 413 */,
+/* 414 */,
+/* 415 */,
+/* 416 */,
+/* 417 */,
+/* 418 */,
+/* 419 */
 /*!***********************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-number-box/props.js ***!
   \***********************************************************************************************************/
@@ -22471,14 +22251,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 413 */,
-/* 414 */,
-/* 415 */,
-/* 416 */,
-/* 417 */,
-/* 418 */,
-/* 419 */,
-/* 420 */
+/* 420 */,
+/* 421 */,
+/* 422 */,
+/* 423 */,
+/* 424 */,
+/* 425 */,
+/* 426 */,
+/* 427 */
 /*!*****************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-form/props.js ***!
   \*****************************************************************************************************/
@@ -22541,7 +22321,7 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 421 */
+/* 428 */
 /*!*******************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/libs/util/async-validator.js ***!
   \*******************************************************************************************************/
@@ -23722,10 +23502,10 @@ Schema.warning = warning;
 Schema.messages = messages;
 var _default = Schema; // # sourceMappingURL=index.js.map
 exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../../../../../Applications/HBuilderX.app/Contents/HBuilderX/plugins/uniapp-cli/node_modules/node-libs-browser/mock/process.js */ 422)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../../../../../Applications/HBuilderX.app/Contents/HBuilderX/plugins/uniapp-cli/node_modules/node-libs-browser/mock/process.js */ 429)))
 
 /***/ }),
-/* 422 */
+/* 429 */
 /*!********************************************************!*\
   !*** ./node_modules/node-libs-browser/mock/process.js ***!
   \********************************************************/
@@ -23756,7 +23536,7 @@ exports.binding = function (name) {
     var path;
     exports.cwd = function () { return cwd };
     exports.chdir = function (dir) {
-        if (!path) path = __webpack_require__(/*! path */ 423);
+        if (!path) path = __webpack_require__(/*! path */ 430);
         cwd = path.resolve(dir, cwd);
     };
 })();
@@ -23769,7 +23549,7 @@ exports.features = {};
 
 
 /***/ }),
-/* 423 */
+/* 430 */
 /*!***********************************************!*\
   !*** ./node_modules/path-browserify/index.js ***!
   \***********************************************/
@@ -24079,15 +23859,15 @@ var substr = 'ab'.substr(-1) === 'b'
     }
 ;
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../node-libs-browser/mock/process.js */ 422)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../node-libs-browser/mock/process.js */ 429)))
 
 /***/ }),
-/* 424 */,
-/* 425 */,
-/* 426 */,
-/* 427 */,
-/* 428 */,
-/* 429 */
+/* 431 */,
+/* 432 */,
+/* 433 */,
+/* 434 */,
+/* 435 */,
+/* 436 */
 /*!**********************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-form-item/props.js ***!
   \**********************************************************************************************************/
@@ -24153,14 +23933,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 430 */,
-/* 431 */,
-/* 432 */,
-/* 433 */,
-/* 434 */,
-/* 435 */,
-/* 436 */,
-/* 437 */
+/* 437 */,
+/* 438 */,
+/* 439 */,
+/* 440 */,
+/* 441 */,
+/* 442 */,
+/* 443 */,
+/* 444 */
 /*!******************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-input/props.js ***!
   \******************************************************************************************************/
@@ -24365,13 +24145,6 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 438 */,
-/* 439 */,
-/* 440 */,
-/* 441 */,
-/* 442 */,
-/* 443 */,
-/* 444 */,
 /* 445 */,
 /* 446 */,
 /* 447 */,
@@ -24382,7 +24155,279 @@ exports.default = _default;
 /* 452 */,
 /* 453 */,
 /* 454 */,
-/* 455 */
+/* 455 */,
+/* 456 */,
+/* 457 */,
+/* 458 */,
+/* 459 */
+/*!***********************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/libs/mixin/button.js ***!
+  \***********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  props: {
+    lang: String,
+    sessionFrom: String,
+    sendMessageTitle: String,
+    sendMessagePath: String,
+    sendMessageImg: String,
+    showMessageCard: Boolean,
+    appParameter: String,
+    formType: String,
+    openType: String
+  }
+};
+exports.default = _default;
+
+/***/ }),
+/* 460 */
+/*!*************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/libs/mixin/openType.js ***!
+  \*************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  props: {
+    openType: String
+  },
+  methods: {
+    onGetUserInfo: function onGetUserInfo(event) {
+      this.$emit('getuserinfo', event.detail);
+    },
+    onContact: function onContact(event) {
+      this.$emit('contact', event.detail);
+    },
+    onGetPhoneNumber: function onGetPhoneNumber(event) {
+      this.$emit('getphonenumber', event.detail);
+    },
+    onError: function onError(event) {
+      this.$emit('error', event.detail);
+    },
+    onLaunchApp: function onLaunchApp(event) {
+      this.$emit('launchapp', event.detail);
+    },
+    onOpenSetting: function onOpenSetting(event) {
+      this.$emit('opensetting', event.detail);
+    }
+  }
+};
+exports.default = _default;
+
+/***/ }),
+/* 461 */
+/*!*******************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-button/props.js ***!
+  \*******************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+/*
+ * @Author       : LQ
+ * @Description  :
+ * @version      : 1.0
+ * @Date         : 2021-08-16 10:04:04
+ * @LastAuthor   : LQ
+ * @lastTime     : 2021-08-16 10:04:24
+ * @FilePath     : /u-view2.0/uview-ui/components/u-button/props.js
+ */
+var _default = {
+  props: {
+    // 是否细边框
+    hairline: {
+      type: Boolean,
+      default: uni.$u.props.button.hairline
+    },
+    // 按钮的预置样式，info，primary，error，warning，success
+    type: {
+      type: String,
+      default: uni.$u.props.button.type
+    },
+    // 按钮尺寸，large，normal，small，mini
+    size: {
+      type: String,
+      default: uni.$u.props.button.size
+    },
+    // 按钮形状，circle（两边为半圆），square（带圆角）
+    shape: {
+      type: String,
+      default: uni.$u.props.button.shape
+    },
+    // 按钮是否镂空
+    plain: {
+      type: Boolean,
+      default: uni.$u.props.button.plain
+    },
+    // 是否禁止状态
+    disabled: {
+      type: Boolean,
+      default: uni.$u.props.button.disabled
+    },
+    // 是否加载中
+    loading: {
+      type: Boolean,
+      default: uni.$u.props.button.loading
+    },
+    // 加载中提示文字
+    loadingText: {
+      type: [String, Number],
+      default: uni.$u.props.button.loadingText
+    },
+    // 加载状态图标类型
+    loadingMode: {
+      type: String,
+      default: uni.$u.props.button.loadingMode
+    },
+    // 加载图标大小
+    loadingSize: {
+      type: [String, Number],
+      default: uni.$u.props.button.loadingSize
+    },
+    // 开放能力，具体请看uniapp稳定关于button组件部分说明
+    // https://uniapp.dcloud.io/component/button
+    openType: {
+      type: String,
+      default: uni.$u.props.button.openType
+    },
+    // 用于 <form> 组件，点击分别会触发 <form> 组件的 submit/reset 事件
+    // 取值为submit（提交表单），reset（重置表单）
+    formType: {
+      type: String,
+      default: uni.$u.props.button.formType
+    },
+    // 打开 APP 时，向 APP 传递的参数，open-type=launchApp时有效
+    // 只微信小程序、QQ小程序有效
+    appParameter: {
+      type: String,
+      default: uni.$u.props.button.appParameter
+    },
+    // 指定是否阻止本节点的祖先节点出现点击态，微信小程序有效
+    hoverStopPropagation: {
+      type: Boolean,
+      default: uni.$u.props.button.hoverStopPropagation
+    },
+    // 指定返回用户信息的语言，zh_CN 简体中文，zh_TW 繁体中文，en 英文。只微信小程序有效
+    lang: {
+      type: String,
+      default: uni.$u.props.button.lang
+    },
+    // 会话来源，open-type="contact"时有效。只微信小程序有效
+    sessionFrom: {
+      type: String,
+      default: uni.$u.props.button.sessionFrom
+    },
+    // 会话内消息卡片标题，open-type="contact"时有效
+    // 默认当前标题，只微信小程序有效
+    sendMessageTitle: {
+      type: String,
+      default: uni.$u.props.button.sendMessageTitle
+    },
+    // 会话内消息卡片点击跳转小程序路径，open-type="contact"时有效
+    // 默认当前分享路径，只微信小程序有效
+    sendMessagePath: {
+      type: String,
+      default: uni.$u.props.button.sendMessagePath
+    },
+    // 会话内消息卡片图片，open-type="contact"时有效
+    // 默认当前页面截图，只微信小程序有效
+    sendMessageImg: {
+      type: String,
+      default: uni.$u.props.button.sendMessageImg
+    },
+    // 是否显示会话内消息卡片，设置此参数为 true，用户进入客服会话会在右下角显示"可能要发送的小程序"提示，
+    // 用户点击后可以快速发送小程序消息，open-type="contact"时有效
+    showMessageCard: {
+      type: Boolean,
+      default: uni.$u.props.button.showMessageCard
+    },
+    // 额外传参参数，用于小程序的data-xxx属性，通过target.dataset.name获取
+    dataName: {
+      type: String,
+      default: uni.$u.props.button.dataName
+    },
+    // 节流，一定时间内只能触发一次
+    throttleTime: {
+      type: [String, Number],
+      default: uni.$u.props.button.throttleTime
+    },
+    // 按住后多久出现点击态，单位毫秒
+    hoverStartTime: {
+      type: [String, Number],
+      default: uni.$u.props.button.hoverStartTime
+    },
+    // 手指松开后点击态保留时间，单位毫秒
+    hoverStayTime: {
+      type: [String, Number],
+      default: uni.$u.props.button.hoverStayTime
+    },
+    // 按钮文字，之所以通过props传入，是因为slot传入的话
+    // nvue中无法控制文字的样式
+    text: {
+      type: [String, Number],
+      default: uni.$u.props.button.text
+    },
+    // 按钮图标
+    icon: {
+      type: String,
+      default: uni.$u.props.button.icon
+    },
+    // 按钮图标
+    iconColor: {
+      type: String,
+      default: uni.$u.props.button.icon
+    },
+    // 按钮颜色，支持传入linear-gradient渐变色
+    color: {
+      type: String,
+      default: uni.$u.props.button.color
+    }
+  }
+};
+exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+/* 462 */,
+/* 463 */,
+/* 464 */,
+/* 465 */,
+/* 466 */,
+/* 467 */,
+/* 468 */,
+/* 469 */,
+/* 470 */,
+/* 471 */,
+/* 472 */,
+/* 473 */,
+/* 474 */,
+/* 475 */,
+/* 476 */,
+/* 477 */,
+/* 478 */,
+/* 479 */
 /*!****************************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-datetime-picker/props.js ***!
   \****************************************************************************************************************/
@@ -24516,7 +24561,7 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 456 */
+/* 480 */
 /*!*********************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/libs/util/dayjs.js ***!
   \*********************************************************************************************/
@@ -24828,14 +24873,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;var _typeof = 
 });
 
 /***/ }),
-/* 457 */,
-/* 458 */,
-/* 459 */,
-/* 460 */,
-/* 461 */,
-/* 462 */,
-/* 463 */,
-/* 464 */
+/* 481 */,
+/* 482 */,
+/* 483 */,
+/* 484 */,
+/* 485 */,
+/* 486 */,
+/* 487 */,
+/* 488 */
 /*!*********************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-textarea/props.js ***!
   \*********************************************************************************************************/
@@ -24972,12 +25017,332 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 465 */,
-/* 466 */,
-/* 467 */,
-/* 468 */,
-/* 469 */,
-/* 470 */
+/* 489 */,
+/* 490 */,
+/* 491 */,
+/* 492 */,
+/* 493 */,
+/* 494 */
+/*!*******************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-upload/utils.js ***!
+  \*******************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni, wx) {
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.chooseFile = chooseFile;
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function pickExclude(obj, keys) {
+  // 某些情况下，type可能会为
+  if (!['[object Object]', '[object File]'].includes(Object.prototype.toString.call(obj))) {
+    return {};
+  }
+  return Object.keys(obj).reduce(function (prev, key) {
+    if (!keys.includes(key)) {
+      prev[key] = obj[key];
+    }
+    return prev;
+  }, {});
+}
+function formatImage(res) {
+  return res.tempFiles.map(function (item) {
+    return _objectSpread(_objectSpread({}, pickExclude(item, ['path'])), {}, {
+      type: 'image',
+      url: item.path,
+      thumb: item.path,
+      size: item.size
+    });
+  });
+}
+function formatVideo(res) {
+  return [_objectSpread(_objectSpread({}, pickExclude(res, ['tempFilePath', 'thumbTempFilePath', 'errMsg'])), {}, {
+    type: 'video',
+    url: res.tempFilePath,
+    thumb: res.thumbTempFilePath,
+    size: res.size
+  })];
+}
+function formatMedia(res) {
+  return res.tempFiles.map(function (item) {
+    return _objectSpread(_objectSpread({}, pickExclude(item, ['fileType', 'thumbTempFilePath', 'tempFilePath'])), {}, {
+      type: res.type,
+      url: item.tempFilePath,
+      thumb: res.type === 'video' ? item.thumbTempFilePath : item.tempFilePath,
+      size: item.size
+    });
+  });
+}
+function formatFile(res) {
+  return res.tempFiles.map(function (item) {
+    return _objectSpread(_objectSpread({}, pickExclude(item, ['path'])), {}, {
+      url: item.path,
+      size: item.size
+    });
+  });
+}
+function chooseFile(_ref) {
+  var accept = _ref.accept,
+    multiple = _ref.multiple,
+    capture = _ref.capture,
+    compressed = _ref.compressed,
+    maxDuration = _ref.maxDuration,
+    sizeType = _ref.sizeType,
+    camera = _ref.camera,
+    maxCount = _ref.maxCount;
+  return new Promise(function (resolve, reject) {
+    switch (accept) {
+      case 'image':
+        uni.chooseImage({
+          count: multiple ? Math.min(maxCount, 9) : 1,
+          sourceType: capture,
+          sizeType: sizeType,
+          success: function success(res) {
+            return resolve(formatImage(res));
+          },
+          fail: reject
+        });
+        break;
+
+      // 只有微信小程序才支持chooseMedia接口
+      case 'media':
+        wx.chooseMedia({
+          count: multiple ? Math.min(maxCount, 9) : 1,
+          sourceType: capture,
+          maxDuration: maxDuration,
+          sizeType: sizeType,
+          camera: camera,
+          success: function success(res) {
+            return resolve(formatMedia(res));
+          },
+          fail: reject
+        });
+        break;
+      case 'video':
+        uni.chooseVideo({
+          sourceType: capture,
+          compressed: compressed,
+          maxDuration: maxDuration,
+          camera: camera,
+          success: function success(res) {
+            return resolve(formatVideo(res));
+          },
+          fail: reject
+        });
+        break;
+
+      // 只有微信小程序才支持chooseMessageFile接口
+      case 'file':
+        wx.chooseMessageFile({
+          count: multiple ? maxCount : 1,
+          type: accept,
+          success: function success(res) {
+            return resolve(formatFile(res));
+          },
+          fail: reject
+        });
+        break;
+      default:
+        // 此为保底选项，在accept不为上面任意一项的时候选取全部文件
+
+        wx.chooseMessageFile({
+          count: multiple ? maxCount : 1,
+          type: 'all',
+          success: function success(res) {
+            return resolve(formatFile(res));
+          },
+          fail: reject
+        });
+    }
+  });
+}
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"], __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/wx.js */ 1)["default"]))
+
+/***/ }),
+/* 495 */
+/*!*******************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-upload/mixin.js ***!
+  \*******************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  watch: {
+    // 监听accept的变化，判断是否符合个平台要求
+    // 只有微信小程序才支持选择媒体，文件类型，所以这里做一个判断提示
+    accept: {
+      immediate: true,
+      handler: function handler(val) {}
+    }
+  }
+};
+exports.default = _default;
+
+/***/ }),
+/* 496 */
+/*!*******************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-upload/props.js ***!
+  \*******************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  props: {
+    // 接受的文件类型, 可选值为all media image file video
+    accept: {
+      type: String,
+      default: uni.$u.props.upload.accept
+    },
+    // 	图片或视频拾取模式，当accept为image类型时设置capture可选额外camera可以直接调起摄像头
+    capture: {
+      type: [String, Array],
+      default: uni.$u.props.upload.capture
+    },
+    // 当accept为video时生效，是否压缩视频，默认为true
+    compressed: {
+      type: Boolean,
+      default: uni.$u.props.upload.compressed
+    },
+    // 当accept为video时生效，可选值为back或front
+    camera: {
+      type: String,
+      default: uni.$u.props.upload.camera
+    },
+    // 当accept为video时生效，拍摄视频最长拍摄时间，单位秒
+    maxDuration: {
+      type: Number,
+      default: uni.$u.props.upload.maxDuration
+    },
+    // 上传区域的图标，只能内置图标
+    uploadIcon: {
+      type: String,
+      default: uni.$u.props.upload.uploadIcon
+    },
+    // 上传区域的图标的颜色，默认
+    uploadIconColor: {
+      type: String,
+      default: uni.$u.props.upload.uploadIconColor
+    },
+    // 是否开启文件读取前事件
+    useBeforeRead: {
+      type: Boolean,
+      default: uni.$u.props.upload.useBeforeRead
+    },
+    // 读取后的处理函数
+    afterRead: {
+      type: Function,
+      default: null
+    },
+    // 读取前的处理函数
+    beforeRead: {
+      type: Function,
+      default: null
+    },
+    // 是否显示组件自带的图片预览功能
+    previewFullImage: {
+      type: Boolean,
+      default: uni.$u.props.upload.previewFullImage
+    },
+    // 最大上传数量
+    maxCount: {
+      type: [String, Number],
+      default: uni.$u.props.upload.maxCount
+    },
+    // 是否启用
+    disabled: {
+      type: Boolean,
+      default: uni.$u.props.upload.disabled
+    },
+    // 预览上传的图片时的裁剪模式，和image组件mode属性一致
+    imageMode: {
+      type: String,
+      default: uni.$u.props.upload.imageMode
+    },
+    // 标识符，可以在回调函数的第二项参数中获取
+    name: {
+      type: String,
+      default: uni.$u.props.upload.name
+    },
+    // 所选的图片的尺寸, 可选值为original compressed
+    sizeType: {
+      type: Array,
+      default: uni.$u.props.upload.sizeType
+    },
+    // 是否开启图片多选，部分安卓机型不支持
+    multiple: {
+      type: Boolean,
+      default: uni.$u.props.upload.multiple
+    },
+    // 是否展示删除按钮
+    deletable: {
+      type: Boolean,
+      default: uni.$u.props.upload.deletable
+    },
+    // 文件大小限制，单位为byte
+    maxSize: {
+      type: [String, Number],
+      default: uni.$u.props.upload.maxSize
+    },
+    // 显示已上传的文件列表
+    fileList: {
+      type: Array,
+      default: uni.$u.props.upload.fileList
+    },
+    // 上传区域的提示文字
+    uploadText: {
+      type: String,
+      default: uni.$u.props.upload.uploadText
+    },
+    // 内部预览图片区域和选择图片按钮的区域宽度
+    width: {
+      type: [String, Number],
+      default: uni.$u.props.upload.width
+    },
+    // 内部预览图片区域和选择图片按钮的区域高度
+    height: {
+      type: [String, Number],
+      default: uni.$u.props.upload.height
+    },
+    // 是否在上传完成后展示预览图
+    previewImage: {
+      type: Boolean,
+      default: uni.$u.props.upload.previewImage
+    }
+  }
+};
+exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+/* 497 */,
+/* 498 */,
+/* 499 */,
+/* 500 */,
+/* 501 */,
+/* 502 */,
+/* 503 */,
+/* 504 */
 /*!************************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-safe-bottom/props.js ***!
   \************************************************************************************************************/
@@ -24997,14 +25362,14 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 471 */,
-/* 472 */,
-/* 473 */,
-/* 474 */,
-/* 475 */,
-/* 476 */,
-/* 477 */,
-/* 478 */
+/* 505 */,
+/* 506 */,
+/* 507 */,
+/* 508 */,
+/* 509 */,
+/* 510 */,
+/* 511 */,
+/* 512 */
 /*!******************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-badge/props.js ***!
   \******************************************************************************************************/
@@ -25094,17 +25459,17 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 479 */,
-/* 480 */,
-/* 481 */,
-/* 482 */,
-/* 483 */,
-/* 484 */,
-/* 485 */,
-/* 486 */
-/*!********************************************************************************************************!*\
-  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-overlay/props.js ***!
-  \********************************************************************************************************/
+/* 513 */,
+/* 514 */,
+/* 515 */,
+/* 516 */,
+/* 517 */,
+/* 518 */,
+/* 519 */,
+/* 520 */
+/*!*****************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-line/props.js ***!
+  \*****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25117,25 +25482,34 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _default = {
   props: {
-    // 是否显示遮罩
-    show: {
+    color: {
+      type: String,
+      default: uni.$u.props.line.color
+    },
+    // 长度，竖向时表现为高度，横向时表现为长度，可以为百分比，带px单位的值等
+    length: {
+      type: [String, Number],
+      default: uni.$u.props.line.length
+    },
+    // 线条方向，col-竖向，row-横向
+    direction: {
+      type: String,
+      default: uni.$u.props.line.direction
+    },
+    // 是否显示细边框
+    hairline: {
       type: Boolean,
-      default: uni.$u.props.overlay.show
+      default: uni.$u.props.line.hairline
     },
-    // 层级z-index
-    zIndex: {
+    // 线条与上下左右元素的间距，字符串形式，如"30px"、"20px 30px"
+    margin: {
       type: [String, Number],
-      default: uni.$u.props.overlay.zIndex
+      default: uni.$u.props.line.margin
     },
-    // 遮罩的过渡时间，单位为ms
-    duration: {
-      type: [String, Number],
-      default: uni.$u.props.overlay.duration
-    },
-    // 不透明度值，当做rgba的第四个参数
-    opacity: {
-      type: [String, Number],
-      default: uni.$u.props.overlay.opacity
+    // 是否虚线，true-虚线，false-实线
+    dashed: {
+      type: Boolean,
+      default: uni.$u.props.line.dashed
     }
   }
 };
@@ -25143,14 +25517,158 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 487 */,
-/* 488 */,
-/* 489 */,
-/* 490 */,
-/* 491 */,
-/* 492 */,
-/* 493 */,
-/* 494 */
+/* 521 */,
+/* 522 */,
+/* 523 */,
+/* 524 */,
+/* 525 */,
+/* 526 */,
+/* 527 */,
+/* 528 */
+/*!**************************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-column-notice/props.js ***!
+  \**************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  props: {
+    // 显示的内容，字符串
+    text: {
+      type: [Array],
+      default: uni.$u.props.columnNotice.text
+    },
+    // 是否显示左侧的音量图标
+    icon: {
+      type: String,
+      default: uni.$u.props.columnNotice.icon
+    },
+    // 通告模式，link-显示右箭头，closable-显示右侧关闭图标
+    mode: {
+      type: String,
+      default: uni.$u.props.columnNotice.mode
+    },
+    // 文字颜色，各图标也会使用文字颜色
+    color: {
+      type: String,
+      default: uni.$u.props.columnNotice.color
+    },
+    // 背景颜色
+    bgColor: {
+      type: String,
+      default: uni.$u.props.columnNotice.bgColor
+    },
+    // 字体大小，单位px
+    fontSize: {
+      type: [String, Number],
+      default: uni.$u.props.columnNotice.fontSize
+    },
+    // 水平滚动时的滚动速度，即每秒滚动多少px(px)，这有利于控制文字无论多少时，都能有一个恒定的速度
+    speed: {
+      type: [String, Number],
+      default: uni.$u.props.columnNotice.speed
+    },
+    // direction = row时，是否使用步进形式滚动
+    step: {
+      type: Boolean,
+      default: uni.$u.props.columnNotice.step
+    },
+    // 滚动一个周期的时间长，单位ms
+    duration: {
+      type: [String, Number],
+      default: uni.$u.props.columnNotice.duration
+    },
+    // 是否禁止用手滑动切换
+    // 目前HX2.6.11，只支持App 2.5.5+、H5 2.5.5+、支付宝小程序、字节跳动小程序
+    disableTouch: {
+      type: Boolean,
+      default: uni.$u.props.columnNotice.disableTouch
+    }
+  }
+};
+exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+/* 529 */,
+/* 530 */,
+/* 531 */,
+/* 532 */,
+/* 533 */,
+/* 534 */,
+/* 535 */,
+/* 536 */
+/*!***********************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-row-notice/props.js ***!
+  \***********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  props: {
+    // 显示的内容，字符串
+    text: {
+      type: String,
+      default: uni.$u.props.rowNotice.text
+    },
+    // 是否显示左侧的音量图标
+    icon: {
+      type: String,
+      default: uni.$u.props.rowNotice.icon
+    },
+    // 通告模式，link-显示右箭头，closable-显示右侧关闭图标
+    mode: {
+      type: String,
+      default: uni.$u.props.rowNotice.mode
+    },
+    // 文字颜色，各图标也会使用文字颜色
+    color: {
+      type: String,
+      default: uni.$u.props.rowNotice.color
+    },
+    // 背景颜色
+    bgColor: {
+      type: String,
+      default: uni.$u.props.rowNotice.bgColor
+    },
+    // 字体大小，单位px
+    fontSize: {
+      type: [String, Number],
+      default: uni.$u.props.rowNotice.fontSize
+    },
+    // 水平滚动时的滚动速度，即每秒滚动多少px(rpx)，这有利于控制文字无论多少时，都能有一个恒定的速度
+    speed: {
+      type: [String, Number],
+      default: uni.$u.props.rowNotice.speed
+    }
+  }
+};
+exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+/* 537 */,
+/* 538 */,
+/* 539 */,
+/* 540 */,
+/* 541 */,
+/* 542 */,
+/* 543 */,
+/* 544 */
 /*!*************************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-loading-icon/props.js ***!
   \*************************************************************************************************************/
@@ -25227,265 +25745,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 495 */,
-/* 496 */,
-/* 497 */,
-/* 498 */,
-/* 499 */,
-/* 500 */,
-/* 501 */,
-/* 502 */
-/*!****************************************************************************************************!*\
-  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-gap/props.js ***!
-  \****************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _default = {
-  props: {
-    // 背景颜色（默认transparent）
-    bgColor: {
-      type: String,
-      default: uni.$u.props.gap.bgColor
-    },
-    // 分割槽高度，单位px（默认30）
-    height: {
-      type: [String, Number],
-      default: uni.$u.props.gap.height
-    },
-    // 与上一个组件的距离
-    marginTop: {
-      type: [String, Number],
-      default: uni.$u.props.gap.marginTop
-    },
-    // 与下一个组件的距离
-    marginBottom: {
-      type: [String, Number],
-      default: uni.$u.props.gap.marginBottom
-    }
-  }
-};
-exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
-
-/***/ }),
-/* 503 */,
-/* 504 */,
-/* 505 */,
-/* 506 */,
-/* 507 */,
-/* 508 */,
-/* 509 */,
-/* 510 */
-/*!*****************************************************************************************************!*\
-  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-line/props.js ***!
-  \*****************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _default = {
-  props: {
-    color: {
-      type: String,
-      default: uni.$u.props.line.color
-    },
-    // 长度，竖向时表现为高度，横向时表现为长度，可以为百分比，带px单位的值等
-    length: {
-      type: [String, Number],
-      default: uni.$u.props.line.length
-    },
-    // 线条方向，col-竖向，row-横向
-    direction: {
-      type: String,
-      default: uni.$u.props.line.direction
-    },
-    // 是否显示细边框
-    hairline: {
-      type: Boolean,
-      default: uni.$u.props.line.hairline
-    },
-    // 线条与上下左右元素的间距，字符串形式，如"30px"、"20px 30px"
-    margin: {
-      type: [String, Number],
-      default: uni.$u.props.line.margin
-    },
-    // 是否虚线，true-虚线，false-实线
-    dashed: {
-      type: Boolean,
-      default: uni.$u.props.line.dashed
-    }
-  }
-};
-exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
-
-/***/ }),
-/* 511 */,
-/* 512 */,
-/* 513 */,
-/* 514 */,
-/* 515 */,
-/* 516 */,
-/* 517 */,
-/* 518 */
-/*!**************************************************************************************************************!*\
-  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-column-notice/props.js ***!
-  \**************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _default = {
-  props: {
-    // 显示的内容，字符串
-    text: {
-      type: [Array],
-      default: uni.$u.props.columnNotice.text
-    },
-    // 是否显示左侧的音量图标
-    icon: {
-      type: String,
-      default: uni.$u.props.columnNotice.icon
-    },
-    // 通告模式，link-显示右箭头，closable-显示右侧关闭图标
-    mode: {
-      type: String,
-      default: uni.$u.props.columnNotice.mode
-    },
-    // 文字颜色，各图标也会使用文字颜色
-    color: {
-      type: String,
-      default: uni.$u.props.columnNotice.color
-    },
-    // 背景颜色
-    bgColor: {
-      type: String,
-      default: uni.$u.props.columnNotice.bgColor
-    },
-    // 字体大小，单位px
-    fontSize: {
-      type: [String, Number],
-      default: uni.$u.props.columnNotice.fontSize
-    },
-    // 水平滚动时的滚动速度，即每秒滚动多少px(px)，这有利于控制文字无论多少时，都能有一个恒定的速度
-    speed: {
-      type: [String, Number],
-      default: uni.$u.props.columnNotice.speed
-    },
-    // direction = row时，是否使用步进形式滚动
-    step: {
-      type: Boolean,
-      default: uni.$u.props.columnNotice.step
-    },
-    // 滚动一个周期的时间长，单位ms
-    duration: {
-      type: [String, Number],
-      default: uni.$u.props.columnNotice.duration
-    },
-    // 是否禁止用手滑动切换
-    // 目前HX2.6.11，只支持App 2.5.5+、H5 2.5.5+、支付宝小程序、字节跳动小程序
-    disableTouch: {
-      type: Boolean,
-      default: uni.$u.props.columnNotice.disableTouch
-    }
-  }
-};
-exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
-
-/***/ }),
-/* 519 */,
-/* 520 */,
-/* 521 */,
-/* 522 */,
-/* 523 */,
-/* 524 */,
-/* 525 */,
-/* 526 */
-/*!***********************************************************************************************************!*\
-  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-row-notice/props.js ***!
-  \***********************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _default = {
-  props: {
-    // 显示的内容，字符串
-    text: {
-      type: String,
-      default: uni.$u.props.rowNotice.text
-    },
-    // 是否显示左侧的音量图标
-    icon: {
-      type: String,
-      default: uni.$u.props.rowNotice.icon
-    },
-    // 通告模式，link-显示右箭头，closable-显示右侧关闭图标
-    mode: {
-      type: String,
-      default: uni.$u.props.rowNotice.mode
-    },
-    // 文字颜色，各图标也会使用文字颜色
-    color: {
-      type: String,
-      default: uni.$u.props.rowNotice.color
-    },
-    // 背景颜色
-    bgColor: {
-      type: String,
-      default: uni.$u.props.rowNotice.bgColor
-    },
-    // 字体大小，单位px
-    fontSize: {
-      type: [String, Number],
-      default: uni.$u.props.rowNotice.fontSize
-    },
-    // 水平滚动时的滚动速度，即每秒滚动多少px(rpx)，这有利于控制文字无论多少时，都能有一个恒定的速度
-    speed: {
-      type: [String, Number],
-      default: uni.$u.props.rowNotice.speed
-    }
-  }
-};
-exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
-
-/***/ }),
-/* 527 */,
-/* 528 */,
-/* 529 */,
-/* 530 */,
-/* 531 */,
-/* 532 */,
-/* 533 */,
-/* 534 */
+/* 545 */,
+/* 546 */,
+/* 547 */,
+/* 548 */,
+/* 549 */,
+/* 550 */,
+/* 551 */,
+/* 552 */
 /*!*****************************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-swiper-indicator/props.js ***!
   \*****************************************************************************************************************/
@@ -25532,14 +25799,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 535 */,
-/* 536 */,
-/* 537 */,
-/* 538 */,
-/* 539 */,
-/* 540 */,
-/* 541 */,
-/* 542 */
+/* 553 */,
+/* 554 */,
+/* 555 */,
+/* 556 */,
+/* 557 */,
+/* 558 */,
+/* 559 */,
+/* 560 */
 /*!***********************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-transition/props.js ***!
   \***********************************************************************************************************/
@@ -25581,7 +25848,7 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 543 */
+/* 561 */
 /*!****************************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-transition/transition.js ***!
   \****************************************************************************************************************/
@@ -25598,7 +25865,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 58));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 60));
-var _nvueAniMap = _interopRequireDefault(__webpack_require__(/*! ./nvue.ani-map.js */ 544));
+var _nvueAniMap = _interopRequireDefault(__webpack_require__(/*! ./nvue.ani-map.js */ 562));
 // 定义一个一定时间后自动成功的promise，让调用nextTick方法处，进入下一个then方法
 var nextTick = function nextTick() {
   return new Promise(function (resolve) {
@@ -25690,7 +25957,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 544 */
+/* 562 */
 /*!******************************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-transition/nvue.ani-map.js ***!
   \******************************************************************************************************************/
@@ -25883,14 +26150,112 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 545 */,
-/* 546 */,
-/* 547 */,
-/* 548 */,
-/* 549 */,
-/* 550 */,
-/* 551 */,
-/* 552 */
+/* 563 */,
+/* 564 */,
+/* 565 */,
+/* 566 */,
+/* 567 */,
+/* 568 */,
+/* 569 */,
+/* 570 */
+/*!********************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-overlay/props.js ***!
+  \********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  props: {
+    // 是否显示遮罩
+    show: {
+      type: Boolean,
+      default: uni.$u.props.overlay.show
+    },
+    // 层级z-index
+    zIndex: {
+      type: [String, Number],
+      default: uni.$u.props.overlay.zIndex
+    },
+    // 遮罩的过渡时间，单位为ms
+    duration: {
+      type: [String, Number],
+      default: uni.$u.props.overlay.duration
+    },
+    // 不透明度值，当做rgba的第四个参数
+    opacity: {
+      type: [String, Number],
+      default: uni.$u.props.overlay.opacity
+    }
+  }
+};
+exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+/* 571 */,
+/* 572 */,
+/* 573 */,
+/* 574 */,
+/* 575 */,
+/* 576 */,
+/* 577 */,
+/* 578 */
+/*!****************************************************************************************************!*\
+  !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-gap/props.js ***!
+  \****************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  props: {
+    // 背景颜色（默认transparent）
+    bgColor: {
+      type: String,
+      default: uni.$u.props.gap.bgColor
+    },
+    // 分割槽高度，单位px（默认30）
+    height: {
+      type: [String, Number],
+      default: uni.$u.props.gap.height
+    },
+    // 与上一个组件的距离
+    marginTop: {
+      type: [String, Number],
+      default: uni.$u.props.gap.marginTop
+    },
+    // 与下一个组件的距离
+    marginBottom: {
+      type: [String, Number],
+      default: uni.$u.props.gap.marginBottom
+    }
+  }
+};
+exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+/* 579 */,
+/* 580 */,
+/* 581 */,
+/* 582 */,
+/* 583 */,
+/* 584 */,
+/* 585 */,
+/* 586 */
 /*!*******************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-picker/props.js ***!
   \*******************************************************************************************************/
@@ -25987,21 +26352,21 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 553 */,
-/* 554 */,
-/* 555 */,
-/* 556 */,
-/* 557 */,
-/* 558 */,
-/* 559 */,
-/* 560 */,
-/* 561 */,
-/* 562 */,
-/* 563 */,
-/* 564 */,
-/* 565 */,
-/* 566 */,
-/* 567 */
+/* 587 */,
+/* 588 */,
+/* 589 */,
+/* 590 */,
+/* 591 */,
+/* 592 */,
+/* 593 */,
+/* 594 */,
+/* 595 */,
+/* 596 */,
+/* 597 */,
+/* 598 */,
+/* 599 */,
+/* 600 */,
+/* 601 */
 /*!******************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-popup/props.js ***!
   \******************************************************************************************************/
@@ -26098,14 +26463,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 568 */,
-/* 569 */,
-/* 570 */,
-/* 571 */,
-/* 572 */,
-/* 573 */,
-/* 574 */,
-/* 575 */
+/* 602 */,
+/* 603 */,
+/* 604 */,
+/* 605 */,
+/* 606 */,
+/* 607 */,
+/* 608 */,
+/* 609 */
 /*!********************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-toolbar/props.js ***!
   \********************************************************************************************************/
@@ -26157,14 +26522,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 576 */,
-/* 577 */,
-/* 578 */,
-/* 579 */,
-/* 580 */,
-/* 581 */,
-/* 582 */,
-/* 583 */
+/* 610 */,
+/* 611 */,
+/* 612 */,
+/* 613 */,
+/* 614 */,
+/* 615 */,
+/* 616 */,
+/* 617 */
 /*!***********************************************************************************************************!*\
   !*** /Users/wangmeice/IdeaProjects/Xunibi/frontend/uni_modules/uview-ui/components/u-status-bar/props.js ***!
   \***********************************************************************************************************/

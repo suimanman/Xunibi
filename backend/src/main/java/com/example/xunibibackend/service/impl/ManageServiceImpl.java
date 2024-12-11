@@ -25,7 +25,7 @@ public class ManageServiceImpl implements ManageService {
     @Autowired
     UserMapper userMapper;
     @Override
-    public String getNotice() {
+    public List<String> getNotice() {
         return noticeMapper.getNotice();
     }
 

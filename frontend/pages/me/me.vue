@@ -4,10 +4,9 @@
 		<image class="img-b" src="https://zhoukaiwen.com/img/loginImg/3.png"></image>
 
 		<u-cell-group class="cell-group">
-			<u-cell title="用户名" v-model="user.username" />
+			<u-cell title="学号" v-model="user.username" />
 			<u-cell title="所属团队" v-model="user.teamName" />
 			<u-cell title="修改密码" is-link @click="goEditUsername" />
-			<u-cell title="人脸照片上传" is-link @click="uploadPicture" />
 		</u-cell-group>
 		<button class="logout-button" @click="logout()">退 出 登 录</button>
 	</view>

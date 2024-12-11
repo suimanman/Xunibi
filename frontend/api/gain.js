@@ -10,3 +10,13 @@ export function achievementAward(description) {
 		data: description
 	})
 }
+export function dutyAward(dutyInfo) {
+	return request({
+		url: '/gain/dutySubmit',
+		header: {
+			isToken: true
+		},
+		method: 'post',
+		data: dutyInfo
+	})
+}

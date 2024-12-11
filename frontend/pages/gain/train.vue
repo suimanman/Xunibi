@@ -14,7 +14,7 @@
 			<view class="section">
 				<view class="section-header">
 					<text class="section-title">学生基本信息</text>
-					<text class="more-button" @click="editStudentInfo">更多</text>
+					<text class="more-button" @click="editStudentInfo">填写</text>
 				</view>
 				<view class="section-content">
 					<text class="line">姓名：{{studentInfo.name}}</text>

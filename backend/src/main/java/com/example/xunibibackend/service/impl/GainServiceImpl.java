@@ -1,10 +1,7 @@
 package com.example.xunibibackend.service.impl;
 
 import com.example.xunibibackend.entity.*;
-import com.example.xunibibackend.entity.dto.AchievementInfo;
-import com.example.xunibibackend.entity.dto.AchievementRequest;
-import com.example.xunibibackend.entity.dto.StatementInfo;
-import com.example.xunibibackend.entity.dto.StudentInfo;
+import com.example.xunibibackend.entity.dto.*;
 import com.example.xunibibackend.mapper.*;
 import com.example.xunibibackend.response.MyResult;
 import com.example.xunibibackend.service.GainService;
@@ -73,7 +70,7 @@ public class GainServiceImpl implements GainService {
         coinTransaction.setCoinAmount(20.0);
         coinTransaction.setTransactionDate(LocalDate.now());
         coinTransaction.setTransactionType("收入");
-        coinTransaction.setDescription(dutyRecord.getDescription());
+        coinTransaction.setDescription("");
         coinTransaction.setTeamId(teamId);
         coinTransactionMapper.insert(coinTransaction);
         return true;
@@ -119,5 +116,20 @@ public class GainServiceImpl implements GainService {
     @Override
     public MyResult getAchievementListById(Integer teamId) {
         return MyResult.success(achievementMapper.getListById(teamId));
+    }
+
+    @Override
+    public MyResult submitDuty(DutyRequest dutyRequest) {
+        DutyRecord dutyRecord=new DutyRecord();
+        User user=userMapper.getByUsername(dutyRequest.getId());
+        dutyRecord.setTeamId(user.getTeamId());
+        dutyRecord.setUserId(user.getUserId());
+        dutyRecord.setDescription(dutyRequest.getTeam()+"团队成员"+dutyRequest.getName()+"值班情况："+dutyRequest.getDescription());
+        dutyRecord.setDutyDate(LocalDate.now());
+        dutyRecord.setImage(dutyRequest.getImage());
+        dutyRecord.setCoinAwarded(0.0);
+        dutyRecord.setStatus("待审核");
+        dutyMapper.insert(dutyRecord);
+        return MyResult.success("提交成功！");
     }
 }

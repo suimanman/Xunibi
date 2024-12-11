@@ -80,6 +80,27 @@
 			{
 				"navigationBarTitleText" : "参加情况"
 			}
+		},
+		{
+			"path" : "pages/home/record",
+			"style" : 
+			{
+				"navigationBarTitleText" : "交易记录"
+			}
+		},
+		{
+			"path" : "pages/gain/duty",
+			"style" : 
+			{
+				"navigationBarTitleText" : "值班情况"
+			}
+		},
+		{
+			"path" : "pages/edit/dutyInfoEdit",
+			"style" : 
+			{
+				"navigationBarTitleText" : "值日人信息"
+			}
 		}
 	],
 	"globalStyle": {

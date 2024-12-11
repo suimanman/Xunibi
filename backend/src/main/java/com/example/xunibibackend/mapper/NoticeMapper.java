@@ -5,8 +5,10 @@ import com.example.xunibibackend.entity.Notice;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 @Mapper
 public interface NoticeMapper extends BaseMapper<Notice> {
     @Select("select content from notice where display=1")
-    String getNotice();
+    List<String> getNotice();
 }

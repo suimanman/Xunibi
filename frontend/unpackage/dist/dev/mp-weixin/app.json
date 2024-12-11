@@ -11,7 +11,10 @@
     "pages/edit/studentInfoEdit",
     "pages/edit/achievementEdit",
     "pages/edit/statementEdit",
-    "pages/edit/trainEdit"
+    "pages/edit/trainEdit",
+    "pages/home/record",
+    "pages/gain/duty",
+    "pages/edit/dutyInfoEdit"
   ],
   "subPackages": [],
   "window": {

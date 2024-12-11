@@ -3,8 +3,8 @@
   "enablePullDownRefresh": true,
   "usingComponents": {
     "u-notice-bar": "/uni_modules/uview-ui/components/u-notice-bar/u-notice-bar",
-    "u-icon": "/uni_modules/uview-ui/components/u-icon/u-icon",
     "u-divider": "/uni_modules/uview-ui/components/u-divider/u-divider",
+    "u-icon": "/uni_modules/uview-ui/components/u-icon/u-icon",
     "u-list": "/uni_modules/uview-ui/components/u-list/u-list",
     "u-list-item": "/uni_modules/uview-ui/components/u-list-item/u-list-item",
     "u-cell": "/uni_modules/uview-ui/components/u-cell/u-cell"
