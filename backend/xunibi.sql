@@ -11,7 +11,7 @@
  Target Server Version : 80300 (8.3.0)
  File Encoding         : 65001
 
- Date: 22/11/2024 16:52:55
+ Date: 11/12/2024 20:50:34
 */
 
 SET NAMES utf8mb4;
@@ -124,32 +124,36 @@ CREATE TABLE `DutyRecords` (
   `user_id` int DEFAULT NULL,
   `duty_date` date NOT NULL,
   `coin_awarded` decimal(10,2) NOT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`duty_id`),
   KEY `team_id` (`team_id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `dutyrecords_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `Team` (`team_id`),
   CONSTRAINT `dutyrecords_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of DutyRecords
 -- ----------------------------
 BEGIN;
-INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (1, 1, 2, '2023-09-28', 20.00, 'Team duty on project maintenance');
-INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (2, 2, 3, '2023-09-28', 20.00, 'Team duty on workshop preparation');
-INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (3, 3, 4, '2023-09-28', 20.00, 'Team duty on organizing event');
-INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (4, 1, 1, '2024-10-20', 20.00, 'test');
-INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (5, 1, 1, '2024-10-20', 20.00, 'test');
-INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (6, 1, 1, '2024-10-20', 20.00, 'traintest');
-INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (7, 1, 1, '2024-10-22', 20.00, '值班201办公室');
-INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (8, 1, 1, '2024-10-22', 20.00, '值班201办公室');
-INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (9, 1, 1, '2024-10-22', 20.00, '值班201办公室');
-INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (10, 1, 1, '2024-10-22', 20.00, '值班201办公室');
-INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (11, 1, 1, '2024-10-22', 20.00, '值班201办公室');
-INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (12, 1, 1, '2024-10-22', 20.00, '值班201办公室');
-INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (13, 1, 1, '2024-10-25', 20.00, NULL);
-INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `description`) VALUES (14, 1, 1, '2024-10-25', 20.00, NULL);
+INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `image`, `status`, `description`) VALUES (1, 1, 2, '2023-09-28', 20.00, NULL, NULL, NULL);
+INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `image`, `status`, `description`) VALUES (2, 2, 3, '2023-09-28', 20.00, NULL, NULL, NULL);
+INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `image`, `status`, `description`) VALUES (3, 3, 4, '2023-09-28', 20.00, NULL, NULL, NULL);
+INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `image`, `status`, `description`) VALUES (4, 1, 1, '2024-10-20', 20.00, NULL, NULL, NULL);
+INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `image`, `status`, `description`) VALUES (5, 1, 1, '2024-10-20', 20.00, NULL, NULL, NULL);
+INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `image`, `status`, `description`) VALUES (6, 1, 1, '2024-10-20', 20.00, NULL, NULL, NULL);
+INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `image`, `status`, `description`) VALUES (7, 1, 1, '2024-10-22', 20.00, NULL, NULL, NULL);
+INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `image`, `status`, `description`) VALUES (8, 1, 1, '2024-10-22', 20.00, NULL, NULL, NULL);
+INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `image`, `status`, `description`) VALUES (9, 1, 1, '2024-10-22', 20.00, NULL, NULL, NULL);
+INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `image`, `status`, `description`) VALUES (10, 1, 1, '2024-10-22', 20.00, NULL, NULL, NULL);
+INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `image`, `status`, `description`) VALUES (11, 1, 1, '2024-10-22', 20.00, NULL, NULL, NULL);
+INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `image`, `status`, `description`) VALUES (12, 1, 1, '2024-10-22', 20.00, NULL, NULL, NULL);
+INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `image`, `status`, `description`) VALUES (13, 1, 1, '2024-10-25', 20.00, NULL, NULL, NULL);
+INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `image`, `status`, `description`) VALUES (14, 1, 1, '2024-10-25', 20.00, NULL, NULL, NULL);
+INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `image`, `status`, `description`) VALUES (15, 1, 5, '2024-12-11', 0.00, '', NULL, '1');
+INSERT INTO `DutyRecords` (`duty_id`, `team_id`, `user_id`, `duty_date`, `coin_awarded`, `image`, `status`, `description`) VALUES (16, 1, 5, '2024-12-11', 0.00, 'http://localhost:8080/files/download/3VBZLu9mGPM0d8a02500396b3551b97df7ada3afe33a.jpg', '待审核', '河工大众创空间团队成员王梅策值班情况：值班208');
 COMMIT;
 
 -- ----------------------------
@@ -199,7 +203,7 @@ INSERT INTO `notice` (`id`, `content`, `created_at`, `display`) VALUES (1, '下�
 INSERT INTO `notice` (`id`, `content`, `created_at`, `display`) VALUES (2, '系统将于今晚10点进行维护，预计1小时内完成。', '2024-10-31 13:48:15', 0x31);
 INSERT INTO `notice` (`id`, `content`, `created_at`, `display`) VALUES (3, '新版本上线，增加了虚拟币交易记录功能。', '2024-10-31 13:48:15', 0x30);
 INSERT INTO `notice` (`id`, `content`, `created_at`, `display`) VALUES (4, '国庆节放假安排：10月1日至10月7日，期间不提供服务。', '2024-10-31 13:48:15', 0x30);
-INSERT INTO `notice` (`id`, `content`, `created_at`, `display`) VALUES (5, '团队聚餐定于本周五下午6点，地点为公司附近餐厅。', '2024-10-31 13:48:15', 0x30);
+INSERT INTO `notice` (`id`, `content`, `created_at`, `display`) VALUES (5, '团队聚餐定于本周五下午6点，地点为公司附近餐厅。', '2024-10-31 13:48:15', 0x31);
 COMMIT;
 
 -- ----------------------------
@@ -217,7 +221,7 @@ CREATE TABLE `RentalRecords` (
   PRIMARY KEY (`rental_id`),
   KEY `team_id` (`team_id`),
   CONSTRAINT `rentalrecords_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `Team` (`team_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of RentalRecords
@@ -240,6 +244,9 @@ INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`
 INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (15, 1, '2024-11-13', 100.00, 1, '工位1', 1);
 INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (16, 1, '2024-11-14', 200.00, 2, '工位1', 1);
 INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (17, 1, '2024-11-17', 100.00, 1, '工位1', 1);
+INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (18, 1, '2024-11-23', 150.00, 1, '激光打印机', 1);
+INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (19, 1, '2024-11-23', 240.00, 3, 'DSLR 摄像机', 1);
+INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (20, 1, '2024-12-06', 100.00, 1, '工位1', 1);
 COMMIT;
 
 -- ----------------------------
@@ -285,8 +292,8 @@ CREATE TABLE `Team` (
 -- Records of Team
 -- ----------------------------
 BEGIN;
-INSERT INTO `Team` (`team_id`, `team_name`, `creation_date`, `virtual_coins`) VALUES (1, '河工大众创空间', '2023-01-10', 9700.00);
-INSERT INTO `Team` (`team_id`, `team_name`, `creation_date`, `virtual_coins`) VALUES (2, '先锋者', '2023-03-15', 400.00);
+INSERT INTO `Team` (`team_id`, `team_name`, `creation_date`, `virtual_coins`) VALUES (1, '河工大众创空间', '2023-01-10', 9650.00);
+INSERT INTO `Team` (`team_id`, `team_name`, `creation_date`, `virtual_coins`) VALUES (2, '先锋者', '2023-03-15', 420.00);
 INSERT INTO `Team` (`team_id`, `team_name`, `creation_date`, `virtual_coins`) VALUES (3, '暴乱头脑', '2023-05-20', 670.00);
 COMMIT;
 
@@ -301,22 +308,27 @@ CREATE TABLE `User` (
   `password` varchar(255) NOT NULL,
   `role` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `registration_date` date NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `department` varchar(255) DEFAULT NULL,
+  `major` varchar(255) DEFAULT NULL,
+  `clazz` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   KEY `team_id` (`team_id`),
   CONSTRAINT `user_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `Team` (`team_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of User
 -- ----------------------------
 BEGIN;
-INSERT INTO `User` (`user_id`, `team_id`, `username`, `password`, `role`, `registration_date`) VALUES (1, 1, 'Alice', 'password123', 'leader', '2023-01-11');
-INSERT INTO `User` (`user_id`, `team_id`, `username`, `password`, `role`, `registration_date`) VALUES (2, 1, 'Bob', 'password456', 'member', '2023-01-12');
-INSERT INTO `User` (`user_id`, `team_id`, `username`, `password`, `role`, `registration_date`) VALUES (3, 2, 'Charlie', 'password789', 'leader', '2023-03-16');
-INSERT INTO `User` (`user_id`, `team_id`, `username`, `password`, `role`, `registration_date`) VALUES (4, 3, 'David', 'password101', 'leader', '2023-05-21');
-INSERT INTO `User` (`user_id`, `team_id`, `username`, `password`, `role`, `registration_date`) VALUES (5, 1, '11', '698d51a19d8a121ce581499d7b701668', 'leader', '2024-10-25');
-INSERT INTO `User` (`user_id`, `team_id`, `username`, `password`, `role`, `registration_date`) VALUES (6, NULL, 'wmcc', '96e79218965eb72c92a549dd5a330112', 'leader', '2024-10-25');
-INSERT INTO `User` (`user_id`, `team_id`, `username`, `password`, `role`, `registration_date`) VALUES (7, NULL, '190531', '96e79218965eb72c92a549dd5a330112', NULL, '2024-10-30');
+INSERT INTO `User` (`user_id`, `team_id`, `username`, `password`, `role`, `registration_date`, `name`, `department`, `major`, `clazz`) VALUES (1, 1, 'Alice', 'password123', 'leader', '2023-01-11', NULL, NULL, NULL, NULL);
+INSERT INTO `User` (`user_id`, `team_id`, `username`, `password`, `role`, `registration_date`, `name`, `department`, `major`, `clazz`) VALUES (2, 1, 'Bob', 'password456', 'member', '2023-01-12', NULL, NULL, NULL, NULL);
+INSERT INTO `User` (`user_id`, `team_id`, `username`, `password`, `role`, `registration_date`, `name`, `department`, `major`, `clazz`) VALUES (3, 2, 'Charlie', 'password789', 'leader', '2023-03-16', NULL, NULL, NULL, NULL);
+INSERT INTO `User` (`user_id`, `team_id`, `username`, `password`, `role`, `registration_date`, `name`, `department`, `major`, `clazz`) VALUES (4, 3, 'David', 'password101', 'leader', '2023-05-21', NULL, NULL, NULL, NULL);
+INSERT INTO `User` (`user_id`, `team_id`, `username`, `password`, `role`, `registration_date`, `name`, `department`, `major`, `clazz`) VALUES (5, 1, '11', '698d51a19d8a121ce581499d7b701668', 'leader', '2024-10-25', '王梅策', '人工智能与数据科学学院', '软件工程', '软件211');
+INSERT INTO `User` (`user_id`, `team_id`, `username`, `password`, `role`, `registration_date`, `name`, `department`, `major`, `clazz`) VALUES (6, 1, '213333', '96e79218965eb72c92a549dd5a330112', 'leader', '2024-10-25', NULL, NULL, NULL, NULL);
+INSERT INTO `User` (`user_id`, `team_id`, `username`, `password`, `role`, `registration_date`, `name`, `department`, `major`, `clazz`) VALUES (7, 1, '213287', '96e79218965eb72c92a549dd5a330112', NULL, '2024-10-30', NULL, NULL, NULL, NULL);
+INSERT INTO `User` (`user_id`, `team_id`, `username`, `password`, `role`, `registration_date`, `name`, `department`, `major`, `clazz`) VALUES (8, NULL, '1', '698d51a19d8a121ce581499d7b701668', NULL, '2024-11-23', NULL, NULL, NULL, NULL);
 COMMIT;
 
 -- ----------------------------
@@ -333,7 +345,7 @@ CREATE TABLE `VirtualCoinTransactions` (
   PRIMARY KEY (`transaction_id`),
   KEY `team_id` (`team_id`),
   CONSTRAINT `virtualcointransactions_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `Team` (`team_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of VirtualCoinTransactions
@@ -363,6 +375,55 @@ INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction
 INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (22, 1, '2024-11-17', '支出', 100.00, '租用工位');
 INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (23, 1, '2024-11-22', '支出', 800.00, '租用工位1超时4天');
 INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (24, 1, '2024-11-22', '支出', 800.00, '租用工位1超时4天');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (25, 1, '2024-11-23', '支出', 150.00, '租用激光打印机');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (26, 1, '2024-11-23', '支出', 240.00, '租用DSLR 摄像机');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (27, 1, '2024-12-06', '支出', 100.00, '租用工位');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (28, 1, '2024-12-09', '收入', 20.00, '11签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (29, 1, '2024-12-09', '收入', 20.00, '刘叙增签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (30, 1, '2024-12-09', '收入', 20.00, '王梅策签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (31, 1, '2024-12-10', '收入', 20.00, '王梅策签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (32, 1, '2024-12-10', '收入', 20.00, '王梅策签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (33, 1, '2024-12-10', '收入', 20.00, '王梅策签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (34, 1, '2024-12-10', '收入', 20.00, '王梅策签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (35, 1, '2024-12-10', '收入', 20.00, '翟佳起签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (36, 1, '2024-12-10', '收入', 20.00, '王梅策签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (37, 1, '2024-12-10', '收入', 20.00, '王梅策签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (38, 1, '2024-12-10', '收入', 20.00, '翟佳起签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (39, 1, '2024-12-10', '收入', 20.00, '王梅策签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (40, 1, '2024-12-10', '收入', 20.00, '王梅策签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (41, 1, '2024-12-10', '收入', 20.00, '翟佳起签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (42, 1, '2024-12-10', '收入', 20.00, '刘叙增签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (43, 1, '2024-12-10', '收入', 20.00, '刘叙增签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (44, 1, '2024-12-10', '收入', 20.00, '王梅策签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (45, 1, '2024-12-10', '收入', 20.00, '王梅策签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (46, 1, '2024-12-10', '收入', 20.00, '翟佳起签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (47, 1, '2024-12-10', '收入', 20.00, '刘叙增签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (48, 1, '2024-12-10', '收入', 20.00, '刘叙增签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (49, 1, '2024-12-10', '收入', 20.00, '王梅策签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (50, 1, '2024-12-10', '收入', 20.00, '王梅策签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (51, 1, '2024-12-10', '收入', 20.00, '翟佳起签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (52, 1, '2024-12-10', '收入', 20.00, '刘叙增签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (53, 1, '2024-12-10', '收入', 20.00, '刘叙增签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (54, 1, '2024-12-10', '收入', 20.00, '王梅策签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (55, 1, '2024-12-10', '收入', 20.00, '王梅策签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (56, 1, '2024-12-10', '收入', 20.00, '翟佳起签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (57, 1, '2024-12-10', '收入', 20.00, '刘叙增签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (58, 1, '2024-12-10', '收入', 20.00, '刘叙增签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (59, 1, '2024-12-10', '收入', 20.00, '王梅策签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (60, 1, '2024-12-10', '收入', 20.00, '王梅策签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (61, 1, '2024-12-10', '收入', 20.00, '翟佳起签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (62, 1, '2024-12-10', '收入', 20.00, '刘叙增签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (63, 1, '2024-12-10', '收入', 20.00, '刘叙增签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (64, 1, '2024-12-10', '收入', 20.00, '王梅策签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (65, 1, '2024-12-10', '收入', 20.00, '王梅策签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (66, 1, '2024-12-10', '收入', 20.00, '翟佳起签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (67, 1, '2024-12-10', '收入', 20.00, '刘叙增签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (68, 1, '2024-12-10', '收入', 20.00, '刘叙增签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (69, 1, '2024-12-10', '收入', 20.00, '王梅策签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (70, 1, '2024-12-10', '收入', 20.00, '王梅策签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (71, 1, '2024-12-10', '收入', 20.00, '翟佳起签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (72, 1, '2024-12-10', '收入', 20.00, '刘叙增签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (73, 1, '2024-12-10', '收入', 20.00, '刘叙增签到');
 COMMIT;
 
 -- ----------------------------
