@@ -27,6 +27,10 @@ List<Achievement> getList();
 List<Achievement> getListById(@Param("teamId") int teamId);
 
 
+@Select("""
+SELECT * from achievements
+""")
+List<Achievement> getAllAchievement();
 
     @Update("update achievements set coin_awarded = #{achievement.coinAwarded},status = " +
             "#{achievement.status} where achievement_id = #{achievement.achievementId}")

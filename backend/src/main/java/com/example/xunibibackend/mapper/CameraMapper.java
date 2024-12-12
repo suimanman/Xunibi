@@ -31,11 +31,12 @@ public interface CameraMapper extends BaseMapper<Camera> {
         type,
         coin_consumption,
         rented_team_id,  -- 如果租用，则返回队伍名称
-        is_available    
+        is_available,
+        image_url
     FROM Camera""")
     List<Camera> getAllCameras();
 
-    @Insert("INSERT INTO Camera (type, coin_consumption, is_available, rented_team_id) VALUES (#{item.type}, #{item.coinConsumption}, #{item.isAvailable},#{item.rentedTeamId})")
+    @Insert("INSERT INTO Camera (type, coin_consumption, is_available, rented_team_id, image_url) VALUES (#{item.type}, #{item.coinConsumption}, #{item.isAvailable},#{item.rentedTeamId}, #{item.imageUrl})")
     int insert(@Param("item") Camera item);
 
     @Delete("DELETE FROM Camera WHERE id = #{id}")
@@ -53,10 +54,9 @@ public interface CameraMapper extends BaseMapper<Camera> {
         type = #{item.type}, 
         coin_consumption = #{item.coinConsumption}, 
         is_available = #{item.isAvailable},
-        rented_team_id = #{item.rentedTeamId}
+        rented_team_id = #{item.rentedTeamId},
+        image_url = #{item.imageUrl}
     WHERE id = #{id}
 """)
     int updateByadmin(int id,@Param("item")Camera item);
-
-
 }

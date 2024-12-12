@@ -33,12 +33,13 @@ public interface EquipmentMapper extends BaseMapper<Equipment> {
         type,
         coin_consumption,
         rented_team_id AS rentedTeamId ,-- 如果租用，则返回队伍名称
-        is_available AS isAvailable
+        is_available AS isAvailable,
+        image_url
     FROM 
         Equipment""")
    List<Equipment> getAllEquipments();
 
-    @Insert("INSERT INTO Equipment (type, coin_consumption, is_available, rented_team_id) VALUES (#{item.type}, #{item.coinConsumption}, #{item.isAvailable}, #{item.rentedTeamId})")
+    @Insert("INSERT INTO Equipment (type, coin_consumption, is_available, rented_team_id, image_url) VALUES (#{item.type}, #{item.coinConsumption}, #{item.isAvailable}, #{item.rentedTeamId}, #{item.imageUrl})")
     int insert(@Param("item") Equipment item);
 
     @Delete("DELETE FROM Equipment WHERE id = #{id}")
@@ -57,7 +58,8 @@ public interface EquipmentMapper extends BaseMapper<Equipment> {
         type = #{item.type}, 
         coin_consumption = #{item.coinConsumption}, 
         is_available = #{item.isAvailable},
-        rented_team_id = #{item.rentedTeamId}
+        rented_team_id = #{item.rentedTeamId},
+        image_url = #{item.imageUrl}
     WHERE id = #{id}
 """)
     int updateByadmin(int id,@Param("item") Equipment item);

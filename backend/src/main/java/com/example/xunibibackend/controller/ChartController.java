@@ -61,4 +61,7 @@ public class ChartController {
       return MyResult.success(virtualCoinTransactionsService.getMonthlyEarnSummary());
     }
 
+
+
+
 }
