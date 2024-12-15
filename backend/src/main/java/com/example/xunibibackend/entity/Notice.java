@@ -5,6 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Data;
 
+import java.security.Timestamp;
+import java.time.LocalDate;
+
 @Entity
 @Data
 @TableName("notice")
@@ -12,5 +15,7 @@ public class Notice {
     @Id
     private Integer id;
     private String content;
+    private LocalDate createdAt;
     private boolean display;
+
 }

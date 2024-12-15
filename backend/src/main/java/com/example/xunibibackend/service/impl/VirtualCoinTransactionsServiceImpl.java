@@ -1,5 +1,6 @@
 package com.example.xunibibackend.service.impl;
 
+import com.example.xunibibackend.entity.VirtualCoinTransaction;
 import com.example.xunibibackend.entity.dto.TransactionSummaryDTO;
 import com.example.xunibibackend.mapper.CoinTransactionMapper;
 import com.example.xunibibackend.response.MyResult;
@@ -22,5 +23,10 @@ public class VirtualCoinTransactionsServiceImpl implements VirtualCoinTransactio
     @Override
     public List<TransactionSummaryDTO> getMonthlyEarnSummary() {
         return coinTransactionMapper.getMonthlyEarnSummary();
+    }
+
+    @Override
+    public MyResult getAllRecords() {
+        return MyResult.success(coinTransactionMapper.getAllRecords());
     }
 }

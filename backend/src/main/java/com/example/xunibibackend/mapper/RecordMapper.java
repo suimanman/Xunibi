@@ -11,4 +11,14 @@ import java.util.List;
 public interface RecordMapper extends BaseMapper<VirtualCoinTransaction> {
     @Select("select * from VirtualCoinTransactions where team_id = #{teamId}")
     List<VirtualCoinTransaction> getRecords(Integer teamId);
+
+
+
+
+
+
+
+
+
+
 }
