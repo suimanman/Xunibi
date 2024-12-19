@@ -78,8 +78,8 @@ public class TeamsServiceImpl implements TeamsService {
      public List<TeamWithMembers> getTeamsWithMemberCount() {
         return teamMapper.getTeamsWithMemberCount();
     }
-     public List<TeamAchievementSummary> getTeamAchievementSummaries() {
-        return teamMapper.getTeamAchievementSummaries();
+     public List<TeamAchievementSummary> getTeamAchievementSummaries(String month) {
+        return teamMapper.getTeamAchievementSummaries(month);
     }
 
 //    @Override

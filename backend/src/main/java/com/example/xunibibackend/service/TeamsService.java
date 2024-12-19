@@ -25,7 +25,7 @@ public interface TeamsService {
 
     List<TeamWithMembers> getTeamsWithMemberCount();
 
-    List<TeamAchievementSummary> getTeamAchievementSummaries();
+    List<TeamAchievementSummary> getTeamAchievementSummaries(String month);
 
 //    int createTeamByAdmin(Team team);
 }
