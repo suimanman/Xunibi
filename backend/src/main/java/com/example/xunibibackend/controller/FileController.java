@@ -25,6 +25,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/files")
 @Slf4j
+@CrossOrigin(
+        origins = "http://localhost:8081", // 允许的前端地址
+        allowCredentials = "true" // 允许携带凭证
+)
 public class FileController {
 
     @Value("${file.upload-dir}")

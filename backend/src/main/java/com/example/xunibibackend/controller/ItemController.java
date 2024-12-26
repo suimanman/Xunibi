@@ -76,7 +76,7 @@ public class ItemController {
     }
 
      @GetMapping("/equipment/findbyname")
-    public MyResult getEquipmentByName(@RequestParam("itemName") String itemName) {
+    public MyResult getEquipmentByName(@RequestParam("name") String itemName) {
         return equipmentService.getAEquipmentsByName(itemName);
     }
 
@@ -104,7 +104,7 @@ public class ItemController {
     }
 
     @GetMapping("/camera/findbyname")
-    public MyResult getItemByName(@RequestParam("itemName") String itemName) {
-        return equipmentService.getAEquipmentsByName(itemName);
+    public MyResult getCameraByName(@RequestParam("name") String itemName) {
+        return cameraService.getCameraByName(itemName);
     }
 }

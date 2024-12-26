@@ -9,12 +9,14 @@ import com.example.xunibibackend.response.MyResult;
 import com.example.xunibibackend.service.TeamsService;
 import com.example.xunibibackend.service.UserService;
 import com.example.xunibibackend.service.VirtualCoinTransactionsService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/chart")
 @CrossOrigin(
@@ -46,10 +48,25 @@ public class ChartController {
         return MyResult.success(teams);
     }
 
+//    @GetMapping("/teamwithachive")
+//     public MyResult getTeamAchievementSummaries(@RequestParam String month) {
+//        List<TeamAchievementSummary> summaries = teamsService.getTeamAchievementSummaries(month);
+//        return MyResult.success(summaries);
+//    }
+
     @GetMapping("/teamwithachive")
-     public MyResult getTeamAchievementSummaries() {
-        List<TeamAchievementSummary> summaries = teamsService.getTeamAchievementSummaries();
+    public MyResult getTeamAchievementSummaries(@RequestParam(defaultValue = "") String month) {
+       log.info("month:", month);
+    // 如果 month 为空，则查询所有数据
+        if (month.isEmpty()) {
+        // 处理返回所有数据的逻辑
+        List<TeamAchievementSummary> summaries = teamsService.getTeamAchievementSummaries(null);  // 传递 null 或空值
         return MyResult.success(summaries);
+     } else {
+        // 如果传递了 month 参数，则根据指定月份查询
+        List<TeamAchievementSummary> summaries = teamsService.getTeamAchievementSummaries(month);
+        return MyResult.success(summaries);
+     }
     }
 
     @GetMapping("/monwithspend")
@@ -60,5 +77,8 @@ public class ChartController {
     public MyResult getMonWithEarn() {
       return MyResult.success(virtualCoinTransactionsService.getMonthlyEarnSummary());
     }
+
+
+
 
 }

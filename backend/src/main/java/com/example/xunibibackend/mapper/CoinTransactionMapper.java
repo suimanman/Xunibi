@@ -29,4 +29,9 @@ List<TransactionSummaryDTO> getMonthlyExpenditureSummary();
             "GROUP BY month, description " +
             "ORDER BY month DESC, description")
 List<TransactionSummaryDTO> getMonthlyEarnSummary();
+
+    @Select("select * from VirtualCoinTransactions ")
+    List<VirtualCoinTransaction> getAllRecords();
+
+
 }

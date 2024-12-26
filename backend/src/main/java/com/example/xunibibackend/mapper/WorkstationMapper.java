@@ -38,11 +38,12 @@ public interface WorkstationMapper extends BaseMapper<Workstation> {
         type,
         coin_consumption AS coinConsumption,
         is_available,
-        rented_team_id  -- 如果租用，则返回队伍名称
+        rented_team_id,  -- 如果租用，则返回队伍名称
+        image_url
     FROM 
         Workstation """) List<Workstation> getAllWorkstations();
 
-    @Insert("INSERT INTO Workstation (type, coin_consumption, is_available , rented_team_id) VALUES (#{type}, #{coinConsumption}, #{isAvailable},#{rentedTeamId})")
+    @Insert("INSERT INTO Workstation (type, coin_consumption, is_available , rented_team_id, image_url) VALUES (#{type}, #{coinConsumption}, #{isAvailable},#{rentedTeamId}, #{imageUrl})")
     int insert(Workstation item);
 
     @Delete("DELETE FROM Workstation WHERE id = #{id}")
@@ -60,7 +61,8 @@ public interface WorkstationMapper extends BaseMapper<Workstation> {
         type = #{item.type}, 
         coin_consumption = #{item.coinConsumption}, 
         is_available = #{item.isAvailable},
-        rented_team_id = #{item.rentedTeamId}
+        rented_team_id = #{item.rentedTeamId},
+        image_url = #{item.imageUrl}
     WHERE id = #{id}
 """)
     int updateByadmin(int id ,@Param("item")Workstation item);

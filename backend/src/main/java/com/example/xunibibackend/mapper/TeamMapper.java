@@ -47,17 +47,44 @@ public interface TeamMapper extends BaseMapper<Team> {
     List<TeamWithMembers> getTeamsWithMemberCount();
 
 
-     @Select("SELECT " +
-            "t.team_id, " +
-            "t.team_name, " +
-            "SUM(CASE WHEN a.achievement_type = 'paper' AND a.status = '已通过' THEN 1 ELSE 0 END) AS paper_count, " +
-            "SUM(CASE WHEN a.achievement_type = 'competition' AND a.status = '已通过' THEN 1 ELSE 0 END) AS competition_count, " +
-            "SUM(CASE WHEN a.achievement_type NOT IN ('paper', 'competition') AND a.status = '已通过' THEN 1 ELSE 0 END) AS other_count " +
-            "FROM Team t " +
-            "LEFT JOIN Achievements a ON t.team_id = a.team_id " +
-            "WHERE a.status = '已通过' " +
-            "GROUP BY t.team_id, t.team_name")
-    List<TeamAchievementSummary> getTeamAchievementSummaries();
+//     @Select("SELECT " +
+//            "t.team_id, " +
+//            "t.team_name, " +
+//             "a.achievement_date,"+
+//            "SUM(CASE WHEN a.achievement_type = 'paper' AND a.status = '已通过' THEN 1 ELSE 0 END) AS paper_count, " +
+//            "SUM(CASE WHEN a.achievement_type = 'competition' AND a.status = '已通过' THEN 1 ELSE 0 END) AS competition_count, " +
+//            "SUM(CASE WHEN a.achievement_type NOT IN ('paper', 'competition') AND a.status = '已通过' THEN 1 ELSE 0 END) AS other_count " +
+//            "FROM Team t " +
+//            "LEFT JOIN Achievements a ON t.team_id = a.team_id " +
+//            "WHERE a.status = '已通过' " +
+//            "GROUP BY t.team_id, t.team_name")
+//    List<TeamAchievementSummary> getTeamAchievementSummaries();
+//@Select("SELECT " +
+//        "t.team_id, " +
+//        "t.team_name, " +
+//        " MAX(a.achievement_date) AS achievement_date," +
+//        "SUM(CASE WHEN a.achievement_type = 'paper' AND a.status = '已通过' THEN 1 ELSE 0 END) AS paper_count, " +
+//        "SUM(CASE WHEN a.achievement_type = 'competition' AND a.status = '已通过' THEN 1 ELSE 0 END) AS competition_count, " +
+//        "SUM(CASE WHEN a.achievement_type NOT IN ('paper', 'competition') AND a.status = '已通过' THEN 1 ELSE 0 END) AS other_count " +
+//        "FROM Team t " +
+//        "LEFT JOIN Achievements a ON t.team_id = a.team_id " +
+//        "WHERE a.status = '已通过' AND DATE_FORMAT(a.achievement_date, '%Y-%m') = #{month} " +
+//        "GROUP BY t.team_id, t.team_name")
+@Select(
+    "SELECT " +
+    "t.team_id, " +
+    "t.team_name, " +
+    " MAX(a.achievement_date) AS achievement_date,"+
+    " SUM(CASE WHEN a.achievement_type = 'paper' AND a.status = '已通过' THEN 1 ELSE 0 END) AS paper_count, "+
+    " SUM(CASE WHEN a.achievement_type = 'competition' AND a.status = '已通过' THEN 1 ELSE 0 END) AS competition_count, "+
+    " SUM(CASE WHEN a.achievement_type NOT IN ('paper', 'competition') AND a.status = '已通过' THEN 1 ELSE 0 END) AS other_count "+
+    "FROM Team t " +
+    "LEFT JOIN Achievements a ON t.team_id = a.team_id "+
+    "WHERE a.status = '已通过'"+
+    "AND (DATE_FORMAT(a.achievement_date, '%Y-%m') = #{month} OR #{month} IS NULL)"+
+    "GROUP BY t.team_id, t.team_name"
+)
+List<TeamAchievementSummary> getTeamAchievementSummaries(@Param("month") String month);
 
 
 
