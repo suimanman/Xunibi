@@ -45,8 +45,10 @@ public class CheckInSchedulerService {
     private static final String API_CMD = "checkin_query";
 
     // 已处理数据的集合
-    private final Set<Integer> processedIds = new HashSet<>();
+    private final Set<String> processedNames = new HashSet<>();
 
+    private Integer nextId;
+    private Integer finalId;
     /**
      * 每 3 秒请求一次签到数据
      */
@@ -63,6 +65,10 @@ public class CheckInSchedulerService {
             ResponseEntity<JsonNode> response = restTemplate.exchange(URL, HttpMethod.POST, requestEntity, JsonNode.class);
 
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                JsonNode next_id_node = response.getBody().path("data").path("next_id");
+                nextId = next_id_node.isMissingNode() ? null : next_id_node.asInt();
+                finalId=nextId;
+//                log.info("nextId:{}",nextId);
                 JsonNode dataNode = response.getBody().path("data").path("data");
 
                 // 将 JsonNode 转换为 SignInData 列表
@@ -92,6 +98,7 @@ public class CheckInSchedulerService {
         return signInDataList.stream()
                 .filter(data -> {
                     LocalDate recordDate = convertTimestampToDate(data.getCheck_time());
+//                    log.info("时间：{}",recordDate);
                     return recordDate.equals(today);
                 })
                 .toList();
@@ -109,7 +116,7 @@ public class CheckInSchedulerService {
      */
     @Scheduled(cron = "0 0 0 * * ?") // 每天午夜清空
     public void clearProcessedIdsDaily() {
-        processedIds.clear();
+        processedNames.clear();
 //        log.info("已处理数据集合已清空");
     }
 
@@ -118,10 +125,16 @@ public class CheckInSchedulerService {
      */
     private void handleSignInData(List<SignInData> signInDataList) {
         for (SignInData data : signInDataList) {
-            if (!processedIds.contains(data.getId())) {
+            Pattern pattern = Pattern.compile("\"member_name\":\"([^\"]+)\"");
+            Matcher matcher = pattern.matcher(data.getCheck_data());
+            String memberName="";
+            if (matcher.find()) {
+                memberName = matcher.group(1); // 提取 member_name
+            }
+            if (!processedNames.contains(memberName) ){
 //                log.info("重复数据跳过处理: {}", data);
                 // 新数据，进行处理
-                processedIds.add(data.getId());
+                processedNames.add(memberName);
                 processNewData(data);
             }
         }
@@ -182,8 +195,12 @@ public class CheckInSchedulerService {
      */
     private Map<String, Object> createRequestBody() {
         Map<String, Object> params = new HashMap<>();
-        params.put("next_id", 0);
-        params.put("page_size", 10); // 每次只请求一条数据
+        if(nextId==null) {
+            if(finalId==null) nextId=0;
+            else nextId=finalId;
+        }
+        params.put("next_id", nextId);
+        params.put("page_size", 1); // 每次只请求一条数据
         return params;
     }
 

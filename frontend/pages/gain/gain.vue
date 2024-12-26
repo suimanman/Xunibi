@@ -65,8 +65,8 @@
 		data() {
 			return {
 				list2: [{
-					image: '/static/img/1.png',
-					title: '河北工业大学——众创空间',
+					image: '/static/img/背景图片1.png',
+					// title: '河北工业大学——众创空间',
 				}],
 			}
 		},
