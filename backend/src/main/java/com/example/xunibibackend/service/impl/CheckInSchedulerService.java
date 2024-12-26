@@ -4,9 +4,7 @@ import com.example.xunibibackend.entity.Team;
 import com.example.xunibibackend.entity.User;
 import com.example.xunibibackend.entity.VirtualCoinTransaction;
 import com.example.xunibibackend.entity.dto.SignInData;
-import com.example.xunibibackend.mapper.CoinTransactionMapper;
-import com.example.xunibibackend.mapper.TeamMapper;
-import com.example.xunibibackend.mapper.UserMapper;
+import com.example.xunibibackend.mapper.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -36,7 +34,10 @@ public class CheckInSchedulerService {
     TeamMapper teamMapper;
     @Autowired
     CoinTransactionMapper coinTransactionMapper;
-
+    @Autowired
+    SignCoinMapper signCoinMapper;
+    @Autowired
+    SignRecordMapper signRecordMapper;
     private final RestTemplate restTemplate = new RestTemplate();
     private static final String URL = "https://v2-api.delicloud.com/v2.0/cloudappapi";
     private static final String APP_KEY = "eea8179f992cab25a6286152fc4d1cbd";
@@ -116,6 +117,8 @@ public class CheckInSchedulerService {
      */
     @Scheduled(cron = "0 0 0 * * ?") // 每天午夜清空
     public void clearProcessedIdsDaily() {
+        LocalDate date=LocalDate.now();
+        signRecordMapper.insertDate(date);
         processedNames.clear();
 //        log.info("已处理数据集合已清空");
     }
@@ -140,11 +143,13 @@ public class CheckInSchedulerService {
         }
     }
 
-    /**
-     * 模拟对新数据的处理
-     */
     private void processNewData(SignInData data) {
+        //增加签到人数
+        LocalDate date=LocalDate.now();
+        Integer count=signRecordMapper.getCount(date)+1;
+        signRecordMapper.updateCount(date,count);
         // TODO: 发放虚拟币
+        Double coin=signCoinMapper.findCoin();
         // 使用正则表达式提取 employee_num
         Pattern pattern = Pattern.compile("\"employee_num\":\"(\\d+)\",.*\"member_name\":\"([^\"]+)\"");
         Matcher matcher = pattern.matcher(data.getCheck_data());
@@ -156,12 +161,12 @@ public class CheckInSchedulerService {
 
             Integer teamId=user.getTeamId();
             Team team =teamMapper.selectByTeamId(teamId);
-            Double coinNew=team.getVirtualCoins() + 10.0;
+            Double coinNew=team.getVirtualCoins() + coin;
             teamMapper.updateCoinById(teamId,coinNew);
 
             //将记录添加到虚拟币交易记录表中
             VirtualCoinTransaction coinTransaction=new VirtualCoinTransaction();
-            coinTransaction.setCoinAmount(20.0);
+            coinTransaction.setCoinAmount(coin);
             coinTransaction.setTransactionDate(LocalDate.now());
             coinTransaction.setTransactionType("收入");
             coinTransaction.setDescription(memberName+"签到");

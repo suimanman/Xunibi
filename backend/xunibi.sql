@@ -11,7 +11,7 @@
  Target Server Version : 80300 (8.3.0)
  File Encoding         : 65001
 
- Date: 11/12/2024 20:50:34
+ Date: 26/12/2024 12:33:56
 */
 
 SET NAMES utf8mb4;
@@ -221,7 +221,7 @@ CREATE TABLE `RentalRecords` (
   PRIMARY KEY (`rental_id`),
   KEY `team_id` (`team_id`),
   CONSTRAINT `rentalrecords_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `Team` (`team_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of RentalRecords
@@ -247,6 +247,24 @@ INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`
 INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (18, 1, '2024-11-23', 150.00, 1, '激光打印机', 1);
 INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (19, 1, '2024-11-23', 240.00, 3, 'DSLR 摄像机', 1);
 INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (20, 1, '2024-12-06', 100.00, 1, '工位1', 1);
+INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (21, 1, '2024-12-16', 100.00, 1, '工位1', 1);
+INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (22, 1, '2024-12-16', 60.00, 2, '一楼会议室-1', 1);
+INSERT INTO `RentalRecords` (`rental_id`, `team_id`, `rental_date`, `coin_spent`, `rental_days`, `rental_type`, `rental_or_return`) VALUES (23, 1, '2024-12-16', 300.00, 3, '工位1', 1);
+COMMIT;
+
+-- ----------------------------
+-- Table structure for SignCoin
+-- ----------------------------
+DROP TABLE IF EXISTS `SignCoin`;
+CREATE TABLE `SignCoin` (
+  `coin` decimal(10,2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of SignCoin
+-- ----------------------------
+BEGIN;
+INSERT INTO `SignCoin` (`coin`) VALUES (20.00);
 COMMIT;
 
 -- ----------------------------
@@ -254,26 +272,20 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `SignInRecords`;
 CREATE TABLE `SignInRecords` (
-  `sign_in_id` int NOT NULL AUTO_INCREMENT,
-  `team_id` int DEFAULT NULL,
-  `user_id` int DEFAULT NULL,
-  `sign_in_date` date NOT NULL,
-  `virtual_coin_awarded` decimal(10,2) NOT NULL,
-  PRIMARY KEY (`sign_in_id`),
-  KEY `team_id` (`team_id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `signinrecords_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `Team` (`team_id`),
-  CONSTRAINT `signinrecords_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
+  `id` int NOT NULL AUTO_INCREMENT,
+  `date` date NOT NULL,
+  `count` int DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of SignInRecords
 -- ----------------------------
 BEGIN;
-INSERT INTO `SignInRecords` (`sign_in_id`, `team_id`, `user_id`, `sign_in_date`, `virtual_coin_awarded`) VALUES (1, 1, 1, '2023-10-01', 10.00);
-INSERT INTO `SignInRecords` (`sign_in_id`, `team_id`, `user_id`, `sign_in_date`, `virtual_coin_awarded`) VALUES (2, 1, 2, '2023-10-01', 10.00);
-INSERT INTO `SignInRecords` (`sign_in_id`, `team_id`, `user_id`, `sign_in_date`, `virtual_coin_awarded`) VALUES (3, 2, 3, '2023-10-01', 10.00);
-INSERT INTO `SignInRecords` (`sign_in_id`, `team_id`, `user_id`, `sign_in_date`, `virtual_coin_awarded`) VALUES (4, 3, 4, '2023-10-01', 10.00);
+INSERT INTO `SignInRecords` (`id`, `date`, `count`) VALUES (1, '2023-10-01', NULL);
+INSERT INTO `SignInRecords` (`id`, `date`, `count`) VALUES (2, '2023-10-01', NULL);
+INSERT INTO `SignInRecords` (`id`, `date`, `count`) VALUES (3, '2023-10-01', NULL);
+INSERT INTO `SignInRecords` (`id`, `date`, `count`) VALUES (4, '2023-10-01', NULL);
 COMMIT;
 
 -- ----------------------------
@@ -292,7 +304,7 @@ CREATE TABLE `Team` (
 -- Records of Team
 -- ----------------------------
 BEGIN;
-INSERT INTO `Team` (`team_id`, `team_name`, `creation_date`, `virtual_coins`) VALUES (1, '河工大众创空间', '2023-01-10', 9650.00);
+INSERT INTO `Team` (`team_id`, `team_name`, `creation_date`, `virtual_coins`) VALUES (1, '河工大众创空间', '2023-01-10', 9350.00);
 INSERT INTO `Team` (`team_id`, `team_name`, `creation_date`, `virtual_coins`) VALUES (2, '先锋者', '2023-03-15', 420.00);
 INSERT INTO `Team` (`team_id`, `team_name`, `creation_date`, `virtual_coins`) VALUES (3, '暴乱头脑', '2023-05-20', 670.00);
 COMMIT;
@@ -345,7 +357,7 @@ CREATE TABLE `VirtualCoinTransactions` (
   PRIMARY KEY (`transaction_id`),
   KEY `team_id` (`team_id`),
   CONSTRAINT `virtualcointransactions_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `Team` (`team_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=93 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of VirtualCoinTransactions
@@ -424,6 +436,9 @@ INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction
 INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (71, 1, '2024-12-10', '收入', 20.00, '翟佳起签到');
 INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (72, 1, '2024-12-10', '收入', 20.00, '刘叙增签到');
 INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (73, 1, '2024-12-10', '收入', 20.00, '刘叙增签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (90, 1, '2024-12-16', '收入', 20.00, '王梅策签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (91, 1, '2024-12-16', '收入', 20.00, '刘叙增签到');
+INSERT INTO `VirtualCoinTransactions` (`transaction_id`, `team_id`, `transaction_date`, `transaction_type`, `coin_amount`, `description`) VALUES (92, 1, '2024-12-16', '收入', 20.00, '翟佳起签到');
 COMMIT;
 
 -- ----------------------------
