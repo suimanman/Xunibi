@@ -19,4 +19,9 @@ public interface SignRecordMapper extends BaseMapper<SignInRecords> {
 
     @Update("update SignInRecords set count = #{count} where date=#{date}")
     void updateCount(LocalDate date,Integer count);
+
+    @Select("SELECT IFNULL(SUM(count), 0) FROM SignInRecords WHERE date = CURDATE()")
+    int getTodaySignInCount();
+
+
 }
