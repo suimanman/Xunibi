@@ -82,7 +82,7 @@ public class GainServiceImpl implements GainService {
         AchievementInfo achievementInfo = achievementRequest.getAchievementInfo();
         StatementInfo statementInfo = achievementRequest.getStatementInfo();
 
-        String userName = studentInfo.getId();
+        String userName = studentInfo.getUsername();
         Integer userId = userMapper.getUserIdByUsername(userName);
         Integer teamId = userMapper.getTeamIdByUsername(userName);
 
@@ -94,7 +94,7 @@ public class GainServiceImpl implements GainService {
         achievement.setAchievementDate(LocalDate.parse(achievementInfo.getDateValue()));
         achievement.setCoinAwarded(0.0);
         String description = "学生基本信息:\n" +
-                "姓名："+studentInfo.getName()+"，学号："+studentInfo.getId()+
+                "姓名："+studentInfo.getName()+"，学号："+studentInfo.getUsername()+
                 "，学院："+studentInfo.getDepartment()+"，专业："+studentInfo.getMajor()+"，班级："+studentInfo.getClazz()
                 +"，所属团队："+studentInfo.getTeamName()
                 + "\n成果基本信息：\n" + "成果名称："+achievementInfo.getName()+
@@ -120,11 +120,20 @@ public class GainServiceImpl implements GainService {
 
     @Override
     public MyResult submitDuty(DutyRequest dutyRequest) {
+        if (dutyRequest == null ||
+                dutyRequest.getName() == null || dutyRequest.getName().isEmpty() ||
+                dutyRequest.getUsername() == null || dutyRequest.getUsername().isEmpty() ||
+                dutyRequest.getTeamName() == null || dutyRequest.getTeamName().isEmpty() ||
+                dutyRequest.getDescription() == null || dutyRequest.getDescription().isEmpty() ||
+                dutyRequest.getImage() == null || dutyRequest.getImage().isEmpty()) {
+            return MyResult.error("提交失败，信息不能为空！");
+        }
         DutyRecord dutyRecord=new DutyRecord();
-        User user=userMapper.getByUsername(dutyRequest.getId());
+        User user=userMapper.getByUsername(dutyRequest.getUsername());
+//        log.info("zhiban :{}",dutyRequest);
         dutyRecord.setTeamId(user.getTeamId());
         dutyRecord.setUserId(user.getUserId());
-        dutyRecord.setDescription(dutyRequest.getTeam()+"团队成员"+dutyRequest.getName()+"值班情况："+dutyRequest.getDescription());
+        dutyRecord.setDescription(dutyRequest.getTeamName()+"团队成员"+dutyRequest.getName()+"值班情况："+dutyRequest.getDescription());
         dutyRecord.setDutyDate(LocalDate.now());
         dutyRecord.setImage(dutyRequest.getImage());
         dutyRecord.setCoinAwarded(0.0);

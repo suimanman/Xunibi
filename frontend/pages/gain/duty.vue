@@ -27,7 +27,7 @@
 					<view>
 						<text class="section-title">值班情况</text>
 					</view>
-			
+
 					<text class="more-button" @click="editStatement">填写</text>
 				</view>
 				<view class="section-content">
@@ -39,11 +39,11 @@
 				<text class="required">*</text>
 				<text class="section-title">值日照片上传</text>
 				<view>
-					<u-upload :fileList="fileList1" @afterRead="afterRead" @delete="deletePic"
-						name="1" multiple :maxCount="1" :previewFullImage="true">
-						<image class="upload-image" src="@/static/img/图片上传.png"
-							mode="widthFix" style="width: 50px;height: 50px;"></image>
-							</u-upload>
+					<u-upload :fileList="fileList1" @afterRead="afterRead" @delete="deletePic" name="1" multiple
+						:maxCount="1" :previewFullImage="true">
+						<image class="upload-image" src="@/static/img/图片上传.png" mode="widthFix"
+							style="width: 50px;height: 50px;"></image>
+					</u-upload>
 				</view>
 				<text class="beizhu">* 请上传1张大小不超过5M的图片</text>
 			</view>
@@ -103,7 +103,7 @@
 				// 获取用户数据
 				// 定义允许的字段
 				const allowedFields = Object.keys(this.dutyInfo);
-			
+
 				// 筛选后端返回的数据
 				this.dutyInfo = Object.keys(loginResult.data.data)
 					.filter(key => allowedFields.includes(key)) // 筛选只保留前端需要的字段
@@ -124,14 +124,14 @@
 						res.eventChannel.emit('updateStatement', {
 							data: this.statementInfo
 						});
-			
+
 						// 接收下级页面返回的数据
 						res.eventChannel.on('acceptStatement', (data) => {
 							// console.log("接收到下级页面返回的数据：", data);
 							this.statementInfo = {
 								...data.data // 注意解构 data.data
 							};
-							this.dutyInfo.description=this.statementInfo.info;
+							this.dutyInfo.description = this.statementInfo.info;
 							console.log("接收的数据:", this.dutyInfo.description);
 						});
 					},
@@ -198,11 +198,21 @@
 					});
 				});
 			},
-			submitAll() {
+			async submitAll() {
 				if (isLogin()) {
-					console.log(this.dutyInfo);
-					dutyAward(this.dutyInfo);
-					this.showToast(this.params);
+					// console.log(this.dutyInfo);
+					try {
+						const result = await dutyAward(this.dutyInfo);
+						if (result.data.code === 200) {
+							this.showToast(this.params);
+						}
+					} catch (error) {
+						uni.showToast({
+							title: "请填写完整信息！",
+							icon: "none"
+						});
+					}
+
 				}
 
 			},
@@ -373,11 +383,11 @@
 		font-size: 16px;
 		border-radius: 5px;
 	}
-	
+
 	.upload-image {
 		padding: 10px;
 	}
-	
+
 	.duty-text {
 		font-size: 14px;
 	}

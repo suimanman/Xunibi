@@ -250,15 +250,46 @@ var _default = {
       uni.navigateBack();
     },
     submitAll: function submitAll() {
-      var description = {
-        studentInfo: this.studentInfo,
-        achievementInfo: this.achievementInfo,
-        statementInfo: this.statementInfo
-      };
-      if ((0, _me.isLogin)()) {
-        (0, _gain.achievementAward)(description);
-        this.showToast(this.params);
-      }
+      var _this3 = this;
+      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+        var description, result;
+        return _regenerator.default.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                description = {
+                  studentInfo: _this3.studentInfo,
+                  achievementInfo: _this3.achievementInfo,
+                  statementInfo: _this3.statementInfo
+                };
+                if (!(0, _me.isLogin)()) {
+                  _context2.next = 12;
+                  break;
+                }
+                _context2.prev = 2;
+                _context2.next = 5;
+                return (0, _gain.achievementAward)(description);
+              case 5:
+                result = _context2.sent;
+                if (result.data.code === 200) {
+                  _this3.showToast(_this3.params);
+                }
+                _context2.next = 12;
+                break;
+              case 9:
+                _context2.prev = 9;
+                _context2.t0 = _context2["catch"](2);
+                uni.showToast({
+                  title: "请填写完整信息！",
+                  icon: "none"
+                });
+              case 12:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, null, [[2, 9]]);
+      }))();
     },
     showToast: function showToast(params) {
       this.$refs.uToast.show(_objectSpread(_objectSpread({}, params), {}, {
@@ -268,58 +299,58 @@ var _default = {
       }));
     },
     editStudentInfo: function editStudentInfo() {
-      var _this3 = this;
+      var _this4 = this;
       // console.log("当前传递的数据：", this.studentInfo);
       uni.navigateTo({
         url: '/pages/edit/studentInfoEdit',
         success: function success(res) {
           // 通过 eventChannel 向被打开页面传送数据
           res.eventChannel.emit('updateStudentInfo', {
-            data: _this3.studentInfo
+            data: _this4.studentInfo
           });
 
           // 接收下级页面返回的数据
           res.eventChannel.on('acceptStudentInfo', function (data) {
             // console.log("接收到下级页面返回的数据：", data);
-            _this3.studentInfo = _objectSpread({}, data.data);
+            _this4.studentInfo = _objectSpread({}, data.data);
           });
         }
       });
     },
     editAchievement: function editAchievement() {
-      var _this4 = this;
+      var _this5 = this;
       uni.navigateTo({
         url: '/pages/edit/achievementEdit',
         success: function success(res) {
           // 通过 eventChannel 向被打开页面传送数据
           res.eventChannel.emit('updateAchievement', {
-            data: _this4.achievementInfo
+            data: _this5.achievementInfo
           });
 
           // 接收下级页面返回的数据
           res.eventChannel.on('acceptAchievement', function (data) {
             // console.log("接收到下级页面返回的数据：", data);
-            _this4.achievementInfo = _objectSpread({}, data.data);
-            console.log("接收的数据:", _this4.achievementInfo);
+            _this5.achievementInfo = _objectSpread({}, data.data);
+            console.log("接收的数据:", _this5.achievementInfo);
           });
         }
       });
     },
     editStatement: function editStatement() {
-      var _this5 = this;
+      var _this6 = this;
       uni.navigateTo({
         url: '/pages/edit/statementEdit',
         success: function success(res) {
           // 通过 eventChannel 向被打开页面传送数据
           res.eventChannel.emit('updateStatement', {
-            data: _this5.statementInfo
+            data: _this6.statementInfo
           });
 
           // 接收下级页面返回的数据
           res.eventChannel.on('acceptStatement', function (data) {
             // console.log("接收到下级页面返回的数据：", data);
-            _this5.statementInfo = _objectSpread({}, data.data);
-            console.log("接收的数据:", _this5.statementInfo);
+            _this6.statementInfo = _objectSpread({}, data.data);
+            console.log("接收的数据:", _this6.statementInfo);
           });
         }
       });

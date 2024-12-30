@@ -133,15 +133,24 @@
 			goBack() {
 				uni.navigateBack();
 			},
-			submitAll() {
+			async submitAll() {
 				const description = {
 					studentInfo: this.studentInfo,
 					achievementInfo: this.achievementInfo,
 					statementInfo: this.statementInfo
 				};
 				if (isLogin()) {
-					achievementAward(description);
-					this.showToast(this.params);
+					try {
+						const result = await achievementAward(description);
+						if (result.data.code === 200) {
+							this.showToast(this.params);
+						}
+					} catch (error) {
+						uni.showToast({
+							title: "请填写完整信息！",
+							icon: "none"
+						});
+					}
 				}
 
 			},

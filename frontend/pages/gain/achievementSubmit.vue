@@ -111,7 +111,7 @@
 				// console.log('接收到上级页面传递的数据：', data);
 				this.achievementInfo.type = data.data
 			});
-			console.log("类型：",this.achievementInfo.type)
+			console.log("类型：", this.achievementInfo.type)
 		},
 		methods: {
 			async loginHandle() {
@@ -120,28 +120,37 @@
 				// 获取用户数据
 				// 定义允许的字段
 				const allowedFields = Object.keys(this.studentInfo);
-				
+
 				// 筛选后端返回的数据
 				this.studentInfo = Object.keys(loginResult.data.data)
-				    .filter(key => allowedFields.includes(key)) // 筛选只保留前端需要的字段
-				    .reduce((obj, key) => {
-				        obj[key] = loginResult.data.data[key]; // 构建新对象
-				        return obj;
-				    }, {});
+					.filter(key => allowedFields.includes(key)) // 筛选只保留前端需要的字段
+					.reduce((obj, key) => {
+						obj[key] = loginResult.data.data[key]; // 构建新对象
+						return obj;
+					}, {});
 				console.log(this.studentInfo);
 			},
 			goBack() {
 				uni.navigateBack();
 			},
-			submitAll() {
+			async submitAll() {
 				const description = {
 					studentInfo: this.studentInfo,
 					achievementInfo: this.achievementInfo,
 					statementInfo: this.statementInfo
 				};
 				if (isLogin()) {
-					achievementAward(description);
-					this.showToast(this.params);
+					try {
+						const result = await achievementAward(description);
+						if (result.data.code === 200) {
+							this.showToast(this.params);
+						}
+					} catch (error) {
+						uni.showToast({
+							title: "请填写完整信息！",
+							icon: "none"
+						});
+					}
 				}
 
 			},

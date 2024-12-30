@@ -30,12 +30,13 @@ public class GainController {
     //值日情况提交
     @PostMapping("/dutySubmit")
     public MyResult submitDuty(@RequestBody DutyRequest dutyRequest){
-        log.info("值班情况提交：{}",dutyRequest);
+//        log.info("值班情况提交：{}",dutyRequest);
         return gainService.submitDuty(dutyRequest);
     }
     //成果提交待审核
     @PostMapping("/achievementSubmit")
     public MyResult submitAchievement(@RequestBody AchievementRequest achievementRequest){
+        log.info("成果：{}",achievementRequest);
         return gainService.submitAchievement(achievementRequest);
     }
 

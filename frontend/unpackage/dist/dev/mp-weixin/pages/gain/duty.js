@@ -344,11 +344,41 @@ var _default = {
       });
     },
     submitAll: function submitAll() {
-      if ((0, _me.isLogin)()) {
-        console.log(this.dutyInfo);
-        (0, _gain.dutyAward)(this.dutyInfo);
-        this.showToast(this.params);
-      }
+      var _this5 = this;
+      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
+        var result;
+        return _regenerator.default.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                if (!(0, _me.isLogin)()) {
+                  _context3.next = 11;
+                  break;
+                }
+                _context3.prev = 1;
+                _context3.next = 4;
+                return (0, _gain.dutyAward)(_this5.dutyInfo);
+              case 4:
+                result = _context3.sent;
+                if (result.data.code === 200) {
+                  _this5.showToast(_this5.params);
+                }
+                _context3.next = 11;
+                break;
+              case 8:
+                _context3.prev = 8;
+                _context3.t0 = _context3["catch"](1);
+                uni.showToast({
+                  title: "请填写完整信息！",
+                  icon: "none"
+                });
+              case 11:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, null, [[1, 8]]);
+      }))();
     },
     showToast: function showToast(params) {
       this.$refs.uToast.show(_objectSpread(_objectSpread({}, params), {}, {
@@ -358,19 +388,19 @@ var _default = {
       }));
     },
     editDutyInfo: function editDutyInfo() {
-      var _this5 = this;
+      var _this6 = this;
       uni.navigateTo({
         url: '/pages/edit/dutyInfoEdit',
         success: function success(res) {
           // 通过 eventChannel 向被打开页面传送数据
           res.eventChannel.emit('updateDutyInfo', {
-            data: _this5.dutyInfo
+            data: _this6.dutyInfo
           });
 
           // 接收下级页面返回的数据
           res.eventChannel.on('acceptDutyInfo', function (data) {
             // console.log("接收到下级页面返回的数据：", data);
-            _this5.dutyInfo = _objectSpread({}, data.data);
+            _this6.dutyInfo = _objectSpread({}, data.data);
           });
         }
       });
