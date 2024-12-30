@@ -30,7 +30,7 @@ public interface DutyMapper extends BaseMapper<DutyRecord> {
     DutyRecord findById(@Param("dutyId") int dutyId);
 
 
-    @Update("UPDATE DutyRecords SET team_id = #{teamId}, user_id = #{userId}, duty_date = #{dutyDate}, " +
+    @Update("UPDATE DutyRecords SET team_id = #{teamId}, user_id = #{userId}, duty_date = #{dutyDate},  " +
             "coin_awarded = #{coinAwarded}, image = #{image}, status = #{status}, description = #{description} " +
             "WHERE duty_id = #{dutyId}")
     int update(DutyRecord dutyRecords);
