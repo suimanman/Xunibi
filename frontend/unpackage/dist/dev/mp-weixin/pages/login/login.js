@@ -229,10 +229,12 @@ var _default = {
                 _context.next = 14;
                 break;
               case 13:
-                uni.showToast({
-                  title: _result.data.msg || "注册失败",
-                  icon: "none"
-                });
+                if (_result.data.code === 409) {
+                  uni.showToast({
+                    title: _result.data.msg || "注册失败",
+                    icon: "none"
+                  });
+                }
               case 14:
                 _context.next = 19;
                 break;
@@ -240,7 +242,7 @@ var _default = {
                 _context.prev = 16;
                 _context.t0 = _context["catch"](0);
                 uni.showToast({
-                  title: "注册请求异常，请检查网络连接",
+                  title: "该用户已经存在",
                   icon: "none"
                 });
               case 19:

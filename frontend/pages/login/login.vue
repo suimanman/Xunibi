@@ -71,7 +71,7 @@
 						});
 						// 调用登录方法实现自动登录
 						await this.loginUser();
-					} else {
+					} else if(result.data.code === 409){
 						uni.showToast({
 							title: result.data.msg || "注册失败",
 							icon: "none"
@@ -79,7 +79,7 @@
 					}
 				} catch (error) {
 					uni.showToast({
-						title: "注册请求异常，请检查网络连接",
+						title: "该用户已经存在",
 						icon: "none"
 					});
 				}

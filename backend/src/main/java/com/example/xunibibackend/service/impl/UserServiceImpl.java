@@ -29,7 +29,9 @@ public class UserServiceImpl implements UserService {
     public MyResult register(User user) {
         User getUser=userMapper.getByUsername(user.getUsername());
         if(getUser != null){
-            return MyResult.error("用户已经存在");
+            log.info("用户已经存在");
+            return MyResult.warn("用户已经存在",HttpStatus.CONFLICT);
+
         }
         user.setPassword(DigestUtil.md5Hex(user.getPassword()));
         user.setDate(LocalDate.now());
