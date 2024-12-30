@@ -41,7 +41,7 @@
 						</view>
 						<view class="device-detail" v-if="device.isAvailable">
 							<view class="label">租期:</view>
-							<u-number-box v-model="rentalDays[index]" button-size="27" :max="7">
+							<u-number-box v-model="rentalDays[index]" button-size="27" >
 								<view slot="minus" class="minus">
 									<u-icon name="minus" size="12"></u-icon>
 								</view>
