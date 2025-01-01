@@ -95,7 +95,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public MyResult editPassword(User sessionUser, String oldPassword, String newPassword) {
-//        log.info("1:{},2:{}",sessionUser.getPassword(),DigestUtil.md5Hex(oldPassword));
+        log.info("1:{},2:{}",sessionUser.getPassword(),DigestUtil.md5Hex(oldPassword));
         if(!sessionUser.getPassword().equals(oldPassword)){
             return MyResult.error("原密码输入错误！");
         }

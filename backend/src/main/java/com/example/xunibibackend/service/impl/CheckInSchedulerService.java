@@ -117,8 +117,6 @@ public class CheckInSchedulerService {
      */
     @Scheduled(cron = "0 0 0 * * ?") // 每天午夜清空
     public void clearProcessedIdsDaily() {
-        LocalDate date=LocalDate.now();
-        signRecordMapper.insertDate(date);
         processedNames.clear();
 //        log.info("已处理数据集合已清空");
     }
@@ -138,6 +136,7 @@ public class CheckInSchedulerService {
 //                log.info("重复数据跳过处理: {}", data);
                 // 新数据，进行处理
                 processedNames.add(memberName);
+                log.info("名字：{}",memberName);
                 processNewData(data);
             }
         }
@@ -146,7 +145,14 @@ public class CheckInSchedulerService {
     private void processNewData(SignInData data) {
         //增加签到人数
         LocalDate date=LocalDate.now();
-        Integer count=signRecordMapper.getCount(date)+1;
+//        log.info("date:{}",date);
+        Integer count=signRecordMapper.getCount(date);
+        if(count == null){
+            signRecordMapper.insertDate(date);
+            count = 1;
+        }else{
+            count++;
+        }
         signRecordMapper.updateCount(date,count);
         // TODO: 发放虚拟币
         Double coin=signCoinMapper.findCoin();

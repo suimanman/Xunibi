@@ -1,6 +1,6 @@
 <template>
 	<view class="edit-password">
-		<u-form ref="formRef" :model="form" @submit="submitForm">
+		<u-form ref="formRef" :model="form">
 			<u-form-item label="原密码" required>
 				<u-input type="password" v-model="form.oldPassword" placeholder="请输入原密码" />
 			</u-form-item>
@@ -15,6 +15,9 @@
 
 			<button class="submit" @click="submitForm">提交</button>
 		</u-form>
+
+		<!-- 添加 uToast 组件 -->
+		<u-toast ref="uToast" />
 	</view>
 </template>
 
@@ -26,20 +29,24 @@
 	export default {
 		data() {
 			return {
+				params: {
+					type: "success",
+					message: "密码修改成功！请重新登录",
+				},
 				form: {
-					oldPassword: '',
-					newPassword: '',
-					confirmNewPassword: ''
-				}
+					oldPassword: "",
+					newPassword: "",
+					confirmNewPassword: "",
+				},
 			};
 		},
 		methods: {
 			async submitForm() {
-				// 先校验两次新密码是否一致
+				// 校验两次新密码是否一致
 				if (this.form.newPassword !== this.form.confirmNewPassword) {
 					uni.showToast({
 						title: "新密码不一致",
-						icon: "error"
+						icon: "error",
 					});
 					return;
 				}
@@ -47,23 +54,11 @@
 					// 调用后端接口，传递旧密码和新密码
 					const response = await editPassword({
 						oldPassword: this.form.oldPassword,
-						newPassword: this.form.newPassword
+						newPassword: this.form.newPassword,
 					});
 					if (response.data.code === 200) {
-						uni.showToast({
-							title: "密码修改成功",
-							icon: "success",
-							duration: 2000,
-							success: () => {
-								setTimeout(() => {
-									uni.switchTab({
-										url: "/pages/me/me" // tabBar 页面的路径
-									});
-								}, 1000);
-							}
-						});
+						this.showToast(this.params);
 					} else {
-						// 处理接口返回的错误信息
 						uni.showToast({
 							title: response.data.msg || "密码修改失败",
 							icon: "error",
@@ -73,12 +68,22 @@
 				} catch (error) {
 					console.error(error);
 					uni.showToast({
-						title: response.data.msg || "请求出错，请重试",
-						icon: "error"
+						title: error.message || "请求出错，请重试",
+						icon: "error",
 					});
 				}
-			}
-		}
+			},
+			showToast(params) {
+				this.$refs.uToast.show({
+					...params,
+					complete() {
+						uni.navigateTo({
+							url: "/pages/login/login", // tabBar 页面的路径
+						});
+					},
+				});
+			},
+		},
 	};
 </script>
 
@@ -89,7 +94,6 @@
 
 	.submit {
 		margin-top: 30px;
-		/* 调整按钮的顶部间距 */
 		font-size: 28rpx;
 		background: #5677fc;
 		color: #fff;

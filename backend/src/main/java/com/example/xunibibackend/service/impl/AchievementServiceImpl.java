@@ -44,7 +44,7 @@ public class AchievementServiceImpl implements AchievementService {
              Workbook workbook = new XSSFWorkbook();
              Sheet sheet =  workbook.createSheet("Achievements");
              Row headerRow = sheet.createRow(0);
-             String[] columns = {"Student Name", "Department", "Major", "Class", "Team Name", "Achievement Name", "Achievement Type", "Achievement Date", "Coin Awarded", "Description", "Status"};
+             String[] columns = {"学生姓名", "学院", "专业", "班级", "队伍名称", "成果名称", "成果类型", "日期", "奖励", "简介", "审核状态"};
              for (int i = 0; i < columns.length; i++) {
                 headerRow.createCell(i).setCellValue(columns[i]);
             }

@@ -7,26 +7,38 @@
                 icon="el-icon-refresh-left">重置</el-button>
             <el-button type="primary" plain @click="handleAdd">新增</el-button>
         </div>
-        <div class="table">
-            <el-table :data="users" @selection-change="handleSelectionChange" border>
-                <el-table-column prop="userId" label="用户ID" sortable></el-table-column>
-                <el-table-column prop="username" label="用户名"></el-table-column>
-                <el-table-column prop="password" label="用户密码"></el-table-column>
-                <el-table-column prop="role" label="用户身份">
-                    <template slot-scope="scope">
-                        <span>{{ getRoleLabel(scope.row.role) }}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="teamId" label="用户所属团队Id"></el-table-column>
-                <el-table-column prop="teamName" label="用户所属团队名称"></el-table-column>
-                <el-table-column label="操作">
-                    <template v-slot="scope">
-                        <el-button size="mini" type="primary" plain @click="handleEdit(scope.row)">编辑</el-button>
-                        <el-button size="mini" type="danger" plain @click="del(scope.row.userId)">删除</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </div>
+      <div class="table">
+        <el-table :data="paginatedUsers" @selection-change="handleSelectionChange" border>
+          <el-table-column prop="userId" label="用户ID" sortable></el-table-column>
+          <el-table-column prop="username" label="用户名"></el-table-column>
+          <el-table-column prop="password" label="用户密码"></el-table-column>
+          <el-table-column prop="role" label="用户身份">
+            <template slot-scope="scope">
+              <span>{{ getRoleLabel(scope.row.role) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="teamId" label="用户所属团队Id"></el-table-column>
+          <el-table-column prop="teamName" label="用户所属团队名称"></el-table-column>
+          <el-table-column label="操作">
+            <template v-slot="scope">
+              <el-button size="mini" type="primary" plain @click="handleEdit(scope.row)">编辑</el-button>
+              <el-button size="mini" type="danger" plain @click="del(scope.row.userId)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+
+      <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-size="pageSize"
+          :total="users.length"
+          layout="sizes, prev, pager, next, jumper"
+          :page-sizes="[5, 10, 20]"
+          style="margin-top: 20px;"
+      ></el-pagination>
+
 
         <el-dialog :title="editMode ? '编辑用户' : '新增用户'" :visible.sync="dialogVisible" @close="handleDialogClose">
             <el-form :model="newUser" label-width="100px">
@@ -79,12 +91,39 @@ export default {
 
             },
             editMode: false,
+            paginatedUsers: [],
+           currentPage: 1,
+           pageSize: 10,
         };
     },
     created() {
         this.load(); // 页面加载时获取数据
     },
+  watch: {
+    users() {
+      this.paginateUsers();
+    },
+  },
+  mounted() {
+    this.load(); // 初始加载
+  },
+
     methods: {
+      paginateUsers() {
+        const start = (this.currentPage - 1) * this.pageSize;
+        const end = start + this.pageSize;
+        this.paginatedUsers = this.users.slice(start, end);
+      },
+      handleCurrentChange(page) {
+        this.currentPage = page;
+        this.paginateUsers();
+      },
+      handleSizeChange(size) {
+        this.pageSize = size;
+        this.paginateUsers();
+      },
+
+
 
         getRoleLabel(role) {
             switch (role) {

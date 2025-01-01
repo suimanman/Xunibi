@@ -16,7 +16,7 @@
     <el-container>
       <el-aside width="205px" class="menu-container">
         <el-menu background-color="#2e2e2e" text-color="#fff" active-text-color="#ffd04b" router="true">
-          <el-menu-item @click="backToFirst">
+          <el-menu-item index="/crypto" >
             <i class="el-icon-s-home"></i>
             <span>首页</span>
           </el-menu-item>
@@ -95,10 +95,10 @@
               <i class="el-icon-s-marketing"></i>
               <span>交易记录</span>
             </el-menu-item>
-            <el-menu-item index="/crypto">
-              <i class="el-icon-coin"></i>
-              <span>可视化信息管理</span>
-            </el-menu-item>
+<!--            <el-menu-item index="/crypto">-->
+<!--              <i class="el-icon-coin"></i>-->
+<!--              <span>可视化信息管理</span>-->
+<!--            </el-menu-item>-->
           </el-submenu>
 
 

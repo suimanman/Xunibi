@@ -286,7 +286,7 @@ public class ConsumerServiceImpl implements ConsumerService {
                         teamName=teamMapper.getNameByteamId(teamId);
                     workstation.setRentTeamName(teamName);
                 }
-                log.info("资源列表1：{}",workstationList);
+//                log.info("资源列表1：{}",workstationList);
                 return MyResult.success(workstationList);
             }
             case "固定设备" -> {
@@ -297,7 +297,7 @@ public class ConsumerServiceImpl implements ConsumerService {
                         teamName=teamMapper.getNameByteamId(teamId);
                     equipment.setRentTeamName(teamName);
                 }
-                log.info("资源列表2：{}",equipmentList);
+//                log.info("资源列表2：{}",equipmentList);
                 return MyResult.success(equipmentList);
             }
             case "摄像设备" -> {
@@ -308,7 +308,7 @@ public class ConsumerServiceImpl implements ConsumerService {
                         teamName=teamMapper.getNameByteamId(teamId);
                     camera.setRentTeamName(teamName);
                 }
-                log.info("资源列表3：{}",cameraList);
+//                log.info("资源列表3：{}",cameraList);
                 return MyResult.success(cameraList);
             }
             case "场地" -> {
@@ -319,7 +319,7 @@ public class ConsumerServiceImpl implements ConsumerService {
                         teamName=teamMapper.getNameByteamId(teamId);
                     area.setRentTeamName(teamName);
                 }
-                log.info("资源列表4：{}",areaList);
+//                log.info("资源列表4：{}",areaList);
                 return MyResult.success(areaList);
             }
             default -> {

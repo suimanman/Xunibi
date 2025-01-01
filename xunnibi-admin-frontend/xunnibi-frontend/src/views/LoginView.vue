@@ -112,7 +112,7 @@ export default {
                             // 假设需要将登录状态保存在 LocalStorage
                             localStorage.setItem("adminData", JSON.stringify(adminData));
                             this.$message.success("登录成功！");
-                            this.$router.push("/"); // 跳转到管理员控制台页面
+                            this.$router.push("/crypto"); // 跳转到管理员控制台页面
                         }
                     } catch (error) {
                         console.error(error);

@@ -2,6 +2,8 @@ package com.example.xunibibackend.service.impl;
 
 import com.example.xunibibackend.entity.DutyRecord;
 import com.example.xunibibackend.entity.Team;
+import com.example.xunibibackend.entity.VirtualCoinTransaction;
+import com.example.xunibibackend.mapper.CoinTransactionMapper;
 import com.example.xunibibackend.mapper.DutyMapper;
 import com.example.xunibibackend.mapper.TeamMapper;
 import com.example.xunibibackend.response.MyResult;
@@ -10,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 @Slf4j
 @Service
@@ -19,6 +22,8 @@ public class DutyRecordsServiceImpl implements DutyRecordsService {
     private DutyMapper dutyRecordsMapper;
     @Autowired
     private TeamMapper teamMapper;
+    @Autowired
+    private CoinTransactionMapper  coinTransactionMapper;
 
 
     @Override
@@ -97,6 +102,15 @@ public MyResult dutyReward(DutyRecord dutyRecord) {
         if (updateResult == 0) {
             return MyResult.error("更新值班记录失败，请稍后重试");
         }
+
+        //将记录添加到虚拟币交易记录表中
+        VirtualCoinTransaction coinTransaction=new VirtualCoinTransaction();
+        coinTransaction.setCoinAmount(dutyRecord.getCoinAwarded());
+        coinTransaction.setTransactionDate(LocalDate.now());
+        coinTransaction.setTransactionType("收入");
+        coinTransaction.setDescription("值日获得");
+        coinTransaction.setTeamId(dutyRecord.getTeamId());
+        coinTransactionMapper.insert(coinTransaction);
 
         // 返回成功结果
         return MyResult.success("奖励发放成功");
